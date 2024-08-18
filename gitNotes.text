@@ -69,3 +69,6 @@ git merge <branch name> (to merge 2 branches)
 so we pull request on github and then to reflect that merge on local folder we use pull command: git pull origin <branch name to pull(feature) into the current branch(main)>
 
 *** resolving merge conflicts : when both branches have some changes to same lines so which ones to keep ?? so we will manually delete the one we dont want
+
+
+⭐UNDOING CHANGES:
