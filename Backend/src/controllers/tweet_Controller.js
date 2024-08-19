@@ -186,7 +186,7 @@ const delete_Tweet = async (req,res) => {
 
         const deletedTweet = await Tweet.findByIdAndDelete(tweetId);
         if(!deletedTweet) return res.status(400).json({message:"TWEET_NOT_FOUND"});
-        const likes = await Like.findOneAndDelete({tweet:new mongoose.Types.ObjectId(deletedTweet._id)});
+        const likes = await Like.deleteMany({tweet:new mongoose.Types.ObjectId(deletedTweet._id)});
         return res.status(200).json({ message:"Tweet deleted successfully" })
     }
     catch (err) 

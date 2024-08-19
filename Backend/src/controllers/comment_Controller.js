@@ -239,7 +239,7 @@ const delete_Comment = async (req,res) => {
         if(!isValidObjectId(commentId)) return res.status(400).json({message:"INVALID_COMMENTID"})
         const deletedComment = await Comment.findByIdAndDelete(commentId);
         if(!deletedComment) return res.status(400).json({message:"COMMENT_NOT_FOUND"});
-        const likes = await Like.findOneAndDelete({comment:new mongoose.Types.ObjectId(deletedComment._id)});
+        const likes = await Like.deleteMany({comment:new mongoose.Types.ObjectId(deletedComment._id)});
         return res.status(200).json({message:"comment deleted successfully" })
     }
     catch (err) 
