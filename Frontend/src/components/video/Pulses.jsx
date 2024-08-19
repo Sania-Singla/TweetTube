@@ -300,6 +300,7 @@ export function PulseVideoPage() {
     )
 }
 
+//admin page
 export function PulseAdminPage() {
     return (
         <div>
@@ -326,72 +327,77 @@ export function PulseAdminPage() {
 
             <div className="overflow-x-scroll w-full">
                 <table className="border-[0.1rem] border-[#b5b4b4] w-full">
-                    <tr className="border-b-[0.1rem] border-[#b5b4b4] h-[65px]">
-                        <td className="animate-pulse bg-slate-700 w-full"></td>
-                    </tr>
-                    <tr className="px-8 border-b-[0.01rem] border-b-slate-600 h-[75px] flex items-center justify-evenly gap-14">
-                        <td className="animate-pulse bg-slate-700 w-[60px] h-[30px] rounded-full "></td>
-                        <td className="animate-pulse bg-slate-700 w-[100px] rounded-full h-[30px]"></td>
-                        <td className="flex items-center justify-center">
-                            <div><div className="animate-pulse bg-slate-700 size-[43px] rounded-full"></div></div>
-                            <div className="animate-pulse bg-slate-700 w-[200px] h-[26px] rounded-md ml-4"></div>
-                        </td>
-                        <td className="animate-pulse bg-slate-700 w-[120px] h-[30px] rounded-md"></td>
-                        <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
-                        <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
-                        <td className="flex items-center justify-center gap-4">
-                            <div className="animate-pulse bg-[#d4ffd4] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
-                            <div className="animate-pulse bg-[#ffd2d2] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
-                        </td>
-                        <td className="flex items-center justify-center gap-4">
-                            <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
-                            <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
-                        </td>
-                    </tr>
-                    <tr className="px-8 border-b-[0.01rem] border-b-slate-600 h-[75px] flex items-center justify-evenly gap-14">
-                        <td className="animate-pulse bg-slate-700 w-[60px] h-[30px] rounded-full "></td>
-                        <td className="animate-pulse bg-slate-700 w-[100px] rounded-full h-[30px]"></td>
-                        <td className="flex items-center justify-center">
-                            <div><div className="animate-pulse bg-slate-700 size-[43px] rounded-full"></div></div>
-                            <div className="animate-pulse bg-slate-700 w-[200px] h-[26px] rounded-md ml-4"></div>
-                        </td>
-                        <td className="animate-pulse bg-slate-700 w-[120px] h-[30px] rounded-md"></td>
-                        <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
-                        <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
-                        <td className="flex items-center justify-center gap-4">
-                            <div className="animate-pulse bg-[#d4ffd4] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
-                            <div className="animate-pulse bg-[#ffd2d2] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
-                        </td>
-                        <td className="flex items-center justify-center gap-4">
-                            <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
-                            <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
-                        </td>
-                    </tr>
-                    <tr className="px-8 border-b-[0.01rem] border-b-slate-600 h-[75px] flex items-center justify-evenly gap-14">
-                        <td className="animate-pulse bg-slate-700 w-[60px] h-[30px] rounded-full "></td>
-                        <td className="animate-pulse bg-slate-700 w-[100px] rounded-full h-[30px]"></td>
-                        <td className="flex items-center justify-center">
-                            <div><div className="animate-pulse bg-slate-700 size-[43px] rounded-full"></div></div>
-                            <div className="animate-pulse bg-slate-700 w-[200px] h-[26px] rounded-md ml-4"></div>
-                        </td>
-                        <td className="animate-pulse bg-slate-700 w-[120px] h-[30px] rounded-md"></td>
-                        <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
-                        <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
-                        <td className="flex items-center justify-center gap-4">
-                            <div className="animate-pulse bg-[#d4ffd4] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
-                            <div className="animate-pulse bg-[#ffd2d2] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
-                        </td>
-                        <td className="flex items-center justify-center gap-4">
-                            <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
-                            <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
-                        </td>
-                    </tr>
+                    <thead>
+                        <tr className="border-b-[0.1rem] border-[#b5b4b4] h-[65px]">
+                            <td className="animate-pulse bg-slate-700 w-full"></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="px-8 border-b-[0.01rem] border-b-slate-600 h-[75px] flex items-center justify-evenly gap-14">
+                            <td className="animate-pulse bg-slate-700 w-[60px] h-[30px] rounded-full "></td>
+                            <td className="animate-pulse bg-slate-700 w-[100px] rounded-full h-[30px]"></td>
+                            <td className="flex items-center justify-center">
+                                <div><div className="animate-pulse bg-slate-700 size-[43px] rounded-full"></div></div>
+                                <div className="animate-pulse bg-slate-700 w-[200px] h-[26px] rounded-md ml-4"></div>
+                            </td>
+                            <td className="animate-pulse bg-slate-700 w-[120px] h-[30px] rounded-md"></td>
+                            <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
+                            <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
+                            <td className="flex items-center justify-center gap-4">
+                                <div className="animate-pulse bg-[#d4ffd4] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
+                                <div className="animate-pulse bg-[#ffd2d2] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
+                            </td>
+                            <td className="flex items-center justify-center gap-4">
+                                <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
+                                <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
+                            </td>
+                        </tr>
+                        <tr className="px-8 border-b-[0.01rem] border-b-slate-600 h-[75px] flex items-center justify-evenly gap-14">
+                            <td className="animate-pulse bg-slate-700 w-[60px] h-[30px] rounded-full "></td>
+                            <td className="animate-pulse bg-slate-700 w-[100px] rounded-full h-[30px]"></td>
+                            <td className="flex items-center justify-center">
+                                <div><div className="animate-pulse bg-slate-700 size-[43px] rounded-full"></div></div>
+                                <div className="animate-pulse bg-slate-700 w-[200px] h-[26px] rounded-md ml-4"></div>
+                            </td>
+                            <td className="animate-pulse bg-slate-700 w-[120px] h-[30px] rounded-md"></td>
+                            <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
+                            <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
+                            <td className="flex items-center justify-center gap-4">
+                                <div className="animate-pulse bg-[#d4ffd4] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
+                                <div className="animate-pulse bg-[#ffd2d2] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
+                            </td>
+                            <td className="flex items-center justify-center gap-4">
+                                <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
+                                <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
+                            </td>
+                        </tr>
+                        <tr className="px-8 border-b-[0.01rem] border-b-slate-600 h-[75px] flex items-center justify-evenly gap-14">
+                            <td className="animate-pulse bg-slate-700 w-[60px] h-[30px] rounded-full "></td>
+                            <td className="animate-pulse bg-slate-700 w-[100px] rounded-full h-[30px]"></td>
+                            <td className="flex items-center justify-center">
+                                <div><div className="animate-pulse bg-slate-700 size-[43px] rounded-full"></div></div>
+                                <div className="animate-pulse bg-slate-700 w-[200px] h-[26px] rounded-md ml-4"></div>
+                            </td>
+                            <td className="animate-pulse bg-slate-700 w-[120px] h-[30px] rounded-md"></td>
+                            <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
+                            <td className="animate-pulse bg-slate-700 w-[45px] h-[30px] rounded-md"></td>
+                            <td className="flex items-center justify-center gap-4">
+                                <div className="animate-pulse bg-[#d4ffd4] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
+                                <div className="animate-pulse bg-[#ffd2d2] brightness-[0.7] w-[80px] h-[37px] rounded-[12px]"></div>
+                            </td>
+                            <td className="flex items-center justify-center gap-4">
+                                <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
+                                <div className="animate-pulse bg-slate-700 w-[40px] h-[37px] rounded-[10px]"></div>
+                            </td>
+                        </tr>
+                    </tbody>
                 </table>
             </div>
         </div>
     )
 }
 
+//playlist page
 export function PulsePlaylistPage() {
     return (
         <div className="flex flex-col xl:flex-row gap-y-[40px] gap-x-[30px]">
