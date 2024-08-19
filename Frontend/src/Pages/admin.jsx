@@ -22,6 +22,7 @@ function AdminPage() {
   const [videoUpdatedPopup,setVideoUpdatedPopup] = useState(false);
   const [deleteVideoPopup,setDeleteVideoPopup] = useState(false);
   const [editVideoPopup,setEditVideoPopup] = useState(false);
+  const [fileSize,setFileSize] = useState(0);
   const navigate = useNavigate();
   const [controller,setController] = useState(null);  // Create the controller
 
@@ -49,8 +50,6 @@ function AdminPage() {
     description:"",
     thumbnail:null,
   });
-
-  const [fileSize,setFileSize] = useState(0);
 
   useEffect(()=>{
     setLoading(true);
@@ -292,36 +291,42 @@ function AdminPage() {
       }
 
       {/* popups */}
-      {
-        uploadVideoPopup && 
+      
+      {uploadVideoPopup && 
         <div className="fixed overflow-scroll inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-start">
           <UploadVideoPopup setController={setController} close={()=>setUploadVideoPopup(false)} setUploadVideoPopup={setUploadVideoPopup} setFileSize={setFileSize} setUploadingPopup={setUploadingPopup} setVideoUploadedPopup={setVideoUploadedPopup}/>
-        </div>
-      }
+        </div>}
+
       {uploadingPopup && fileSize && 
         <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
             <UploadingVideoPopup cancelUpload={handleAbortRequest} fileSize={fileSize.toFixed(2)} close={()=>setUploadingPopup(false)}/>
         </div>}
+
       {videoUploadedPopup && fileSize && 
         <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
             <VideoUploadedPopup fileSize={fileSize.toFixed(2)} close={()=>setVideoUploadedPopup(false)}/>
         </div>}
+
       {deleteVideoPopup && videoForDelete.id && 
         <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
             <DeleteVideoPopup close={()=>setDeleteVideoPopup(false)} video={videoForDelete}/>
         </div>}
+
       {videoUpdatedPopup && videoForEdit.id && 
         <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
             <VideoUpdatedPopup close={()=>setVideoUpdatedPopup(false)} video={videoForEdit}/>
         </div>}
+
       {videoUpdatingPopup && videoForEdit.id && 
         <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
             <VideoUpdatingPopup close={()=>setVideoUpdatingPopup(false)} video={videoForEdit}/>
         </div>}
+
       {editVideoPopup && videoForEdit.id && 
         <div className="fixed overflow-scroll inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
             <EditVideoPopup close={()=>setEditVideoPopup(false)} setEditVideoPopup={setEditVideoPopup} setVideoUpdatingPopup={setVideoUpdatingPopup} setVideoUpdatedPopup={setVideoUpdatedPopup} video={videoForEdit}/>
         </div>}
+
     </div>
   )
 }

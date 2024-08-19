@@ -128,10 +128,10 @@ function Header() {
         shouldShow: true
     },
     {
-        name:"Playlists",
-        path:`channel/${userData?.username}/playlists`,       // /channel/:${userData.username}/....   we only need color(:) in defining the Route path first time in main.jsx , while navigating we dont need it
-        icon:<i className="fa-regular fa-square-plus"></i>,
-        shouldShow: loginStatus
+      name:"My Content",
+      path:`/channel/${userData?.username}`,
+      icon:<i className="fa-solid fa-video"></i> ,
+      shouldShow:true
     },
     {
         name:"Liked videos",
@@ -146,15 +146,21 @@ function Header() {
         shouldShow: loginStatus
     },
     {
+      name:"Playlists",
+      path:`channel/${userData?.username}/playlists`,       // /channel/:${userData.username}/....   we only need color(:) in defining the Route path first time in main.jsx , while navigating we dont need it
+      icon:<i className="fa-regular fa-square-plus"></i>,
+      shouldShow: loginStatus
+    },
+    {
+      name:"Admin",
+      path:"admin",
+      icon:<i className="fa-solid fa-user"></i>,
+      shouldShow: loginStatus
+    },
+    {
         name:"Subscribers",
         path:"subscribers",
         icon:<i className="fa-solid fa-user-group"></i>,
-        shouldShow: loginStatus
-    },
-    {
-        name:"Admin",
-        path:"admin",
-        icon:<i className="fa-solid fa-user"></i>,
         shouldShow: loginStatus
     },
     {
@@ -174,7 +180,7 @@ function Header() {
   const hamburgurElements = hamburgurItems.map(item => (
       item.shouldShow &&
       (<li key={item.name} value={item.name} onClick={()=>setHamburgurMenuDisplay(false)} className="w-full h-full mb-2">
-          <NavLink to={item.path} className={({ isActive }) => `${isActive ? "border-[#8871ee]" : "border-[#b5b4b4]"} border-[0.01rem] h-full flex items-center justify-start hover:border-[#8871ee] py-[5px] px-3 text-[1.05rem]`}>
+          <NavLink to={item.path} className={({ isActive }) => `${isActive ? "border-[#8871ee]" : "border-[#b5b4b4]"} border-[0.01rem] h-full flex items-center justify-start hover:border-[#8871ee] py-1 px-3 text-[1.05rem]`}>
             <span className='text-md w-5 flex items-center justify-center'>{item.icon}</span> <span className='ml-3'>{item.name}</span>
           </NavLink>
       </li>)
@@ -186,7 +192,7 @@ function Header() {
       <div className=''>
         <div className='w-[50px] h-[50px] rounded-full overflow-hidden'>
           <Link to="">
-            <img src="/sunflower.jpg" alt="logo" className='object-cover'/>
+            <img src="/sunflower.jpg" alt="logo" className='h-full w-full object-cover'/>
           </Link>
         </div>
       </div>
@@ -262,11 +268,11 @@ function Header() {
               animate="end"
               exit="exit"
             >
-              <div className='w-[60%] h-full ml-auto bg-[#0c0c0c] relative border-l-[0.01rem] border-[#b5b4b4]'>
+              <div className='w-[55%] h-full ml-auto bg-[#0c0c0c] relative border-l-[0.01rem] border-[#b5b4b4]'>
                 <div className='h-[80px] border-b-[0.01rem] border-[#b5b4b4] flex items-center px-4 relative'>
-                  <div className='w-[50px] h-[50px] rounded-full overflow-hidden'>
+                  <div onClick={()=>setHamburgurMenuDisplay(false)} className='w-[50px] h-[50px] rounded-full overflow-hidden'>
                     <Link to="">
-                      <img src="/sunflower.jpg" alt="logo" className='object-cover'/>
+                      <img src="/sunflower.jpg" alt="logo" className='h-full w-full object-cover'/>
                     </Link>
                   </div>
                   {
@@ -277,23 +283,23 @@ function Header() {
                   }
                 </div>
 
-                <div className='p-3 w-full'>
+                <div className='p-2 w-full'>
                   <ul className=''>
                     {hamburgurElements}
                   </ul>
                 </div>
 
-                <div className='h-[80px] w-full absolute bottom-0 px-5 flex items-center justify-center'>
+                <div onClick={()=>setHamburgurMenuDisplay(false)} className='h-[80px] w-full absolute bottom-0 px-3 flex items-center justify-start'>
                   {
                     loginStatus && 
-                    <div className="flex h-full w-full gap-[10px] items-center">
-                      <div className="w-[50px] h-[50px] border-[0.01rem] border-[#b5b4b4] overflow-hidden rounded-full ">
-                        <Link to={`channel/${userData?.username}`} onClick={()=>setHamburgurMenuDisplay(false)}>
+                    <div onClick={()=>navigate(`channel/${userData?.username}`)} className="cursor-pointer flex h-full w-fit gap-[10px] items-center justify-start">
+                      <div className="w-[47px] h-[47px] border-[0.01rem] border-[#b5b4b4] overflow-hidden rounded-full ">
+                        <div>
                           <img src={userData?.avatar} alt="avatar" className='w-full h-full object-cover'/>
-                        </Link>
+                        </div>
                       </div>
-                      <div className='flex flex-col items-start justify-center pb-[10px]'>
-                        <div className='text-[1.2rem]'>{userData?.fullname}</div>
+                      <div className='flex flex-col items-start justify-center pb-[5px] leading-[23px]'>
+                        <div className='text-[1.15rem]'>{userData?.fullname}</div>
                         <div className='text-[0.9rem] text-[#b5b4b4]'>{"@" + userData?.username}</div>
                       </div>
                     </div>

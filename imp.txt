@@ -1,1 +1,0 @@
-we used secure true in cookie options but still in fetch sending request on http:// becuase without secure true it is not including cookies in the request but with https:// we are getting some ssl error so just keep it this way for now

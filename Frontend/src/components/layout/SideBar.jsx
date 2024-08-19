@@ -25,10 +25,10 @@ function SideBar() {
             shouldShow: true
         },
         {
-            name:"Playlists",
-            path:`channel/${userData?.username}/playlists`,       // /channel/:${userData.username}/....   we only need color(:) in defining the Route path first time in main.jsx , while navigating we dont need it
-            icon:<i className="fa-regular fa-square-plus"></i>,
-            shouldShow: loginStatus
+            name:"My Content",
+            path:`/channel/${userData?.username}`,
+            icon:<i className="fa-solid fa-video"></i> ,
+            shouldShow:true
         },
         {
             name:"Liked videos",
@@ -43,15 +43,21 @@ function SideBar() {
             shouldShow: loginStatus
         },
         {
-            name:"Subscribers",
-            path:"subscribers",
-            icon:<i className="fa-solid fa-user-group"></i>,
+            name:"Playlists",
+            path:`channel/${userData?.username}/playlists`,       // /channel/:${userData.username}/....   we only need color(:) in defining the Route path first time in main.jsx , while navigating we dont need it
+            icon:<i className="fa-regular fa-square-plus"></i>,
             shouldShow: loginStatus
         },
         {
             name:"Admin",
             path:"admin",
             icon:<i className="fa-solid fa-user"></i>,
+            shouldShow: loginStatus
+        },
+        {
+            name:"Subscribers",
+            path:"subscribers",
+            icon:<i className="fa-solid fa-user-group"></i>,
             shouldShow: loginStatus
         },
     ]
