@@ -11,6 +11,7 @@ import SupportPage from "./support";
 import RedirectToLogin from "./RedirectToLogin";
 import AdminPage from "./admin";
 import NotFoundPage from "./notFound";
+import TweetsPage from "./tweetsPage";
 
 export {
     LoginPage,
@@ -26,4 +27,5 @@ export {
     RedirectToLogin,
     AdminPage,
     NotFoundPage,
+    TweetsPage,
 }

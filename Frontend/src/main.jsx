@@ -19,7 +19,8 @@ import {
         SupportPage, 
         RedirectToLogin, 
         AdminPage, 
-        NotFoundPage 
+        NotFoundPage,
+        TweetsPage,
       } from './Pages'
 import { 
         ChannelVideos, 
@@ -42,7 +43,8 @@ const router = createBrowserRouter(
       <Route path="watch-history" element={ <WatchHistoryPage/> }/>
       <Route path="subscribers" element={ <SubscribersPage/> }/>
       <Route path="admin" element={ <AdminPage/> }/>
-      <Route path="/results" element={ <SearchResultsPage/> }/>   {/*we don't have to mention the query params here in the routes just directly use them in navigate*/}
+      <Route path="tweets" element={ <TweetsPage/> }/>
+      <Route path="results" element={ <SearchResultsPage/> }/>   {/*we don't have to mention the query params here in the routes just directly use them in navigate*/}
 
 
       <Route path="channel/:username" element={ <ChannelPage/> }>    {/*we only need colon here not anywhere while navigating and fetch*/}
