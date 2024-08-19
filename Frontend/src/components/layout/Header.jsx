@@ -161,7 +161,7 @@ function Header() {
         name:"Subscribers",
         path:"subscribers",
         icon:<i className="fa-solid fa-user-group"></i>,
-        shouldShow: loginStatus
+        shouldShow: true
     },
     {
         name:"Support",
