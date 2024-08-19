@@ -31,6 +31,7 @@ import {
         ChannelAbout 
       }from './components'
 import SearchResultsPage from './Pages/SearchResults.jsx'
+import SubscribersPage from './Pages/Subscribers.jsx'
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -39,6 +40,7 @@ const router = createBrowserRouter(
       <Route path="login" element={ <LoginPage/> }/>
       <Route path="register" element={ <RegisterPage/> }/>
       <Route path="watch-history" element={ <WatchHistoryPage/> }/>
+      <Route path="subscribers" element={ <SubscribersPage/> }/>
       <Route path="admin" element={ <AdminPage/> }/>
       <Route path="/results" element={ <SearchResultsPage/> }/>   {/*we don't have to mention the query params here in the routes just directly use them in navigate*/}
 

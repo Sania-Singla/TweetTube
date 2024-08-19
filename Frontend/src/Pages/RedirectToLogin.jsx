@@ -17,5 +17,3 @@ export default RedirectToLogin
  but if we have predefined everything means we are not performing any calculations or fetching just checking something like here if loginstatus is true or not 
  and then redirecting so without any user interaction we are redirecting then we have to use <Navigate to=""/> which is since a jsx component so can be used in conditional rendering and all  
 */
-
-//<Route path="*" element={<NotFoundPage />} /> /* Add this line for 404 page */

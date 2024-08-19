@@ -1,14 +1,8 @@
-import Login from "./auth/Login"
-import Register from "./auth/Register"
 import Logout from "./auth/Logout"
-import Home from "./layout/Home"
 import PlaylistCard from "./video/PlaylistCard"
-import Channel from "./channel/Channel"
 import ChannelVideos from "./channel/ChannelVideos"
 import ChannelPlaylists from "./channel/ChannelPlaylists"
 import ChannelAbout from "./channel/ChannelAbout"
-import WatchHistory from "./user/WatchHistory"
-import LikedVideos from "./user/LikedVideos"
 import ChannelSubscribed from "./channel/ChannelSubscribed"
 import VideoList from "./video/VideoList"
 import RandomVideoCard from "./video/RandomVideoCard"
@@ -17,11 +11,9 @@ import RecemendationVideoList from "./video/RecemendationVideoList"
 import SideVideos from "./video/SideVideos"
 import Comments from "./video/Comments"
 import VideoPlayer from "./video/VideoPlayer"
-import Settings from "./user/Settings"
-import SettingsPersonal from "./user/SettingsPersonal"
-import SettingsChannel from "./user/SettingsChannel"
-import SettingsPassword from "./user/SettingsPassword"
-import Support from "./user/Support" 
+import SettingsPersonal from "./settings/SettingsPersonal"
+import SettingsChannel from "./settings/SettingsChannel"
+import SettingsPassword from "./settings/SettingsPassword"
 
 import Layout from "./layout/Layout"
 import Header from "./layout/Header"
@@ -61,20 +53,14 @@ import DeletePlaylistPopup from "./popups/deletePlaylistPopup"
 import CreatePlaylistPopup from "./popups/createPlaylistPopup"
 
 export {
-    Login,
     Logout,
-    Register,
     Header,
     SideBar,
     Layout,
-    Home,
-    Channel,
     ChannelVideos,
     ChannelPlaylists,
     ChannelAbout,
-    WatchHistory,
     PlaylistCard,
-    LikedVideos,
     ChannelSubscribed,
     VideoList,
     RandomVideoCard,
@@ -108,9 +94,7 @@ export {
     DeletePlaylistPopup,
     CreatePlaylistPopup,
     formatDuration,
-    Settings,
     SettingsPersonal,
     SettingsChannel,
     SettingsPassword,
-    Support,
 }
