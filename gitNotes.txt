@@ -82,3 +82,5 @@ git reset HEAD~1 (will move the head(last commit) backwards by 1 step)
 3) commited changes: (for multiple commits)
 git reset <commit hash code>
 git reset --hard <hash code> (will undo the changes on vs code also)
+
+⭐can use 'q' for quitting 
