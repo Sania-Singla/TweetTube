@@ -1,4 +1,6 @@
 const Comment = require("../models/comment");
+const Like = require("../models/like");
+const Video = require("../models/video");
 const mongoose = require("mongoose");
 const {isValidObjectId} = require("mongoose")
 
@@ -10,7 +12,10 @@ const get_Video_Comments = async (req,res) => {
     {
         const { videoId } = req.params;
         if(!isValidObjectId(videoId)) return res.status(400).json({message:"INVALID_VIDEOID"})
-        const { page=1, limit=10, sortBy="updatedAt", sortType="desc", query="" } = req.query;
+        const video = await Video.findById(videoId);
+        if(!video) return res.status(400).json({message:"VIDEO_NOT_FOUND"});
+        
+        const { page=1, limit=10, sortBy="createdAt", sortType="desc", query="" } = req.query;
         const pageNumber = parseInt(page);
         const limitNumber = parseInt(limit);
         const startIndex = (pageNumber-1)*limit;
@@ -234,6 +239,7 @@ const delete_Comment = async (req,res) => {
         if(!isValidObjectId(commentId)) return res.status(400).json({message:"INVALID_COMMENTID"})
         const deletedComment = await Comment.findByIdAndDelete(commentId);
         if(!deletedComment) return res.status(400).json({message:"COMMENT_NOT_FOUND"});
+        const likes = await Like.findOneAndDelete({comment:new mongoose.Types.ObjectId(deletedComment._id)});
         return res.status(200).json({message:"comment deleted successfully" })
     }
     catch (err) 

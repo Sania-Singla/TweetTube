@@ -1,6 +1,8 @@
 const mongoose  = require("mongoose");
 const User = require("../models/user");
 const Video = require("../models/video");
+const Comment = require("../models/comment");
+const Like = require("../models/like");
 const { upload_On_Cloudinary, delete_From_Cloudinary } = require("../utils/cloudinary");
 const { isValidObjectId } = require("mongoose");
 
@@ -316,6 +318,8 @@ const delete_a_Video = async ( req,res ) => {
         const deletedVideoFile = await delete_From_Cloudinary(video.videoFile);
         if( deletedVideoFile.result !== "ok" || deletedThumbnail.result!== "ok" ) return res.status(500).json({message:"VIDEOFILE_THUMBNAIL_DELETION_ISSUE" })
         const deletedVideo = await Video.findByIdAndDelete(video._id);     // videoid
+        const comments = await Comment.findOneAndDelete({video:new mongoose.Types.ObjectId(video._id)});
+        const likes = await Like.findOneAndDelete({video:new mongoose.Types.ObjectId(video._id)});
         
         return res.status(200).json({message:"VIDEO_DELETED_SUCCESSFULLY"});
     } catch (err) 
