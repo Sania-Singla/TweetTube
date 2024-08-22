@@ -82,6 +82,7 @@ export class AdminServices {
                 console.log("res.ok is true");
                 return data;
             }
+            else if (res.status===500 && (data.message==="VIDEO_UPLOAD_ISSUE"||data.message==="VIDEODOC_CREATION_DB_ISSUE")) return data;
             else {
                 throw new Error(data.message);
             }

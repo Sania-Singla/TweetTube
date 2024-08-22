@@ -1,0 +1,1 @@
+so instead of connecting to the db everytime when querying we create a pool of all the connections similar to what we did in the db/connection file in tweettube (we got a object where .connection was a property)

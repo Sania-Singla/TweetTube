@@ -26,7 +26,8 @@ const upload_On_Cloudinary = async ( localFilePath ) => {
     {
         //removing the locally temporary saved file as the upload opr. failed ( don't want to keep any currpted .. files on server )
         fs.unlinkSync(localFilePath);
-        return console.log("something wrong happened while uploading file on cloudinary; error: ", err);
+        console.log("something wrong happened while uploading file on cloudinary; error: ", err.message);
+        return ;
     }
 }
 
@@ -43,7 +44,8 @@ const delete_From_Cloudinary = async (URL) => {
     }
     catch(err)
     {
-        return console.log("something wrong happened while deleting file from cloudinary; error: ", err);
+        console.log("something wrong happened while deleting file from cloudinary; error: ", err);
+        return ;
     }
 }
 

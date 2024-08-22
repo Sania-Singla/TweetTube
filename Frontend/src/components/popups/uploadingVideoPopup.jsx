@@ -2,12 +2,17 @@ import { X } from "lucide-react";
 import { icons } from "../../assets/icons";
 import { useState } from "react";
 
-export default function UploadingVideoPopup({fileSize,close,cancelUpload}) {
+export default function UploadingVideoPopup({fileSize,close,controller,setController}) {
 
-    function handleCancelUpload() {
-        cancelUpload();
-        close();   // Optionally close the popup
-    }
+    function handleCancelUpload() {  
+        if (controller) {
+            console.log(controller);
+            controller.abort();
+            console.log(controller);
+            setController(null); // Reset controller
+            close();
+        } 
+      };
 
     return (
         <div className="p-4 flex flex-col items-center justify-center bg-[#13161f] backdrop-blur-sm border-[0.01rem] border-[#757575] border-dotted rounded-md shadow-black shadow-md w-[500px]">
@@ -39,7 +44,7 @@ export default function UploadingVideoPopup({fileSize,close,cancelUpload}) {
                     <button onClick={close} className="p-2 w-full">Close</button>
                 </div>
                 <div className="cursor-pointer hover:font-medium w-full border-transparent text-center border-[0.01rem] hover:border-[#b5b4b4] bg-[#8871ee] text-black text-lg">
-                    <button onClick={handleCancelUpload} className="p-2 w-full">Cancel Upload</button> {/*terminate the uploading*/}
+                    <button onClick={handleCancelUpload} className="p-2 w-full">Cancel Upload</button>
                 </div>
             </div>
         </div>
