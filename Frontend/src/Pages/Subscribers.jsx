@@ -5,7 +5,7 @@ export default function SubscribersPage() {
 
   if(loginStatus) {
     return (
-      <div>Subscribers</div>
+      <div>page under build yet :Subscribers</div>
     )
   }
   else return <div>login to get userData</div>

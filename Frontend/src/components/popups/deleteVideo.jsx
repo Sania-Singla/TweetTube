@@ -9,7 +9,7 @@ export default function DeleteVideoPopup({close,video}) {
 
     async function handleDeleteVideo(e) {
         close();
-        const res = await adminServices.deleteVideo(video._id);
+        const res = await adminServices.deleteVideo(video.id);
         if(res) {}
     }
 

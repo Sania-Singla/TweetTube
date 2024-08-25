@@ -32,13 +32,11 @@ function Header() {
 
   //drop-down fetch
   useEffect(()=>{
-    if(search === "") setDropDownResults([])
-    else {
-      videoServices.getSearchData(search)
-      .then(data=>{ 
-        if(data) setDropDownResults(data.results) 
-      })
-    } 
+    videoServices.getSearchData(search)
+    .then(data=>{ 
+      if(data) setDropDownResults(data.results) 
+      else setDropDownResults([]);
+    }) 
   },[search])
 
   function handleBlur(){ //COMMON ISSUE:⭐because to disappear the dropdown on blur event we were not able to interact with the options even so thats why give the disappear a delay until then the navigation would happen
@@ -54,8 +52,11 @@ function Header() {
     else if(fullname.includes(search.toLowerCase())) return fullname;
   }))]
 
-  const dropDownItemsElements = dropDownItemsArray.map((item,index)=>(
-    <div key={index} onClick={()=>handleSearch(item)} className='cursor-pointer hover:bg-[#393939] px-4 py-1 line-clamp-1'><i className="fa-solid fa-magnifying-glass text-[1.05rem] text-[#b5b5b5]"></i> <span className='pl-[10px] text-[1.1rem] text-white'>{item}</span></div>
+  const dropDownItemsElements = dropDownItemsArray?.map((item,index)=>(
+    <div key={index} onClick={()=>handleSearch(item)} className='cursor-pointer hover:bg-[#393939] px-4 py-1 line-clamp-1'>
+      <i className="fa-solid fa-magnifying-glass text-[1.05rem] text-[#b5b5b5]"></i> 
+      <span className='pl-[10px] text-[1.1rem] text-white'>{item}</span>
+    </div>
   ))
 
   function closeHamburgurMenu(e) {
@@ -212,9 +213,9 @@ function Header() {
             onFocus={()=>setShowDropdown(true)}
             onBlur={handleBlur}
             onChange={(e)=>setSearch(e.target.value)}
-            className="w-full h-full text-[1rem] rounded-l-lg indent-3 bg-transparent text-white border-[0.01rem] border-[#545454] placeholder:text-[1.15rem] placeholder:text-[#b5b4b4] focus:outline-none focus:border-[#8871ee]"
+            className="group/input w-full h-full text-[1rem] rounded-l-lg indent-3 bg-transparent text-white border-[0.01rem] border-[#545454] placeholder:text-[1.15rem] placeholder:text-[#b5b4b4] focus:outline-none focus:border-[#8871ee]"
           />
-          <button type="button" onClick={()=>setSearch("")} className={`${showDropdown ? "block" : "hidden"} absolute top-[3px] right-[87px] text-2xl text-[#cbcbcb] hover:bg-[#343434] size-10 rounded-full flex items-center justify-center`}><i className="fa-solid fa-xmark"></i></button>
+          <button type="button" onClick={()=>setSearch("")} className={`${search ? "block" : "hidden"} input:focus:block absolute top-[3px] right-[87px] text-2xl text-[#cbcbcb] hover:bg-[#343434] size-10 rounded-full flex items-center justify-center`}><i className="fa-solid fa-xmark"></i></button>
           <button type="submit" className="cursor-pointer bg-[#191919] text-[#cbcbcb] hover:bg-[#242424] rounded-r-lg h-full w-16 text-[1.4rem] border-[.01rem] border-[#545454] active:border-[#3d3d3d]"><i className="fa-solid fa-magnifying-glass"></i></button>
         </form>
 

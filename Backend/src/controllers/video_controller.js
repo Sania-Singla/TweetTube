@@ -203,38 +203,44 @@ const publish_a_Video = async ( req,res ) => {
     let videoFile,thumbnail;
     try 
     {
-        req.customConnectionClosed = false;
+        // req.customConnectionClosed = false;
 
-        req.on('close', () => {
-            req.customConnectionClosed = true;
-        });
+        // req.on('close', () => {
+        //     req.customConnectionClosed = true;
+        // });
         
-        if(!req.files.videoFile || !req.files.thumbnail ) return res.status(400).json({ message:"VIDEOFILE_THUMBNAIL_MISSING" });
+        if(!req.files?.videoFile || !req.files?.thumbnail ) return res.status(400).json({ message:"VIDEOFILE_THUMBNAIL_MISSING" });
         const { title, description } = req.body; 
         if( !title || !description ) return res.status(400).json({ message:"TITLE_DESCR_MISSING" });
         const videoFile_Localpath = req.files.videoFile[0].path;
         const thumbnail_Localpath = req.files.thumbnail[0].path;
 
-        // console.log("videoFilePath=",videoFile_Localpath,"thumbnail_path=",thumbnail_Localpath);
+        console.log("videoFilePath=",videoFile_Localpath,"thumbnail_path=",thumbnail_Localpath);
+
+        if (req.connectionClosed) {
+            console.log("Connection closed, aborting video and thumbnail upload...");
+            console.log("had nothing to clean yet & request closed...");
+            return; // Preventing further execution
+        }
 
         //upload video 
         videoFile = await upload_On_Cloudinary(videoFile_Localpath);
-        if(req.customConnectionClosed) {
+        if(req.connectionClosed) {
             console.log("video uploaded but request cancelled so now deleting the video from cloudinary and returning with a cancelled message");
             await delete_From_Cloudinary(videoFile.url);
             console.log("deleted the video from cloudinary");
-            fs.unlinkSync(thumbnail_Localpath);  //we dont need the thumbnail in out device now because we are not going to upload it anymore
-            return res.status(200).json({message:"REQUEST_CANCELLED_SUCCESSFULLY"});
+            fs.unlinkSync(thumbnail_Localpath);  //we dont need the thumbnail now because we are not going to upload it anymore
+            return;
         }
 
         //upload thumbnail
         thumbnail = await upload_On_Cloudinary(thumbnail_Localpath);
-        if(req.customConnectionClosed) {
+        if(req.connectionClosed) {
             console.log("uploaded both but request cancelled so now deleting both from cloudinary and returning with a cancelled message");
             await delete_From_Cloudinary(videoFile.url);
             await delete_From_Cloudinary(thumbnail.url);
             console.log("deleted both");
-            return res.status(200).json({message:"REQUEST_CANCELLED_SUCCESSFULLY"});
+            return;
         }
 
         // console.log("videoFile=",videoFile,"thumbnail=",thumbnail);   // it contains the duration property for a video file in seconds
@@ -255,13 +261,13 @@ const publish_a_Video = async ( req,res ) => {
         const publishedVideo = await Video.findById(video._id);
         if(!publishedVideo) return res.status(500).json({message:"VIDEODOC_CREATION_DB_ISSUE"});
         
-        if(req.customConnectionClosed) {
+        if(req.connectionClosed) {
             console.log("uploaded both and created entry in db but request cancelled so now deleting both from cloudinary and the video doc from db and returning with a cancelled message");
             await delete_From_Cloudinary(videoFile.url);
             await delete_From_Cloudinary(thumbnail.url);
             await Video.findByIdAndDelete(video._id);
             console.log("deleted the video");
-            return res.status(200).json({message:"REQUEST_CANCELLED_SUCCESSFULLY"});
+            return;
         }
     
         return res.status(201).json(publishedVideo);

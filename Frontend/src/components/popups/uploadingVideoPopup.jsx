@@ -1,18 +1,11 @@
 import { X } from "lucide-react";
 import { icons } from "../../assets/icons";
-import { useState } from "react";
 
-export default function UploadingVideoPopup({fileSize,close,controller,setController}) {
+export default function UploadingVideoPopup({fileSize,close}) {
 
-    function handleCancelUpload() {  
-        if (controller) {
-            console.log(controller);
-            controller.abort();
-            console.log(controller);
-            setController(null); // Reset controller
-            close();
-        } 
-      };
+    function handleCancelUpload() { 
+
+    };
 
     return (
         <div className="p-4 flex flex-col items-center justify-center bg-[#13161f] backdrop-blur-sm border-[0.01rem] border-[#757575] border-dotted rounded-md shadow-black shadow-md w-[500px]">

@@ -62,9 +62,8 @@ export class AdminServices {
     }
 
 
-    async uploadVideo (inputs,controller) {
+    async uploadVideo (inputs) {
         try {
-            console.log("got a req");
             const formData = new FormData();
             Object.entries(inputs).forEach(([key,value])=>{
                 formData.append(key,value);
@@ -73,13 +72,11 @@ export class AdminServices {
                 method:"POST",
                 credentials:"include",
                 body:formData,
-                signal: controller.signal,
             });
             const data = await res.json();
             console.log("uploaded=",data);
 
             if(res.ok){
-                console.log("res.ok is true");
                 return data;
             }
             else if (res.status===500 && (data.message==="VIDEO_UPLOAD_ISSUE"||data.message==="VIDEODOC_CREATION_DB_ISSUE")) return data;
@@ -87,11 +84,7 @@ export class AdminServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            if (err.name === "AbortError") {
-                console.log("Upload canceled");
-            } else {
-                console.log("Error in uploadVideo service:", err.message);
-            }
+            console.log("Error in uploadVideo service:", err.message); 
         }
     }
 

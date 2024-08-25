@@ -14,6 +14,7 @@ const videoRouter = express.Router();
 const upload = require("../middleware/multer");
 const verifyJWT = require("../middleware/authorize");
 const optionalVerifyJWT = require("../middleware/optionalAuthorize");
+const { checkAborted } = require("../middleware/abortRequest");
 
 videoRouter.route("/random-videos")
 .get(get_Random_Videos)
@@ -29,7 +30,7 @@ videoRouter.route("/")
         name:"thumbnail",
         maxCount:1
     }
-]), publish_a_Video )
+]),checkAborted, publish_a_Video )
 
 
 videoRouter.route("/search-data")
