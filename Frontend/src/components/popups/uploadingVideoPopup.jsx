@@ -1,10 +1,15 @@
 import { X } from "lucide-react";
 import { icons } from "../../assets/icons";
 
-export default function UploadingVideoPopup({fileSize,close}) {
+export default function UploadingVideoPopup({fileSize,close,controller,setController}) {
 
     function handleCancelUpload() { 
-
+        if(controller)
+        {
+            controller.abort();
+            setController(null);
+            close();
+        }
     };
 
     return (

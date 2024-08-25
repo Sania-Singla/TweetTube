@@ -24,6 +24,7 @@ function AdminPage() {
   const [editVideoPopup,setEditVideoPopup] = useState(false);
   const [fileSize,setFileSize] = useState(0);
   const navigate = useNavigate();
+  const [controller,setController] = useState(null);
 
   const [videoForDelete,setVideoForDelete] = useState({
     id:null,
@@ -281,12 +282,12 @@ function AdminPage() {
       
       {uploadVideoPopup && 
         <div className="fixed overflow-scroll inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-start">
-          <UploadVideoPopup close={()=>setUploadVideoPopup(false)} setUploadVideoPopup={setUploadVideoPopup} setFileSize={setFileSize} setUploadingPopup={setUploadingPopup} setVideoUploadedPopup={setVideoUploadedPopup}/>
+          <UploadVideoPopup controller={controller} setController={setController} close={()=>setUploadVideoPopup(false)} setUploadVideoPopup={setUploadVideoPopup} setFileSize={setFileSize} setUploadingPopup={setUploadingPopup} setVideoUploadedPopup={setVideoUploadedPopup}/>
         </div>}
 
       {uploadingPopup && fileSize && 
         <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
-            <UploadingVideoPopup fileSize={fileSize.toFixed(2)} close={()=>setUploadingPopup(false)}/>
+            <UploadingVideoPopup controller={controller} setController={setController} fileSize={fileSize.toFixed(2)} close={()=>setUploadingPopup(false)}/>
         </div>}
 
       {videoUploadedPopup && fileSize && 

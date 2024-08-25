@@ -62,7 +62,7 @@ export class AdminServices {
     }
 
 
-    async uploadVideo (inputs) {
+    async uploadVideo (inputs,controller) {
         try {
             const formData = new FormData();
             Object.entries(inputs).forEach(([key,value])=>{
@@ -72,6 +72,7 @@ export class AdminServices {
                 method:"POST",
                 credentials:"include",
                 body:formData,
+                signal: controller?.signal
             });
             const data = await res.json();
             console.log("uploaded=",data);

@@ -3,7 +3,7 @@ import { icons } from "../../assets/icons";
 import { useEffect, useRef, useState } from "react";
 import adminServices from "../../DBservices/adminServices";
 
-export default function UploadVideoPopup({close,setUploadVideoPopup,setFileSize,setUploadingPopup,setVideoUploadedPopup}) {
+export default function UploadVideoPopup({controller,setController,close,setUploadVideoPopup,setFileSize,setUploadingPopup,setVideoUploadedPopup}) {
     const [inputs,setInputs] = useState({
         title:"",
         description:"",
@@ -110,7 +110,9 @@ export default function UploadVideoPopup({close,setUploadVideoPopup,setFileSize,
         setUploadingPopup(true);
         setFileSize((inputs.videoFile.size)/(1024*1024));
 
-        const res = await adminServices.uploadVideo(inputs);
+        const newController = new AbortController();
+        setController(newController);
+        const res = await adminServices.uploadVideo(inputs,newController);
         if(res && (res.message === "VIDEODOC_CREATION_DB_ISSUE" || res.message==="VIDEO_UPLOAD_ISSUE"))
         {
             alert("something went wrong! couln't upload the video please retry after some time.");
