@@ -15,7 +15,7 @@ app.use( (req,res,next)=>{                                // copied from davegre
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");    
     }
     next();
-})
+});
 
 app.use(cors({
     origin: function (origin, callback) {

@@ -85,7 +85,8 @@ export class AdminServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            console.log("Error in uploadVideo service:", err.message); 
+            if (err.name === 'AbortError') console.log("upload aborted")
+            else console.log("Error in uploadVideo service:", err.message); 
         }
     }
 

@@ -32,10 +32,10 @@ export class VideoServices {
                 credentials:"include",
             })
             const data = await res.json();
-            console.log("fetch done")
+            console.log(data);
+
             if(res.ok)
             {
-                console.log("service",data);
                 return data;
             }
             else {
