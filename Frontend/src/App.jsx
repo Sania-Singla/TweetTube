@@ -1,4 +1,3 @@
-import './App.css'
 import { useDispatch } from 'react-redux'
 import {Layout} from './components/index'
 import { useEffect, useState } from 'react'
