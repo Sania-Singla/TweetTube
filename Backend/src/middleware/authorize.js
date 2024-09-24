@@ -20,7 +20,7 @@ const verifyJWT = async (req, res, next) => {
         }
 
         //since token is valid but is this id user in oue db or not
-        const user = await User.findById(decodedToken._id).select("-password -refreshToken");
+        const user = await User.findById(decodedToken._id).select("-password -refreshToken -watchHistory");
         if (!user) {
             return res.status(401).clearCookie("accessToken", options).json({ message: "ACCESS_TOKEN_USER_NOT_FOUND" });
         }

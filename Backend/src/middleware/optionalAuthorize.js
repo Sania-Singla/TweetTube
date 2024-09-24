@@ -25,7 +25,7 @@ const optionalVerifyJWT = async ( req,res,next ) => {
             }
 
             //since token is valid but is this id user in oue db or not
-            const user = await User.findById(decodedToken._id).select( "-password -refreshToken" );
+            const user = await User.findById(decodedToken._id).select( "-password -refreshToken -watchHistory" );
             if(!user)  
             {
                 return res

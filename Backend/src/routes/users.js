@@ -37,7 +37,6 @@ userRouter.route("/login")
 .post( login_User );
 
 
-//secured routes
 userRouter.route("/logout")
 .post( verifyJWT, logout_User );
 
