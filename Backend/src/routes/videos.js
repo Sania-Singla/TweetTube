@@ -19,20 +19,6 @@ const { checkAborted } = require("../middleware/abortRequest");
 videoRouter.route("/random-videos")
 .get(get_Random_Videos)
 
-videoRouter.route("/")
-.get(get_All_Videos)
-.post(verifyJWT, upload.fields([
-    {
-        name:"videoFile",
-        maxCount:1
-    },
-    {
-        name:"thumbnail",
-        maxCount:1
-    }
-]),checkAborted, publish_a_Video )
-
-
 videoRouter.route("/search-data")
 .get(get_Search_Data)
 
@@ -53,6 +39,19 @@ videoRouter.route("/:videoid")
         return res.status(500).json({message:"something bad happened while updating the thumbnail."});
     }
 }, update_a_Video )
+
+videoRouter.route("/")
+.get(get_All_Videos)
+.post(verifyJWT, upload.fields([
+    {
+        name:"videoFile",
+        maxCount:1
+    },
+    {
+        name:"thumbnail",
+        maxCount:1
+    }
+]),checkAborted, publish_a_Video )
 
 
 module.exports = videoRouter;

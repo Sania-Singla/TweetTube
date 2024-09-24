@@ -11,7 +11,6 @@ const options = {
 
 const verifyJWT = async (req, res, next) => {
     try {
-        console.log(req.cookies);
         const accessToken = req.cookies?.accessToken || req.headers["authorization"]?.split(" ")[1]; //sometimes it could be capital A
         if (!accessToken) return res.status(400).json({ message: "ACCESS_TOKEN_MISSING" }); //user is logged out
 
