@@ -35,10 +35,9 @@ const router = createBrowserRouter(
             <Route path="subscribers" element={<SubscribersPage />} />
             <Route path="admin" element={<AdminPage />} />
             <Route path="tweets" element={<TweetsPage />} />
-            <Route path="results" element={<SearchResultsPage />} />{" "}
+            <Route path="results" element={<SearchResultsPage />} />
             {/*we don't have to mention the query params here in the routes just directly use them in navigate*/}
             <Route path="channel/:username" element={<ChannelPage />}>
-                {" "}
                 {/*we only need colon here not anywhere while navigating and fetch*/}
                 <Route path="" element={<ChannelVideos />} />
                 <Route path="playlists" element={<ChannelPlaylists />} />
@@ -52,12 +51,10 @@ const router = createBrowserRouter(
                 path="settings"
                 element={
                     <RedirectToLogin>
-                        {" "}
-                        <SettingsPage />{" "}
+                        <SettingsPage />
                     </RedirectToLogin>
                 }
             >
-                {" "}
                 {/*redirecting to /login if not logged in*/}
                 <Route path="" element={<SettingsPersonal />} />
                 <Route path="change-channel-info" element={<SettingsChannel />} />

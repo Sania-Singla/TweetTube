@@ -44,35 +44,50 @@ export default function RegisterPage() {
     const handleBlur = (e) => {
         let { name, value, type, files } = e.target;
 
-        if (type === "text") {
+        if (type === "text" || type === "password") {
             if (name === "email") {
                 /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
                     ? setError((prevError) => ({ ...prevError, email: "" }))
-                    : setError((prevError) => ({ ...prevError, email: "please enter a valid email." }));
+                    : setError((prevError) => ({
+                          ...prevError,
+                          email: "please enter a valid email.",
+                      }));
             }
 
             if (name === "firstname") {
                 /^[a-zA-Z]+$/.test(value)
                     ? setError((prevError) => ({ ...prevError, firstname: "" }))
-                    : setError((prevError) => ({ ...prevError, firstname: "numbers, spaces and speacial characters are not allowed." }));
+                    : setError((prevError) => ({
+                          ...prevError,
+                          firstname: "numbers, spaces and speacial characters are not allowed.",
+                      }));
             }
 
             if (name === "lastname") {
                 /^[a-zA-Z]+$/.test(value)
                     ? setError((prevError) => ({ ...prevError, lastname: "" }))
-                    : setError((prevError) => ({ ...prevError, lastname: "numbers, spaces and speacial char are not allowed." }));
+                    : setError((prevError) => ({
+                          ...prevError,
+                          lastname: "numbers, spaces and speacial char are not allowed.",
+                      }));
             }
 
             if (name === "username") {
                 /^[a-zA-Z0-9_]+$/.test(value)
                     ? setError((prevError) => ({ ...prevError, username: "" }))
-                    : setError((prevError) => ({ ...prevError, username: "only numbers, letters and underscores are allowed." }));
+                    : setError((prevError) => ({
+                          ...prevError,
+                          username: "only numbers, letters and underscores are allowed.",
+                      }));
             }
 
             if (name === "password") {
                 value.length >= 8
                     ? setError((prevError) => ({ ...prevError, password: "" }))
-                    : setError((prevError) => ({ ...prevError, password: "password must be atleast 8 characters." }));
+                    : setError((prevError) => ({
+                          ...prevError,
+                          password: "password must be atleast 8 characters.",
+                      }));
             }
         }
 
@@ -86,10 +101,16 @@ export default function RegisterPage() {
     //onsubmit()
     async function handleSubmit(e) {
         e.preventDefault();
-        if (error.email || error.password || error.username || error.firstname || error.lastname) return;
+        if (error.email || error.password || error.username || error.firstname || error.lastname)
+            return;
         const { firstname, lastname, ...newInputs } = inputs;
-        const userData = await userServices.registerUser({ ...newInputs, fullname: `${firstname} ${lastname}` }, setData, setLoading);
-        if (userData.message === "USER_ALREADY_EXIST") return setError((prevError) => ({ ...prevError, root: "user already exist." }));
+        const userData = await userServices.registerUser(
+            { ...newInputs, fullname: `${firstname} ${lastname}` },
+            setData,
+            setLoading
+        );
+        if (userData.message === "USER_ALREADY_EXIST")
+            return setError((prevError) => ({ ...prevError, root: "user already exist." }));
         else {
             dispatch(login(userData));
             navigate("/"); //because hmne auto login toh krva hi diya hai
@@ -217,8 +238,13 @@ export default function RegisterPage() {
                     ></motion.div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="mt-3 flex flex-col items-start justify-center">
-                    {error.root && <p className="text-red-600 w-full text-md text-center">{error.root}</p>}
+                <form
+                    onSubmit={handleSubmit}
+                    className="mt-3 flex flex-col items-start justify-center"
+                >
+                    {error.root && (
+                        <p className="text-red-600 w-full text-md text-center">{error.root}</p>
+                    )}
                     {inputElements}
                     {fileElements}
                     {/* button */}
