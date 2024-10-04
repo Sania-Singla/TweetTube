@@ -3,7 +3,7 @@ import RegisterPage from "./register";
 import HomePage from "./home";
 import WatchHistoryPage from "./watchHistory";
 import ChannelPage from "./channel";
-import LikedVideosPage from "./likedVideos"
+import LikedVideosPage from "./likedVideos";
 import VideoPage from "./video";
 import PlaylistPage from "./playlist";
 import SettingsPage from "./settings";
@@ -28,4 +28,4 @@ export {
     AdminPage,
     NotFoundPage,
     TweetsPage,
-}
+};

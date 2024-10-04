@@ -1,13 +1,12 @@
-import { useNavigate,Navigate } from "react-router-dom";
-import { useAuthHook } from "../hooks"
+import { useNavigate, Navigate } from "react-router-dom";
+import { useAuthHook } from "../hooks";
 
-export default function RedirectToLogin({children}) {
-
-    const {loginStatus} = useAuthHook();
+export default function RedirectToLogin({ children }) {
+    const { loginStatus } = useAuthHook();
     // const navigate = useNavigate();
 
     // return  loginStatus ? children : navigate("/login");    //hooks cant be used in JSX so will have to use Navigate component which is speacially made for redirects
-    return  loginStatus ? children : <Navigate to="/login"/>;
+    return loginStatus ? children : <Navigate to="/login" />;
 }
 
 /*⭐ navigate is used for redirection on some user interaction 

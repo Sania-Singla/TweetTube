@@ -6,7 +6,7 @@ const options = {
     httpOnly: true,
     sameSite: "None",
     path: "/",
-    secure: true,   // while thunderclient testing remove it
+    secure: true, // while thunderclient testing remove it
 };
 
 const verifyJWT = async (req, res, next) => {
@@ -22,13 +22,13 @@ const verifyJWT = async (req, res, next) => {
         //since token is valid but is this id user in oue db or not
         const user = await User.findById(decodedToken._id).select("-password -refreshToken -watchHistory");
         if (!user) {
-            return res.status(401).clearCookie("accessToken", options).json({ message: "ACCESS_TOKEN_USER_NOT_FOUND" });
+            return res.status(400).clearCookie("accessToken", options).json({ message: "ACCESS_TOKEN_USER_NOT_FOUND" });
         }
 
         req.user = user; // we set a custom property name user in the req object so now after the middleware we can directly get the user without password and refreshToken
     } catch (err) {
         console.log({ message: "something went wrong while authorizing ", err: err.message });
-        return res.status(400).clearCookie("accessToken", options).json({ message: "EXPIRED_ACCESS_TOKEN" });
+        return res.status(500).clearCookie("accessToken", options).json({ message: "EXPIRED_ACCESS_TOKEN" });
     }
     next();
 };

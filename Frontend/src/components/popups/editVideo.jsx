@@ -2,93 +2,91 @@ import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import adminServices from "../../DBservices/adminServices";
 
-export default function EditVideoPopup({close,video,setEditVideoPopup,setVideoUpdatedPopup,setVideoUpdatingPopup}) {
-    const [inputs,setInputs] = useState({
-        title:"",
-        description:"",
-        thumbnail:null,
-    })
-    
-    const [error,setError] = useState({
-        root:"",                        
-        title:"",
-        description:"",
-        thumbnail:"",
+export default function EditVideoPopup({ close, video, setEditVideoPopup, setVideoUpdatedPopup, setVideoUpdatingPopup }) {
+    const [inputs, setInputs] = useState({
+        title: "",
+        description: "",
+        thumbnail: null,
     });
 
-    const [disabled,setDisabled] = useState(false);
+    const [error, setError] = useState({
+        root: "",
+        title: "",
+        description: "",
+        thumbnail: "",
+    });
 
-    useEffect(()=>{
+    const [disabled, setDisabled] = useState(false);
+
+    useEffect(() => {
         setInputs({
-            title:video.title,
-            thumbnail:null,
-            description:video.description,
+            title: video.title,
+            thumbnail: null,
+            description: video.description,
         });
-    },[])
+    }, []);
 
     function handleChange(e) {
-        let {value,name,files} = e.target;
-        if (name==="thumbnail") {
+        let { value, name, files } = e.target;
+        if (name === "thumbnail") {
             const file = files[0];
-            if(file){
+            if (file) {
                 const extension = file.name.split(".").pop().toLowerCase();
-                const fileSize = (file.size)/(1024*1024);
-                const maxSizeMB = 100; 
-                const allowedExtensions = ["png","jpg","jpeg"];
-                if(allowedExtensions.includes(extension)) {
-                    if(fileSize > maxSizeMB ) return setError(prevError=>({...prevError,root:"File is too large, Please upload a file smaller than 100MB."}))
-                    setError(prevError=>({...prevError,thumbnail:""}))
-                    return setInputs(prevInputs => ({
+                const fileSize = file.size / (1024 * 1024);
+                const maxSizeMB = 100;
+                const allowedExtensions = ["png", "jpg", "jpeg"];
+                if (allowedExtensions.includes(extension)) {
+                    if (fileSize > maxSizeMB)
+                        return setError((prevError) => ({ ...prevError, root: "File is too large, Please upload a file smaller than 100MB." }));
+                    setError((prevError) => ({ ...prevError, thumbnail: "" }));
+                    return setInputs((prevInputs) => ({
                         ...prevInputs,
-                        [name]: file
+                        [name]: file,
                     }));
-                }
-                else { 
-                    return setError(prevError=>({...prevError, thumbnail:"Only .png .jpg and .jpeg files are accepted"}));
+                } else {
+                    return setError((prevError) => ({ ...prevError, thumbnail: "Only .png .jpg and .jpeg files are accepted" }));
                 }
             }
-        }
-        else {
-            if(value) setError(prevError=>({...prevError,[name]:""})); 
-            return setInputs(prevInputs => ({
+        } else {
+            if (value) setError((prevError) => ({ ...prevError, [name]: "" }));
+            return setInputs((prevInputs) => ({
                 ...prevInputs,
-                [name]: value
-            }))
+                [name]: value,
+            }));
         }
     }
 
     const handleBlur = (e) => {
-        let { name, value,files } = e.target;
+        let { name, value, files } = e.target;
 
         if (name === "title") {
-            value 
-                ? setError(prevError => ({ ...prevError, title: "" }))
-                : setError(prevError => ({ ...prevError, title: "title is required." }));
+            value ? setError((prevError) => ({ ...prevError, title: "" })) : setError((prevError) => ({ ...prevError, title: "title is required." }));
         }
 
         if (name === "description") {
-            value 
-                ? setError(prevError => ({ ...prevError, description: "" }))
-                : setError(prevError => ({ ...prevError, description: "description is required." }));
+            value
+                ? setError((prevError) => ({ ...prevError, description: "" }))
+                : setError((prevError) => ({ ...prevError, description: "description is required." }));
         }
 
         if (name === "thumbnail") {
-            !files[0] && setError(prevError => ({ ...prevError, thumbnail: "thumbnail is required." }))
+            !files[0] && setError((prevError) => ({ ...prevError, thumbnail: "thumbnail is required." }));
         }
     };
 
     const handleMouseOver = () => {
-        if(!inputs.title || !inputs.description || !inputs.thumbnail || error.root || error.title || error.description || error.thumbnail) return setDisabled(true);
+        if (!inputs.title || !inputs.description || !inputs.thumbnail || error.root || error.title || error.description || error.thumbnail)
+            return setDisabled(true);
         return setDisabled(false);
-    }
+    };
 
     async function handleUpdateVideo(e) {
         e.preventDefault();
-        if(error.root || error.thumbnail || error.title || error.description) return; 
+        if (error.root || error.thumbnail || error.title || error.description) return;
         setEditVideoPopup(false);
         setVideoUpdatingPopup(true);
-        const res = await adminServices.editVideo(inputs,video.id);
-        if(res) {
+        const res = await adminServices.editVideo(inputs, video.id);
+        if (res) {
             setVideoUpdatingPopup(false);
             setVideoUpdatedPopup(true);
         }
@@ -98,40 +96,50 @@ export default function EditVideoPopup({close,video,setEditVideoPopup,setVideoUp
         <div className="bg-[#0e0e0e] border-[0.1rem] border-[#b5b4b4] rounded-md shadow-black shadow-lg w-[500px]">
             <div className="w-full relative border-b-[0.1rem] border-[#b5b4b4]">
                 <div className="text-[1.4rem] font-semibold p-2 px-4">Edit Video</div>
-                <button onClick={close} className="absolute top-1 right-1"><X size={27}/></button>
+                <button onClick={close} className="absolute top-1 right-1">
+                    <X size={27} />
+                </button>
             </div>
 
             <form onSubmit={handleUpdateVideo} className="w-full p-4">
-                {error.root && <div className="w-full text-center mb-2">
-                    <div className="text-red-600 text-md">** {error.root} **</div>
-                </div>} 
+                {error.root && (
+                    <div className="w-full text-center mb-2">
+                        <div className="text-red-600 text-md">** {error.root} **</div>
+                    </div>
+                )}
                 <div className="">
                     <div>
                         <div>
-                            <label htmlFor="thumbnail"><span className="text-red-600 mr-[2px]">*</span>Thumbnail:</label>
+                            <label htmlFor="thumbnail">
+                                <span className="text-red-600 mr-[2px]">*</span>Thumbnail:
+                            </label>
                         </div>
-                        <input 
-                            type="file" 
+                        <input
+                            type="file"
                             name="thumbnail"
                             id="thumbnail"
                             required
                             onChange={handleChange}
-                            onBlur={handleBlur} 
+                            onBlur={handleBlur}
                             className="pt-1 h-10 mt-[3px] w-full indent-3 bg-transparent border-[0.01rem] border-[#b5b4b4] rounded-[5px]"
                         />
-                        {error.thumbnail && <div>
-                            <div className="text-red-600 text-sm mt-1">{error.thumbnail}</div>
-                        </div>}
+                        {error.thumbnail && (
+                            <div>
+                                <div className="text-red-600 text-sm mt-1">{error.thumbnail}</div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 <div className="mt-2">
                     <div>
                         <div>
-                            <label htmlFor="title"><span className="text-red-600 mr-[2px]">*</span>Title:</label>
+                            <label htmlFor="title">
+                                <span className="text-red-600 mr-[2px]">*</span>Title:
+                            </label>
                         </div>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             placeholder="Enter the video title"
                             id="title"
                             name="title"
@@ -141,41 +149,51 @@ export default function EditVideoPopup({close,video,setEditVideoPopup,setVideoUp
                             onBlur={handleBlur}
                             className="h-10 w-full mt-[5px] indent-3 bg-transparent border-[0.01rem] border-[#e8e8e8] rounded-[5px]"
                         />
-                        {error.title && <div>
-                            <div className="text-red-600 text-sm">{error.title}</div>
-                        </div>}
+                        {error.title && (
+                            <div>
+                                <div className="text-red-600 text-sm">{error.title}</div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 <div className="mt-2">
                     <div>
-                        <label htmlFor="description"><span className="text-red-600 mr-[2px]">*</span>Description:</label>
+                        <label htmlFor="description">
+                            <span className="text-red-600 mr-[2px]">*</span>Description:
+                        </label>
                     </div>
-                    <textarea 
-                        name="description" 
+                    <textarea
+                        name="description"
                         id="description"
                         required
                         placeholder="Enter the video description"
                         value={inputs.description}
                         onChange={handleChange}
                         onBlur={handleBlur}
-                        className="w-full pt-[3px] mt-[3px] bg-transparent border-[0.01rem] border-[#b5b4b4] text-[1.05rem] rounded-md indent-2"    
+                        className="w-full pt-[3px] mt-[3px] bg-transparent border-[0.01rem] border-[#b5b4b4] text-[1.05rem] rounded-md indent-2"
                         rows={4}
                     />
-                    {error.description && <div>
-                        <div className="text-red-600 text-sm">{error.description}</div>
-                    </div>}
+                    {error.description && (
+                        <div>
+                            <div className="text-red-600 text-sm">{error.description}</div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex items-center justify-center gap-[20px] mt-4">
                     <div className="hover:bg-[#2a2a2a] w-full text-center  border-[0.01rem] border-[#b5b4b4] text-lg">
-                        <button type="button" onClick={close} className="p-2 w-full">Cancel</button>
+                        <button type="button" onClick={close} className="p-2 w-full">
+                            Cancel
+                        </button>
                     </div>
                     <div className="cursor-pointer hover:font-medium w-full border-transparent text-center border-[0.01rem] hover:border-[#b5b4b4] bg-[#8871ee] text-black text-lg">
-                        <button onMouseOver={handleMouseOver} disabled={disabled} type="submit" className="disabled:cursor-not-allowed p-2 w-full">Publish</button>
+                        <button onMouseOver={handleMouseOver} disabled={disabled} type="submit" className="disabled:cursor-not-allowed p-2 w-full">
+                            Publish
+                        </button>
                     </div>
                 </div>
             </form>
-       </div>
-    )
+        </div>
+    );
 }

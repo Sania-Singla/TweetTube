@@ -308,7 +308,7 @@ const change_Current_Password = async (req, res) => {
 const get_Current_User = async (req, res) => {
     try {
         const user = req.user;
-        return res.status(200).json({ user, message: "SUCCESS" });
+        return res.status(200).json(user);
     } catch (err) {
         return res.status(500).json({
             message: "something bad happened while fetching the current user",

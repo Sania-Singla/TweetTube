@@ -1,13 +1,15 @@
 import { X } from "lucide-react";
 import { icons } from "../../assets/icons";
 
-export default function VideoUploadedPopup({video,close}) {
+export default function VideoUploadedPopup({ video, close }) {
     return (
         <div className="p-4 flex flex-col items-center justify-center bg-[#13161f] backdrop-blur-sm border-[0.01rem] border-[#757575] border-dotted rounded-md shadow-black shadow-md w-[500px] pt-5 pb-3">
             <div className="flex flex-col items-start justify-center w-full">
                 <h2 className="text-[1.3rem] font-medium">Video Updated !!</h2>
                 <h2 className="text-[0.9rem] text-[#b5b4b4] font-medium">Track your video Updating process.</h2>
-                <button onClick={close} className="absolute right-1 top-1"><X size={27}/></button>
+                <button onClick={close} className="absolute right-1 top-1">
+                    <X size={27} />
+                </button>
             </div>
 
             <div className="flex items-start justify-start w-full border-[0.01rem] rounded-md border-[#d7d7d7] p-3 mt-4">
@@ -18,19 +20,23 @@ export default function VideoUploadedPopup({video,close}) {
                     <div className="text-[1.05rem]">Updated - {video.title}</div>
                     <div className="flex items-center justify-start w-full mt-2">
                         <div className="fill-[#8871ee] size-[25px]">{icons.tick}</div>
-                        <span className='text-md ml-[6px]'>Video Updated Successfully</span>
+                        <span className="text-md ml-[6px]">Video Updated Successfully</span>
                     </div>
                 </div>
             </div>
 
             <div className="flex items-center justify-center gap-5 mt-6 w-full">
                 <div className="hover:bg-[#2a2a2a] w-full text-center  border-[0.01rem] border-[#b5b4b4] text-lg">
-                    <button onClick={close} className="p-2 w-full">Close</button>
+                    <button onClick={close} className="p-2 w-full">
+                        Close
+                    </button>
                 </div>
                 <div className="cursor-pointer hover:font-medium w-full border-transparent text-center border-[0.01rem] hover:border-[#b5b4b4] bg-[#8871ee] text-black text-lg">
-                    <button onClick={close} className="p-2 w-full">Finish</button>
+                    <button onClick={close} className="p-2 w-full">
+                        Finish
+                    </button>
                 </div>
             </div>
         </div>
-    )
+    );
 }
