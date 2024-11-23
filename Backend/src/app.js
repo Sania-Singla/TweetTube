@@ -4,36 +4,28 @@ const cors = require("cors");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
 
-//const allowedOrigins = process.env.ORIGIN.split(',');   //array
-
-app.use( (req,res,next)=>{                                // copied from davegrey and it worked 😉 for third party cookies and all 
-    const origin = req.headers.origin;
-    if(process.env.ORIGIN.includes(origin))
-    {
-        res.setHeader("Access-Control-Allow-Credentials",true);
-        res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH");
-        res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");    
-    }
-    next();
-});
-
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || process.env.ORIGIN.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    optionsSuccessStatus: 200,
-    // credentials:true
-}));
-
 app.use(express.json());
 app.use(express.urlencoded({ extended:false }));  
 app.use(express.static("../public"));
 app.use(cookieParser());
 
+// CORS configuration
+const whitelist = process.env.WHITELIST ? process.env.WHITELIST.split(',') : [];
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (!origin || whitelist.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+        credentials: true,
+        optionsSuccessStatus: 200,
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+);
 
 //route importing
 const userRouter = require("./routes/users");

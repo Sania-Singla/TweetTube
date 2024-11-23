@@ -21,7 +21,7 @@ function ChannelVideoCard({ video, reference }) {
             </div>
 
             <div className="p-2">
-                <div className="text-[1.2rem] text-white">{video.title}</div>
+                <div className="text-[1.2rem] text-white">{title}</div>
                 <div className="mt-[2px] text-[#b5b4b4] text-[0.9rem]">
                     {views} views &bull; {formattedCreatedAt}
                 </div>

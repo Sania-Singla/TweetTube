@@ -40,7 +40,7 @@ export default function HomePage() {
         //     }
         // }
     },[observerCallback])*/
-    //⭐⭐⭐the problem was that everytime new observer was getting created and then even at last video if go little up and then hit end it shows pleasewait then no videos(as there are no more videos) but we just dont even want the loading effect when we hit th every end . so we needed to define the observer outside and as a ref so that it can presist its previous value between rerenders.👇
+    //⭐⭐⭐the problem was that everytime new observer was getting created and then even at last video if go little up and then hit end it shows please wait then no videos(as there are no more videos) but we just dont even want the loading effect when we hit the every end . so we needed to define the observer outside and as a ref so that it can presist its previous value between rerenders.👇
 
     const observer = useRef(); //undefined initially
     const callbackRef = useCallback(
