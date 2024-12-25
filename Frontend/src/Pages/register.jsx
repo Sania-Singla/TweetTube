@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import userServices from "../DBservices/userServices";
-import { useDispatch } from "react-redux";
-import { login } from "../Store/Slices/userSlice";
-import { useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useEffect, useState } from 'react';
+import userServices from '../DBservices/userServices';
+import { useDispatch } from 'react-redux';
+import { login } from '../Store/Slices/userSlice';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function RegisterPage() {
     const dispatch = useDispatch();
@@ -12,23 +12,23 @@ export default function RegisterPage() {
     const [loading, setLoading] = useState(false);
 
     const [inputs, setInputs] = useState({
-        username: "",
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
+        username: '',
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
         avatar: null,
         coverImage: null,
     });
 
     const [error, setError] = useState({
-        root: "",
-        email: "",
-        password: "",
-        username: "",
-        firstname: "",
-        lastname: "",
-        avatar: "",
+        root: '',
+        email: '',
+        password: '',
+        username: '',
+        firstname: '',
+        lastname: '',
+        avatar: '',
     });
 
     //on input change()
@@ -36,7 +36,7 @@ export default function RegisterPage() {
         let { value, name, files, type } = e.target;
         return setInputs((prevInputs) => ({
             ...prevInputs,
-            [name]: type === "file" ? files[0] : value,
+            [name]: type === 'file' ? files[0] : value,
         }));
     }
 
@@ -44,64 +44,76 @@ export default function RegisterPage() {
     const handleBlur = (e) => {
         let { name, value, type, files } = e.target;
 
-        if (type === "text" || type === "password") {
-            if (name === "email") {
+        if (type === 'text' || type === 'password') {
+            if (name === 'email') {
                 /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
-                    ? setError((prevError) => ({ ...prevError, email: "" }))
+                    ? setError((prevError) => ({ ...prevError, email: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          email: "please enter a valid email.",
+                          email: 'please enter a valid email.',
                       }));
             }
 
-            if (name === "firstname") {
+            if (name === 'firstname') {
                 /^[a-zA-Z]+$/.test(value)
-                    ? setError((prevError) => ({ ...prevError, firstname: "" }))
+                    ? setError((prevError) => ({ ...prevError, firstname: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          firstname: "numbers, spaces and speacial characters are not allowed.",
+                          firstname:
+                              'numbers, spaces and speacial characters are not allowed.',
                       }));
             }
 
-            if (name === "lastname") {
+            if (name === 'lastname') {
                 /^[a-zA-Z]+$/.test(value)
-                    ? setError((prevError) => ({ ...prevError, lastname: "" }))
+                    ? setError((prevError) => ({ ...prevError, lastname: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          lastname: "numbers, spaces and speacial char are not allowed.",
+                          lastname:
+                              'numbers, spaces and speacial char are not allowed.',
                       }));
             }
 
-            if (name === "username") {
+            if (name === 'username') {
                 /^[a-zA-Z0-9_]+$/.test(value)
-                    ? setError((prevError) => ({ ...prevError, username: "" }))
+                    ? setError((prevError) => ({ ...prevError, username: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          username: "only numbers, letters and underscores are allowed.",
+                          username:
+                              'only numbers, letters and underscores are allowed.',
                       }));
             }
 
-            if (name === "password") {
+            if (name === 'password') {
                 value.length >= 8
-                    ? setError((prevError) => ({ ...prevError, password: "" }))
+                    ? setError((prevError) => ({ ...prevError, password: '' }))
                     : setError((prevError) => ({
                           ...prevError,
-                          password: "password must be atleast 8 characters.",
+                          password: 'password must be atleast 8 characters.',
                       }));
             }
         }
 
-        if (name === "avatar") {
+        if (name === 'avatar') {
             files[0]
-                ? setError((prevError) => ({ ...prevError, avatar: "" }))
-                : setError((prevError) => ({ ...prevError, avatar: "avatar is required." }));
+                ? setError((prevError) => ({ ...prevError, avatar: '' }))
+                : setError((prevError) => ({
+                      ...prevError,
+                      avatar: 'avatar is required.',
+                  }));
         }
     };
 
     //onsubmit()
     async function handleSubmit(e) {
         e.preventDefault();
-        if (error.email || error.password || error.username || error.firstname || error.lastname)
+        if (
+            error.email ||
+            error.password ||
+            error.username ||
+            error.firstname ||
+            error.lastname
+        )
             return;
         const { firstname, lastname, ...newInputs } = inputs;
         const userData = await userServices.registerUser(
@@ -109,76 +121,81 @@ export default function RegisterPage() {
             setData,
             setLoading
         );
-        if (userData.message === "USER_ALREADY_EXIST")
-            return setError((prevError) => ({ ...prevError, root: "user already exist." }));
+        if (userData.message === 'USER_ALREADY_EXIST')
+            return setError((prevError) => ({
+                ...prevError,
+                root: 'user already exist.',
+            }));
         else {
             dispatch(login(userData));
-            navigate("/"); //because hmne auto login toh krva hi diya hai
+            navigate('/'); //because hmne auto login toh krva hi diya hai
         }
     }
 
     const inputFields = [
         {
-            id: "username",
-            name: "username",
-            type: "text",
-            placeholder: "Create your username",
+            id: 'username',
+            name: 'username',
+            type: 'text',
+            placeholder: 'Create your username',
             required: true,
-            label: "User name",
+            label: 'User name',
         },
         {
-            id: "firstname",
-            name: "firstname",
-            type: "text",
-            placeholder: "Enter your firstname",
+            id: 'firstname',
+            name: 'firstname',
+            type: 'text',
+            placeholder: 'Enter your firstname',
             required: true,
-            label: "first name",
+            label: 'first name',
         },
         {
-            id: "lastname",
-            name: "lastname",
-            type: "text",
-            placeholder: "Enter your lastname",
+            id: 'lastname',
+            name: 'lastname',
+            type: 'text',
+            placeholder: 'Enter your lastname',
             required: false,
-            label: "Last name",
+            label: 'Last name',
         },
         {
-            id: "email",
-            name: "email",
-            type: "text",
-            placeholder: "Enter your email",
+            id: 'email',
+            name: 'email',
+            type: 'text',
+            placeholder: 'Enter your email',
             required: true,
-            label: "Email",
+            label: 'Email',
         },
         {
-            id: "password",
-            name: "password",
-            type: "password",
-            placeholder: "create your password",
+            id: 'password',
+            name: 'password',
+            type: 'password',
+            placeholder: 'create your password',
             required: true,
-            label: "Password",
+            label: 'Password',
         },
     ];
 
     const fileFields = [
         {
-            id: "avatar",
-            name: "avatar",
+            id: 'avatar',
+            name: 'avatar',
             required: true,
-            label: "Avatar",
+            label: 'Avatar',
         },
         {
-            id: "coverImage",
-            name: "coverImage",
+            id: 'coverImage',
+            name: 'coverImage',
             required: false,
-            label: "Cover Image",
+            label: 'Cover Image',
         },
     ];
 
     const inputElements = inputFields?.map((input) => (
         <div className="w-[320px] mb-2" key={input.id}>
             <div className="mb-[1px]">
-                {input.required && <span className="text-red-600 mr-[2px]">*</span>}
+                {input.required && (
+                    <span className="text-red-600 mr-[2px]">*</span>
+                )}
                 <label htmlFor={input.id}>{input.label}</label>
             </div>
             <input
@@ -191,14 +208,18 @@ export default function RegisterPage() {
                 onBlur={handleBlur}
                 className="h-10 w-full indent-3 bg-transparent border-[0.01rem] border-[#b5b4b4] rounded-[5px]"
             />
-            {error[input.name] && <p className="text-red-600 text-sm">{error[input.name]}</p>}
+            {error[input.name] && (
+                <p className="text-red-600 text-sm">{error[input.name]}</p>
+            )}
         </div>
     ));
 
     const fileElements = fileFields?.map((input) => (
         <div className="w-[320px] mb-2" key={input.id}>
             <div className="mb-[1px]">
-                {input.required && <span className="text-red-600 mr-[2px]">*</span>}
+                {input.required && (
+                    <span className="text-red-600 mr-[2px]">*</span>
+                )}
                 <label htmlFor={input.id}>{input.label}</label>
             </div>
             <input
@@ -209,7 +230,9 @@ export default function RegisterPage() {
                 onBlur={handleBlur}
                 className="pt-1 h-10 w-full indent-3 bg-transparent border-[0.01rem] border-[#b5b4b4] rounded-[5px]"
             />
-            {error[input.name] && <p className="text-red-600 text-sm">{error[input.name]}</p>}
+            {error[input.name] && (
+                <p className="text-red-600 text-sm">{error[input.name]}</p>
+            )}
         </div>
     ));
 
@@ -222,17 +245,19 @@ export default function RegisterPage() {
                             <img src="/sunflower.jpg" alt="logo" />
                         </Link>
                     </div>
-                    <h2 className="font-semibold text-[1.65rem] mt-5">CREATE ACCOUNT</h2>
+                    <h2 className="font-semibold text-[1.65rem] mt-5">
+                        CREATE ACCOUNT
+                    </h2>
                     <h3 className="text-lg mt-1">
                         Already have an Account ?
                         <Link to="/login" className="text-[1rem] text-blue-700">
-                            {" "}
+                            {' '}
                             Login now
                         </Link>
                     </h3>
                     <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: "120%" }}
+                        animate={{ width: '120%' }}
                         transition={{ duration: 0.3 }}
                         className=" h-[0.005rem] mt-2 bg-[#9e9e9e]"
                     ></motion.div>
@@ -243,7 +268,9 @@ export default function RegisterPage() {
                     className="mt-3 flex flex-col items-start justify-center"
                 >
                     {error.root && (
-                        <p className="text-red-600 w-full text-md text-center">{error.root}</p>
+                        <p className="text-red-600 w-full text-md text-center">
+                            {error.root}
+                        </p>
                     )}
                     {inputElements}
                     {fileElements}
@@ -274,7 +301,7 @@ export default function RegisterPage() {
                                     </svg>
                                 </div>
                             ) : (
-                                "Sign Up"
+                                'Sign Up'
                             )}
                         </button>
                     </div>

@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { useAuthHook } from "../../hooks";
-import userServices from "../../DBservices/userServices";
-import { useDispatch } from "react-redux";
-import { login } from "../../Store/Slices/userSlice";
+import { useState, useEffect } from 'react';
+import { useAuthHook } from '../../hooks';
+import userServices from '../../DBservices/userServices';
+import { useDispatch } from 'react-redux';
+import { login } from '../../Store/Slices/userSlice';
 
 export default function SettingsPersonal() {
     // const [loading,setLoading] = useState(true);    // krlo agr krni hai loading state but no need because this is more like a static page because store se hi info aa ri hai so won't take any time
@@ -10,17 +10,21 @@ export default function SettingsPersonal() {
     const dispatch = useDispatch();
 
     const defaultValues = {
-        firstname: userData.fullname.includes(" ") ? userData.fullname.split(" ")[0] : userData.fullname,
-        lastname: userData.fullname.includes(" ") ? userData.fullname.split(" ")[1] : "",
+        firstname: userData.fullname.includes(' ')
+            ? userData.fullname.split(' ')[0]
+            : userData.fullname,
+        lastname: userData.fullname.includes(' ')
+            ? userData.fullname.split(' ')[1]
+            : '',
         email: userData.email,
-        password: "",
+        password: '',
     };
 
     const defaultErrors = {
-        firstname: "",
-        lastname: "",
-        email: "",
-        password: "",
+        firstname: '',
+        lastname: '',
+        email: '',
+        password: '',
     };
 
     const [inputs, setInputs] = useState(defaultValues);
@@ -30,22 +34,31 @@ export default function SettingsPersonal() {
     const handleBlur = (e) => {
         const { name, value } = e.target;
 
-        if (name === "email") {
+        if (name === 'email') {
             /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
-                ? setError((prevError) => ({ ...prevError, email: "" }))
-                : setError((prevError) => ({ ...prevError, email: "please enter a valid email." }));
+                ? setError((prevError) => ({ ...prevError, email: '' }))
+                : setError((prevError) => ({
+                      ...prevError,
+                      email: 'please enter a valid email.',
+                  }));
         }
 
-        if (name === "firstname") {
+        if (name === 'firstname') {
             /^[a-zA-Z]+$/.test(value)
-                ? setError((prevError) => ({ ...prevError, firstname: "" }))
-                : setError((prevError) => ({ ...prevError, firstname: "only letters are allowed." }));
+                ? setError((prevError) => ({ ...prevError, firstname: '' }))
+                : setError((prevError) => ({
+                      ...prevError,
+                      firstname: 'only letters are allowed.',
+                  }));
         }
 
-        if (name === "lastname") {
+        if (name === 'lastname') {
             /^[a-zA-Z]+$/.test(value)
-                ? setError((prevError) => ({ ...prevError, lastname: "" }))
-                : setError((prevError) => ({ ...prevError, lastname: "only letters are allowed." }));
+                ? setError((prevError) => ({ ...prevError, lastname: '' }))
+                : setError((prevError) => ({
+                      ...prevError,
+                      lastname: 'only letters are allowed.',
+                  }));
         }
     };
 
@@ -59,13 +72,22 @@ export default function SettingsPersonal() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        if (error.email || error.firstname || (inputs.lastname && error.lastname)) return;
+        if (
+            error.email ||
+            error.firstname ||
+            (inputs.lastname && error.lastname)
+        )
+            return;
         const newData = await userServices.updateAccountDetails(inputs);
-        if (newData.message === "WRONG_PASSWORD") return setError((prevError) => ({ ...prevError, password: "wrong password." }));
+        if (newData.message === 'WRONG_PASSWORD')
+            return setError((prevError) => ({
+                ...prevError,
+                password: 'wrong password.',
+            }));
         else {
             dispatch(login(newData));
             setError(defaultErrors);
-            setInputs((prev) => ({ ...prev, password: "" }));
+            setInputs((prev) => ({ ...prev, password: '' }));
         }
     }
 
@@ -77,8 +99,12 @@ export default function SettingsPersonal() {
     return (
         <div className="w-full h-full bg-[#0c0c0c] flex flex-col p-3 sm:flex-row sm:justify-between gap-4">
             <div className="">
-                <p className="text-[1.23rem] text-[#f2f2f2] mb-[3px]">Personal Info</p>
-                <p className="text-[1rem] text-[#c5c5c5]">Update your personal details here.</p>
+                <p className="text-[1.23rem] text-[#f2f2f2] mb-[3px]">
+                    Personal Info
+                </p>
+                <p className="text-[1rem] text-[#c5c5c5]">
+                    Update your personal details here.
+                </p>
             </div>
 
             <form
@@ -89,7 +115,11 @@ export default function SettingsPersonal() {
                     <div className="w-full">
                         <div className="mb-[2px]">
                             <label htmlFor="firstname"> First name : </label>
-                            {error.firstname && <span className="text-red-600 text-sm">{error.firstname}</span>}
+                            {error.firstname && (
+                                <span className="text-red-600 text-sm">
+                                    {error.firstname}
+                                </span>
+                            )}
                         </div>
                         <input
                             type="text"
@@ -106,7 +136,11 @@ export default function SettingsPersonal() {
                     <div className="w-full">
                         <div className="mb-[2px]">
                             <label htmlFor="lastname"> Last name : </label>
-                            {error.lastname && <span className="text-red-600 text-sm">{error.lastname}</span>}
+                            {error.lastname && (
+                                <span className="text-red-600 text-sm">
+                                    {error.lastname}
+                                </span>
+                            )}
                         </div>
                         <input
                             type="text"
@@ -124,7 +158,11 @@ export default function SettingsPersonal() {
                 <div className="w-full">
                     <div className="mb-[2px]">
                         <label htmlFor="email"> Email : </label>
-                        {error.email && <span className="text-red-600 text-sm">{error.email}</span>}
+                        {error.email && (
+                            <span className="text-red-600 text-sm">
+                                {error.email}
+                            </span>
+                        )}
                     </div>
                     <input
                         type="email"
@@ -142,7 +180,11 @@ export default function SettingsPersonal() {
                 <div className="w-full">
                     <div>
                         <label htmlFor="password">Password : </label>
-                        {error.password && <span className="text-red-600 text-sm">{error.password}</span>}
+                        {error.password && (
+                            <span className="text-red-600 text-sm">
+                                {error.password}
+                            </span>
+                        )}
                     </div>
                     <input
                         type="password"

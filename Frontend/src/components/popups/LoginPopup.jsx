@@ -1,19 +1,19 @@
-import { useState } from "react";
-import userServices from "../../DBservices/userServices";
-import { useDispatch } from "react-redux";
-import { login } from "../../Store/Slices/userSlice";
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { X } from "lucide-react";
+import { useState } from 'react';
+import userServices from '../../DBservices/userServices';
+import { useDispatch } from 'react-redux';
+import { login } from '../../Store/Slices/userSlice';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 function LoginPopup({ popupText, close }) {
     const [inputs, setInputs] = useState({
-        loginInput: "",
-        password: "",
+        loginInput: '',
+        password: '',
     });
 
     const [error, setError] = useState({
-        root: "",
+        root: '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -34,12 +34,19 @@ function LoginPopup({ popupText, close }) {
         e.preventDefault();
 
         if (error.loginInput || error.password) return;
-        const userData = await userServices.loginUser(setData, setLoading, inputs);
+        const userData = await userServices.loginUser(
+            setData,
+            setLoading,
+            inputs
+        );
         if (userData) {
             disptach(login(userData));
             close();
         } else {
-            setError((prevError) => ({ ...prevError, root: "Invalid Credentials." }));
+            setError((prevError) => ({
+                ...prevError,
+                root: 'Invalid Credentials.',
+            }));
         }
     }
 
@@ -54,7 +61,7 @@ function LoginPopup({ popupText, close }) {
                 <h2 className="text-[1.5rem] mt-2">Sign in to {popupText}</h2>
                 <motion.div
                     initial={{ width: 0 }}
-                    animate={{ width: "70%" }}
+                    animate={{ width: '70%' }}
                     transition={{ duration: 0.3 }}
                     className=" h-[0.005rem] mt-[2px] bg-[#9e9e9e]"
                 ></motion.div>
@@ -63,15 +70,30 @@ function LoginPopup({ popupText, close }) {
                 </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col items-start justify-center mt-2">
-                <div className="w-full h-7">{error.root && <p className="text-red-600 w-full text-[1.1rem] text-center">{error.root}</p>}</div>
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-start justify-center mt-2"
+            >
+                <div className="w-full h-7">
+                    {error.root && (
+                        <p className="text-red-600 w-full text-[1.1rem] text-center">
+                            {error.root}
+                        </p>
+                    )}
+                </div>
 
                 <div className="w-full mt-2">
                     <div>
                         <label htmlFor="loginInput">
-                            <span className="text-red-600">*</span> Username/email :{" "}
+                            <span className="text-red-600">*</span>{' '}
+                            Username/email :{' '}
                         </label>
-                        {error.loginInput && <span className="text-red-600 text-sm"> {error.loginInput}</span>}
+                        {error.loginInput && (
+                            <span className="text-red-600 text-sm">
+                                {' '}
+                                {error.loginInput}
+                            </span>
+                        )}
                     </div>
 
                     <input
@@ -89,9 +111,14 @@ function LoginPopup({ popupText, close }) {
                 <div className="mt-3">
                     <div>
                         <label htmlFor="password">
-                            <span className="text-red-600">*</span> Password :{" "}
+                            <span className="text-red-600">*</span> Password :{' '}
                         </label>
-                        {error.password && <span className="text-red-600 text-sm"> {error.password}</span>}
+                        {error.password && (
+                            <span className="text-red-600 text-sm">
+                                {' '}
+                                {error.password}
+                            </span>
+                        )}
                     </div>
 
                     <input
@@ -132,15 +159,18 @@ function LoginPopup({ popupText, close }) {
                                 </svg>
                             </div>
                         ) : (
-                            "Login"
+                            'Login'
                         )}
                     </button>
 
                     <h3 className="text-lg mt-1">
                         don't have an Account yet ?
-                        <Link to="/register" className="text-[1rem] text-[#8871ee] brightness-125">
-                            {" "}
-                            Sign up{" "}
+                        <Link
+                            to="/register"
+                            className="text-[1rem] text-[#8871ee] brightness-125"
+                        >
+                            {' '}
+                            Sign up{' '}
                         </Link>
                     </h3>
                 </div>

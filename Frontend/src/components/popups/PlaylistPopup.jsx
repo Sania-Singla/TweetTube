@@ -1,16 +1,17 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import playlistServices from "../../DBservices/playlistServices";
-import { X } from "lucide-react";
-import { useAuthHook } from "../../hooks";
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import playlistServices from '../../DBservices/playlistServices';
+import { X } from 'lucide-react';
+import { useAuthHook } from '../../hooks';
 
 export default function PlaylistPopup({ close }) {
     const [inputs, setInputs] = useState({
-        newPlaylist: "", //will add checkbox properties in the useEffect
+        newPlaylist: '', //will add checkbox properties in the useEffect
     });
 
     const [loading, setLoading] = useState(false);
-    const [creatingPlaylistLoading, setCreatingPlaylistLoading] = useState(false);
+    const [creatingPlaylistLoading, setCreatingPlaylistLoading] =
+        useState(false);
     const [data, setData] = useState([]);
     const { userData } = useAuthHook();
     const { videoId } = useParams();
@@ -18,21 +19,30 @@ export default function PlaylistPopup({ close }) {
     //on input change()
     async function handleChange(e) {
         const { value, name, type, checked } = e.target;
-        if (type === "checkbox") {
+        if (type === 'checkbox') {
             console.log(checked);
             const [target] = data.filter((item) => item.name === name);
             console.log(target);
             if (checked) {
-                const res = await playlistServices.addVideoToPlaylist(videoId, target._id);
-                if (res && res.message === "VIDEO_ADDED_TO_PLAYLIST") {
+                const res = await playlistServices.addVideoToPlaylist(
+                    videoId,
+                    target._id
+                );
+                if (res && res.message === 'VIDEO_ADDED_TO_PLAYLIST') {
                     setInputs((prev) => ({
                         ...prev,
                         [name]: checked,
                     }));
                 }
             } else {
-                const res = await playlistServices.removeVideoFromPlaylist(target._id, videoId);
-                if (res && res.message === "VIDEO_REMOVED_FROM_PLAYLIST_SUCCESSFULLY") {
+                const res = await playlistServices.removeVideoFromPlaylist(
+                    target._id,
+                    videoId
+                );
+                if (
+                    res &&
+                    res.message === 'VIDEO_REMOVED_FROM_PLAYLIST_SUCCESSFULLY'
+                ) {
                     setInputs((prev) => ({
                         ...prev,
                         [name]: checked,
@@ -77,7 +87,10 @@ export default function PlaylistPopup({ close }) {
         console.log(inputs.newPlaylist);
         const res = await playlistServices.createPlaylist(inputs.newPlaylist);
         if (res) {
-            const newRes = await playlistServices.addVideoToPlaylist(videoId, res._id);
+            const newRes = await playlistServices.addVideoToPlaylist(
+                videoId,
+                res._id
+            );
             if (newRes) {
                 close();
             }
@@ -102,7 +115,10 @@ export default function PlaylistPopup({ close }) {
                         />
                     </div>
                     <div>
-                        <label htmlFor={playlist.name} className="text-md line-clamp-2 leading-6">
+                        <label
+                            htmlFor={playlist.name}
+                            className="text-md line-clamp-2 leading-6"
+                        >
                             {playlist.name}
                         </label>
                     </div>
@@ -121,11 +137,16 @@ export default function PlaylistPopup({ close }) {
             </div>
 
             <div className="mt-4">
-                {loading && <div className="w-full text-center">Please wait...</div>}
+                {loading && (
+                    <div className="w-full text-center">Please wait...</div>
+                )}
                 <ul>{existingPlaylists}</ul>
             </div>
 
-            <form onSubmit={handleSubmit} className="flex flex-col items-start justify-center mt-2 w-full">
+            <form
+                onSubmit={handleSubmit}
+                className="flex flex-col items-start justify-center mt-2 w-full"
+            >
                 <div className="w-full mt-2">
                     <div>
                         <label htmlFor="newPlaylist">Name</label>
@@ -143,7 +164,11 @@ export default function PlaylistPopup({ close }) {
                 </div>
 
                 <div className="w-full text-center font-semibold mt-4 text-black">
-                    <button type="submit" disabled={loading} className="w-[68%] px-1 bg-[#8871ee] text-[1rem] h-9 rounded-lg">
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-[68%] px-1 bg-[#8871ee] text-[1rem] h-9 rounded-lg"
+                    >
                         {creatingPlaylistLoading ? (
                             <div className="flex items-center justify-center w-full">
                                 <svg
@@ -164,7 +189,7 @@ export default function PlaylistPopup({ close }) {
                                 </svg>
                             </div>
                         ) : (
-                            "Create new playlist"
+                            'Create new playlist'
                         )}
                     </button>
                 </div>

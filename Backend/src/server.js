@@ -1,11 +1,9 @@
-require("dotenv").config();                                                         // will we available to all the invoked methods
-const app = require("./app");
-const Connect_DB = require("./db/connection");
+import './config/envLoader.js'; // will we available to all
+import { app } from './app.js';
+import { connectDB } from './db/connectDB.js';
 
-const PORT= process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 
+await connectDB();
 
-Connect_DB()        // async function so will return a promise
-.then( ()=>{
-    app.listen( PORT, () => { console.log(`server is listening on port ${PORT} ...`) })
-})
+app.listen(PORT, () => console.log(`server is listening on port ${PORT}...`));

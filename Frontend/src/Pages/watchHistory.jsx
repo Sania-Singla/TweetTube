@@ -1,9 +1,9 @@
-import channelServices from "../DBservices/channelServices";
-import { useEffect, useState, useCallback, useRef } from "react";
-import { VideoList, PulseVideoList } from "../components";
-import { useAuthHook } from "../hooks";
-import { motion } from "framer-motion";
-import { icons } from "../assets/icons";
+import channelServices from '../DBservices/channelServices';
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { VideoList, PulseVideoList } from '../components';
+import { useAuthHook } from '../hooks';
+import { motion } from 'framer-motion';
+import { icons } from '../assets/icons';
 
 export default function WatchHistoryPage() {
     const { loginStatus } = useAuthHook();
@@ -12,12 +12,12 @@ export default function WatchHistoryPage() {
     const [videosFound, setVideosFound] = useState(true);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [searchClick, setSearchClick] = useState(false);
     const [rerender, setRerender] = useState(false);
 
     function handleSearchClick(e) {
-        if (e.key === "Enter") {
+        if (e.key === 'Enter') {
             setPage(1);
             setHistory([]);
             setSearchClick((prev) => !prev);
@@ -26,8 +26,12 @@ export default function WatchHistoryPage() {
     }
 
     async function clearWatchHistory(e) {
-        const res = await channelServices.clearWatchHistory(setHistoryInfo, setHistory);
-        if (res.message === "HISTORY_CLEARED_SUCCESSFULLY") return setRerender((prev) => !prev);
+        const res = await channelServices.clearWatchHistory(
+            setHistoryInfo,
+            setHistory
+        );
+        if (res.message === 'HISTORY_CLEARED_SUCCESSFULLY')
+            return setRerender((prev) => !prev);
     }
 
     useEffect(() => {
@@ -35,11 +39,20 @@ export default function WatchHistoryPage() {
             if (page === 1 || history.length !== historyInfo.totalVideos) {
                 //not condn because when we enter gibberish the any term then previous historyInfo.totalVideos and length both were 0 so equal and onclick length =0 vo toh pehle bhi tha so still equal thats why explicitly consider that 0 case
                 setLoading(true);
-                channelServices.getWatchHistory(setLoading, setHistoryInfo, setHistory, page, search, 10).then((data) => {
-                    if (data.info.overallHistoryCount > 0) {
-                        setVideosFound(true);
-                    } else setVideosFound(false);
-                });
+                channelServices
+                    .getWatchHistory(
+                        setLoading,
+                        setHistoryInfo,
+                        setHistory,
+                        page,
+                        search,
+                        10
+                    )
+                    .then((data) => {
+                        if (data.info.overallHistoryCount > 0) {
+                            setVideosFound(true);
+                        } else setVideosFound(false);
+                    });
             } else setLoading(false);
         }
     }, [loginStatus, page, searchClick, rerender]);
@@ -51,7 +64,8 @@ export default function WatchHistoryPage() {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 const lastVideo = entries[0];
-                if (lastVideo.isIntersecting && historyInfo?.hasNextPage) setPage((prev) => prev + 1);
+                if (lastVideo.isIntersecting && historyInfo?.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -60,9 +74,22 @@ export default function WatchHistoryPage() {
 
     const videoElements = history?.map((video, index) => {
         if (history.length === index + 1) {
-            return <VideoList key={video._id} video={video} isWatchHistory={true} reference={callbackRef} />;
+            return (
+                <VideoList
+                    key={video._id}
+                    video={video}
+                    isWatchHistory={true}
+                    reference={callbackRef}
+                />
+            );
         } else {
-            return <VideoList key={video._id} video={video} isWatchHistory={true} />;
+            return (
+                <VideoList
+                    key={video._id}
+                    video={video}
+                    isWatchHistory={true}
+                />
+            );
         }
     });
 
@@ -81,7 +108,7 @@ export default function WatchHistoryPage() {
                 <div>
                     <div className="w-full h-full">
                         <div className="bg-[#0c0c0c] mb-8 flex items-center justify-between">
-                            {" "}
+                            {' '}
                             {/*sticky top-[calc(80px-0.01rem)] z-[120]*/}
                             <div className="px-2 w-[60%] h-10 flex items-center">
                                 <div className="bg-transparent text-[#b5b4b4] h-full flex items-center pt-4 justify-center text-xl mr-3">
@@ -94,7 +121,7 @@ export default function WatchHistoryPage() {
                                     onChange={(e) => setSearch(e.target.value)}
                                     onKeyPress={handleSearchClick}
                                     initial={{ width: 0 }}
-                                    animate={{ width: "100%" }}
+                                    animate={{ width: '100%' }}
                                     transition={{ duration: 0.5 }}
                                     className="h-full focus:outline-none placeholder:text-[#b5b4b4] bg-transparent text-[#e6e6e6] text-lg pt-3 indent-1 border-b-[0.01rem] border-[#b5b4b4]"
                                 />
@@ -104,15 +131,21 @@ export default function WatchHistoryPage() {
                                 className="bg-[#8871ee] group hover:bg-slate-900 border-transparent border-dotted hover:border-[#b5b4b4] border-[0.01rem] rounded-md relative top-[7px] right-[7px]"
                             >
                                 <div className="flex items-center justify-center py-2 px-[10px]">
-                                    <div className="size-[25px] fill-none group-hover:stroke-[#a40000] stroke-black">{icons.delete}</div>
-                                    <div className="group-hover:text-[#a40000] text-black text-[1.1rem] font-medium ml-2">Clear History</div>
+                                    <div className="size-[25px] fill-none group-hover:stroke-[#a40000] stroke-black">
+                                        {icons.delete}
+                                    </div>
+                                    <div className="group-hover:text-[#a40000] text-black text-[1.1rem] font-medium ml-2">
+                                        Clear History
+                                    </div>
                                 </div>
                             </button>
                         </div>
                         {videoElements}
                     </div>
 
-                    {loading && page === 1 && <div className="w-full h-full">{pulseEffect}</div>}
+                    {loading && page === 1 && (
+                        <div className="w-full h-full">{pulseEffect}</div>
+                    )}
 
                     {loading && page !== 1 && (
                         <div className="flex items-center justify-center my-2">
@@ -132,7 +165,9 @@ export default function WatchHistoryPage() {
                                     fill="currentFill"
                                 />
                             </svg>
-                            <span className="text-xl ml-3">Please wait . . .</span>
+                            <span className="text-xl ml-3">
+                                Please wait . . .
+                            </span>
                         </div>
                     )}
                 </div>

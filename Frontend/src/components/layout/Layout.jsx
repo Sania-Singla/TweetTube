@@ -1,6 +1,6 @@
-import React from "react";
-import { Header, SideBar } from "../index";
-import { Outlet } from "react-router-dom";
+import React from 'react';
+import { Header, SideBar } from '../index';
+import { Outlet } from 'react-router-dom';
 
 function Layout() {
     return (

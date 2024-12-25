@@ -1,15 +1,15 @@
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { formatDistanceToNow, parseISO } from "date-fns";
-import { useAuthHook } from "../../hooks";
-import { LoginPopup } from "..";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp as faSolidThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsUp as faRegularThumbsUp } from "@fortawesome/free-regular-svg-icons";
-import { faThumbsDown as faSolidThumbsDown } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsDown as faRegularThumbsDown } from "@fortawesome/free-regular-svg-icons";
-import { icons } from "../../assets/icons";
-import commentServices from "../../DBservices/commentServices";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { useAuthHook } from '../../hooks';
+import { LoginPopup } from '..';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp as faSolidThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp as faRegularThumbsUp } from '@fortawesome/free-regular-svg-icons';
+import { faThumbsDown as faSolidThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown as faRegularThumbsDown } from '@fortawesome/free-regular-svg-icons';
+import { icons } from '../../assets/icons';
+import commentServices from '../../DBservices/commentServices';
 
 export default function Comments({ expandComments }) {
     const [comments, setComments] = useState([]);
@@ -21,21 +21,30 @@ export default function Comments({ expandComments }) {
     const navigate = useNavigate();
     const { userData } = useAuthHook();
     const [loginPopup, setLoginPopup] = useState(false);
-    const [loginPopupText, setLoginPopupText] = useState("");
+    const [loginPopupText, setLoginPopupText] = useState('');
     const loginRef = useRef();
-    const [newComment, setNewComment] = useState("");
-    const [editComment, setEditComment] = useState("");
+    const [newComment, setNewComment] = useState('');
+    const [editComment, setEditComment] = useState('');
     const [currentEditId, setCurrentEditId] = useState(false);
-    const [expandCommentId, setExpandCommentId] = useState("");
+    const [expandCommentId, setExpandCommentId] = useState('');
 
     useEffect(() => {
         if (page == 1 || comments.length !== commentsInfo.totalComments) {
             setLoading(true);
-            commentServices.getVideoComments(setCommentsInfo, comments, setComments, page, 10, videoId).then((res) => {
-                if (res && res.length > 0) {
-                    setCommentsFound(true);
-                } else setCommentsFound(false);
-            });
+            commentServices
+                .getVideoComments(
+                    setCommentsInfo,
+                    comments,
+                    setComments,
+                    page,
+                    10,
+                    videoId
+                )
+                .then((res) => {
+                    if (res && res.length > 0) {
+                        setCommentsFound(true);
+                    } else setCommentsFound(false);
+                });
             setLoading(false);
         }
     }, [page, userData, videoId]);
@@ -47,7 +56,8 @@ export default function Comments({ expandComments }) {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 const lastComment = entries[0];
-                if (lastComment.isIntersecting && commentsInfo?.hasNextPage) setPage((prev) => prev + 1);
+                if (lastComment.isIntersecting && commentsInfo?.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -76,14 +86,25 @@ export default function Comments({ expandComments }) {
     }
 
     async function handleEditReset() {
-        setEditComment("");
+        setEditComment('');
         setCurrentEditId(null);
     }
 
     const commentElements = comments?.map((comment, index) => {
-        const { _id, content, commentBy, createdAt, likes, dislikes, hasLiked, hasDisliked } = comment;
+        const {
+            _id,
+            content,
+            commentBy,
+            createdAt,
+            likes,
+            dislikes,
+            hasLiked,
+            hasDisliked,
+        } = comment;
         const { avatar, username, fullname } = commentBy;
-        const formattedCreatedAt = formatDistanceToNow(parseISO(createdAt), { addSuffix: true });
+        const formattedCreatedAt = formatDistanceToNow(parseISO(createdAt), {
+            addSuffix: true,
+        });
 
         if (comments.length === index + 1)
             return (
@@ -91,18 +112,37 @@ export default function Comments({ expandComments }) {
                     <hr className="mt-4 mb-3" />
 
                     <div className="flex items-start justify-start">
-                        <div className="pt-[10px] cursor-pointer" onClick={() => navigate(`/channel/${username}`)}>
+                        <div
+                            className="pt-[10px] cursor-pointer"
+                            onClick={() => navigate(`/channel/${username}`)}
+                        >
                             <div className="size-10 rounded-full overflow-hidden">
-                                <img src={avatar} alt={fullname} className="w-full h-full object-cover" />
+                                <img
+                                    src={avatar}
+                                    alt={fullname}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                         </div>
 
-                        <div className="ml-3 w-full relative" onClick={() => setExpandCommentId((prev) => (prev ? "" : _id))}>
+                        <div
+                            className="ml-3 w-full relative"
+                            onClick={() =>
+                                setExpandCommentId((prev) => (prev ? '' : _id))
+                            }
+                        >
                             <div className="text-md text-[#e9e9e9] text-[1.1rem]">
-                                {fullname} <span className="text-[0.5rem] h-full align-middle">&bull;</span>{" "}
-                                <span className="text-[0.8rem] text-[#c6c6c6]">{formattedCreatedAt}</span>
+                                {fullname}{' '}
+                                <span className="text-[0.5rem] h-full align-middle">
+                                    &bull;
+                                </span>{' '}
+                                <span className="text-[0.8rem] text-[#c6c6c6]">
+                                    {formattedCreatedAt}
+                                </span>
                             </div>
-                            <div className="text-[#dedede] text-[0.8rem]">{"@" + username}</div>
+                            <div className="text-[#dedede] text-[0.8rem]">
+                                {'@' + username}
+                            </div>
                             <div className="w-full">
                                 {currentEditId === _id ? (
                                     <form
@@ -119,7 +159,9 @@ export default function Comments({ expandComments }) {
                                             required
                                             value={editComment}
                                             autoFocus
-                                            onChange={(e) => setEditComment(e.target.value)}
+                                            onChange={(e) =>
+                                                setEditComment(e.target.value)
+                                            }
                                             className="caret-[#8871ee] w-full mt-2 text-[0.9rem] bg-transparent text-white border-b-[0.01rem] border-b-[#8871ee] outline-none"
                                         />
                                         <div className="flex items-center justify-center gap-2 absolute bottom-0 right-0">
@@ -139,7 +181,11 @@ export default function Comments({ expandComments }) {
                                         </div>
                                     </form>
                                 ) : (
-                                    <div className={`text-[0.9rem] text-white mt-2 ${expandCommentId === _id ? "" : "line-clamp-3"}`}>{content}</div>
+                                    <div
+                                        className={`text-[0.9rem] text-white mt-2 ${expandCommentId === _id ? '' : 'line-clamp-3'}`}
+                                    >
+                                        {content}
+                                    </div>
                                 )}
                             </div>
                             <div className="mt-3">
@@ -150,43 +196,71 @@ export default function Comments({ expandComments }) {
                                             className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] py-[3px]"
                                         >
                                             <button className="ml-2">
-                                                <FontAwesomeIcon size="lg" icon={hasLiked ? faSolidThumbsUp : faRegularThumbsUp} color={"white"} />
+                                                <FontAwesomeIcon
+                                                    size="lg"
+                                                    icon={
+                                                        hasLiked
+                                                            ? faSolidThumbsUp
+                                                            : faRegularThumbsUp
+                                                    }
+                                                    color={'white'}
+                                                />
                                             </button>
                                             <p className="mx-[8px]">{likes}</p>
                                         </div>
 
                                         <div
-                                            onClick={() => handleDislikeClick(_id)}
+                                            onClick={() =>
+                                                handleDislikeClick(_id)
+                                            }
                                             className="cursor-pointer flex items-center justify-center py-[3px] hover:bg-[#3f3f3f]"
                                         >
                                             <button className="transform -scale-x-100 ml-2">
                                                 <FontAwesomeIcon
                                                     size="lg"
-                                                    icon={hasDisliked ? faSolidThumbsDown : faRegularThumbsDown}
-                                                    color={"white"}
+                                                    icon={
+                                                        hasDisliked
+                                                            ? faSolidThumbsDown
+                                                            : faRegularThumbsDown
+                                                    }
+                                                    color={'white'}
                                                 />
                                             </button>
-                                            <p className="mx-[8px]">{dislikes}</p>
+                                            <p className="mx-[8px]">
+                                                {dislikes}
+                                            </p>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-center rounded-lg bg-[#212121] w-fit overflow-hidden border-[0.01rem] border-[#b5b4b4]">
                                         <div
                                             onClick={() => {
-                                                setLoginPopupText("Like Comment");
+                                                setLoginPopupText(
+                                                    'Like Comment'
+                                                );
                                                 setLoginPopup(true);
                                             }}
                                             className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] py-[3px]"
                                         >
                                             <button className="ml-2">
-                                                <FontAwesomeIcon size="lg" icon={hasLiked ? faSolidThumbsUp : faRegularThumbsUp} color={"white"} />
+                                                <FontAwesomeIcon
+                                                    size="lg"
+                                                    icon={
+                                                        hasLiked
+                                                            ? faSolidThumbsUp
+                                                            : faRegularThumbsUp
+                                                    }
+                                                    color={'white'}
+                                                />
                                             </button>
                                             <p className="mx-[8px]">{likes}</p>
                                         </div>
 
                                         <div
                                             onClick={() => {
-                                                setLoginPopupText("Dislike Comment");
+                                                setLoginPopupText(
+                                                    'Dislike Comment'
+                                                );
                                                 setLoginPopup(true);
                                             }}
                                             className="cursor-pointer flex items-center justify-center py-[3px] hover:bg-[#3f3f3f]"
@@ -194,11 +268,17 @@ export default function Comments({ expandComments }) {
                                             <button className="transform -scale-x-100 ml-2">
                                                 <FontAwesomeIcon
                                                     size="lg"
-                                                    icon={hasDisliked ? faSolidThumbsDown : faRegularThumbsDown}
-                                                    color={"white"}
+                                                    icon={
+                                                        hasDisliked
+                                                            ? faSolidThumbsDown
+                                                            : faRegularThumbsDown
+                                                    }
+                                                    color={'white'}
                                                 />
                                             </button>
-                                            <p className="mx-[8px]">{dislikes}</p>
+                                            <p className="mx-[8px]">
+                                                {dislikes}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
@@ -235,18 +315,37 @@ export default function Comments({ expandComments }) {
                     <hr className="mt-4 mb-3" />
 
                     <div className="flex items-start justify-start">
-                        <div className="pt-[10px] cursor-pointer" onClick={() => navigate(`/channel/${username}`)}>
+                        <div
+                            className="pt-[10px] cursor-pointer"
+                            onClick={() => navigate(`/channel/${username}`)}
+                        >
                             <div className="size-10 rounded-full overflow-hidden">
-                                <img src={avatar} alt={fullname} className="w-full h-full object-cover" />
+                                <img
+                                    src={avatar}
+                                    alt={fullname}
+                                    className="w-full h-full object-cover"
+                                />
                             </div>
                         </div>
 
-                        <div className="ml-3 w-full relative" onClick={() => setExpandCommentId((prev) => (prev ? "" : _id))}>
+                        <div
+                            className="ml-3 w-full relative"
+                            onClick={() =>
+                                setExpandCommentId((prev) => (prev ? '' : _id))
+                            }
+                        >
                             <div className="text-md text-[#e9e9e9] text-[1.1rem]">
-                                {fullname} <span className="text-[0.5rem] h-full align-middle">&bull;</span>{" "}
-                                <span className="text-[0.8rem] text-[#c6c6c6]">{formattedCreatedAt}</span>
+                                {fullname}{' '}
+                                <span className="text-[0.5rem] h-full align-middle">
+                                    &bull;
+                                </span>{' '}
+                                <span className="text-[0.8rem] text-[#c6c6c6]">
+                                    {formattedCreatedAt}
+                                </span>
                             </div>
-                            <div className="text-[#dedede] text-[0.8rem]">{"@" + username}</div>
+                            <div className="text-[#dedede] text-[0.8rem]">
+                                {'@' + username}
+                            </div>
                             <div className="w-full">
                                 {currentEditId === _id ? (
                                     <form
@@ -263,7 +362,9 @@ export default function Comments({ expandComments }) {
                                             required
                                             value={editComment}
                                             autoFocus
-                                            onChange={(e) => setEditComment(e.target.value)}
+                                            onChange={(e) =>
+                                                setEditComment(e.target.value)
+                                            }
                                             className="caret-[#8871ee] w-full mt-2 text-[0.9rem] bg-transparent text-white border-b-[0.01rem] border-b-[#8871ee] outline-none"
                                         />
                                         <div className="flex items-center justify-center gap-2 absolute bottom-0 right-0">
@@ -283,7 +384,11 @@ export default function Comments({ expandComments }) {
                                         </div>
                                     </form>
                                 ) : (
-                                    <div className={`text-[0.9rem] text-white mt-2 ${expandCommentId === _id ? "" : "line-clamp-3"}`}>{content}</div>
+                                    <div
+                                        className={`text-[0.9rem] text-white mt-2 ${expandCommentId === _id ? '' : 'line-clamp-3'}`}
+                                    >
+                                        {content}
+                                    </div>
                                 )}
                             </div>
 
@@ -295,43 +400,71 @@ export default function Comments({ expandComments }) {
                                             className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] py-[3px]"
                                         >
                                             <button className="ml-2">
-                                                <FontAwesomeIcon size="lg" icon={hasLiked ? faSolidThumbsUp : faRegularThumbsUp} color={"white"} />
+                                                <FontAwesomeIcon
+                                                    size="lg"
+                                                    icon={
+                                                        hasLiked
+                                                            ? faSolidThumbsUp
+                                                            : faRegularThumbsUp
+                                                    }
+                                                    color={'white'}
+                                                />
                                             </button>
                                             <p className="mx-[8px]">{likes}</p>
                                         </div>
 
                                         <div
-                                            onClick={() => handleDislikeClick(_id)}
+                                            onClick={() =>
+                                                handleDislikeClick(_id)
+                                            }
                                             className="cursor-pointer flex items-center justify-center py-[3px] hover:bg-[#3f3f3f]"
                                         >
                                             <button className="transform -scale-x-100 ml-2">
                                                 <FontAwesomeIcon
                                                     size="lg"
-                                                    icon={hasDisliked ? faSolidThumbsDown : faRegularThumbsDown}
-                                                    color={"white"}
+                                                    icon={
+                                                        hasDisliked
+                                                            ? faSolidThumbsDown
+                                                            : faRegularThumbsDown
+                                                    }
+                                                    color={'white'}
                                                 />
                                             </button>
-                                            <p className="mx-[8px]">{dislikes}</p>
+                                            <p className="mx-[8px]">
+                                                {dislikes}
+                                            </p>
                                         </div>
                                     </div>
                                 ) : (
                                     <div className="flex items-center justify-center rounded-lg bg-[#212121] w-fit overflow-hidden border-[0.01rem] border-[#b5b4b4]">
                                         <div
                                             onClick={() => {
-                                                setLoginPopupText("Like Comment");
+                                                setLoginPopupText(
+                                                    'Like Comment'
+                                                );
                                                 setLoginPopup(true);
                                             }}
                                             className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] py-[3px]"
                                         >
                                             <button className="ml-2">
-                                                <FontAwesomeIcon size="lg" icon={hasLiked ? faSolidThumbsUp : faRegularThumbsUp} color={"white"} />
+                                                <FontAwesomeIcon
+                                                    size="lg"
+                                                    icon={
+                                                        hasLiked
+                                                            ? faSolidThumbsUp
+                                                            : faRegularThumbsUp
+                                                    }
+                                                    color={'white'}
+                                                />
                                             </button>
                                             <p className="mx-[8px]">{likes}</p>
                                         </div>
 
                                         <div
                                             onClick={() => {
-                                                setLoginPopupText("Dislike Comment");
+                                                setLoginPopupText(
+                                                    'Dislike Comment'
+                                                );
                                                 setLoginPopup(true);
                                             }}
                                             className="cursor-pointer flex items-center justify-center py-[3px] hover:bg-[#3f3f3f]"
@@ -339,11 +472,17 @@ export default function Comments({ expandComments }) {
                                             <button className="transform -scale-x-100 ml-2">
                                                 <FontAwesomeIcon
                                                     size="lg"
-                                                    icon={hasDisliked ? faSolidThumbsDown : faRegularThumbsDown}
-                                                    color={"white"}
+                                                    icon={
+                                                        hasDisliked
+                                                            ? faSolidThumbsDown
+                                                            : faRegularThumbsDown
+                                                    }
+                                                    color={'white'}
                                                 />
                                             </button>
-                                            <p className="mx-[8px]">{dislikes}</p>
+                                            <p className="mx-[8px]">
+                                                {dislikes}
+                                            </p>
                                         </div>
                                     </div>
                                 )}
@@ -377,7 +516,10 @@ export default function Comments({ expandComments }) {
     });
 
     async function toggleLike(commentId, toggleStatus) {
-        const res = await commentServices.toggelCommentLike(commentId, toggleStatus);
+        const res = await commentServices.toggelCommentLike(
+            commentId,
+            toggleStatus
+        );
         if (res) {
             if (toggleStatus) {
                 setComments(
@@ -462,13 +604,17 @@ export default function Comments({ expandComments }) {
     }
 
     function handleReset() {
-        setNewComment("");
+        setNewComment('');
     }
 
     async function handleSubmit() {
-        const res = await commentServices.addComment(videoId, newComment, setComments);
+        const res = await commentServices.addComment(
+            videoId,
+            newComment,
+            setComments
+        );
         if (res) {
-            setNewComment("");
+            setNewComment('');
             setCommentsFound(true);
         }
     }
@@ -489,14 +635,18 @@ export default function Comments({ expandComments }) {
                         className="w-full bg-transparent text-white h-11 text-[1.1rem] placeholder:text-[#dadada] outline-none pr-2"
                     />
                     <div className="flex items-center gap-2">
-                        <button type="reset" onClick={handleReset} className="bg-transparent hover:bg-[#282828] rounded-full px-[10px] pb-[2px]">
+                        <button
+                            type="reset"
+                            onClick={handleReset}
+                            className="bg-transparent hover:bg-[#282828] rounded-full px-[10px] pb-[2px]"
+                        >
                             cancel
                         </button>
                         <button
                             onClick={() => {
                                 if (userData) handleSubmit();
                                 else {
-                                    setLoginPopupText("add comment");
+                                    setLoginPopupText('add comment');
                                     setLoginPopup(true);
                                 }
                             }}
@@ -514,10 +664,12 @@ export default function Comments({ expandComments }) {
             <div>
                 <div>
                     <div>
-                        <div className="text-lg">{comments?.length} Comments</div>
+                        <div className="text-lg">
+                            {comments?.length} Comments
+                        </div>
                         <div
                             className={`${
-                                expandComments ? "flex" : "hidden"
+                                expandComments ? 'flex' : 'hidden'
                             } lg:flex mt-4 mb-5 items-center justify-center border-[0.01rem] border-[#e7e7e7] rounded-lg px-3`}
                         >
                             <input
@@ -542,7 +694,7 @@ export default function Comments({ expandComments }) {
                                     onClick={() => {
                                         if (userData) handleSubmit();
                                         else {
-                                            setLoginPopupText("add comment");
+                                            setLoginPopupText('add comment');
                                             setLoginPopup(true);
                                         }
                                     }}
@@ -555,10 +707,14 @@ export default function Comments({ expandComments }) {
                         </div>
                     </div>
 
-                    <div className={`${expandComments ? "block" : "hidden"} lg:block`}>{commentElements}</div>
+                    <div
+                        className={`${expandComments ? 'block' : 'hidden'} lg:block`}
+                    >
+                        {commentElements}
+                    </div>
                 </div>
 
-                {loading && page === 1 && <div>{"pulses"}</div>}
+                {loading && page === 1 && <div>{'pulses'}</div>}
 
                 {loading && page > 1 && (
                     <div className="flex items-center justify-center my-2 w-full">
@@ -589,7 +745,10 @@ export default function Comments({ expandComments }) {
                         onClick={closeLoginPopup}
                         className="fixed inset-0 backdrop-blur-sm z-[150] flex flex-col items-center justify-center"
                     >
-                        <LoginPopup close={() => setLoginPopup(false)} popupText={loginPopupText} />
+                        <LoginPopup
+                            close={() => setLoginPopup(false)}
+                            popupText={loginPopupText}
+                        />
                     </div>
                 )}
             </div>

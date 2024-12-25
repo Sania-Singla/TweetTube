@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback, useRef } from "react";
-import channelServices from "../../DBservices/channelServices";
-import { ChannelVideoCard, PulseVideoCard } from "../index";
-import { useChannelHook } from "../../hooks";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import channelServices from '../../DBservices/channelServices';
+import { ChannelVideoCard, PulseVideoCard } from '../index';
+import { useChannelHook } from '../../hooks';
 
 function ChannelVideos() {
     const [loading, setLoading] = useState(true);
@@ -15,11 +15,21 @@ function ChannelVideos() {
     useEffect(() => {
         if (page === 1 || videos.length !== videoInfo.totalVideos) {
             setLoading(true);
-            channelServices.getUserVideos(setVideoInfo, videos, setVideos, setLoading, channelData._id, page, 10).then((videos) => {
-                if (videos && videos.length > 0) {
-                    setVideosFound(true);
-                } else setVideosFound(false);
-            });
+            channelServices
+                .getUserVideos(
+                    setVideoInfo,
+                    videos,
+                    setVideos,
+                    setLoading,
+                    channelData._id,
+                    page,
+                    10
+                )
+                .then((videos) => {
+                    if (videos && videos.length > 0) {
+                        setVideosFound(true);
+                    } else setVideosFound(false);
+                });
         }
     }, [page, channelData]);
 
@@ -30,7 +40,8 @@ function ChannelVideos() {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 const lastVideo = entries[0];
-                if (lastVideo.isIntersecting && videoInfo?.hasNextPage) setPage((prev) => prev + 1);
+                if (lastVideo.isIntersecting && videoInfo?.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -39,7 +50,13 @@ function ChannelVideos() {
 
     const videoElements = videos?.map((video, index) => {
         if (videos.length === index + 1) {
-            return <ChannelVideoCard key={video._id} video={video} reference={callbackRef} />;
+            return (
+                <ChannelVideoCard
+                    key={video._id}
+                    video={video}
+                    reference={callbackRef}
+                />
+            );
         } else {
             return <ChannelVideoCard key={video._id} video={video} />;
         }
@@ -63,7 +80,9 @@ function ChannelVideos() {
                     //because 1 or 2 videos were as grid auto-fit do is that evenly spearding (if only video was covering whole screen so we needed to restrict the col width)
                     videos.length > 1 ? ( //agr 0 hai toh toh vo idhr ayega hi nhi (returned no videos found !)
                         videos.length > 2 ? (
-                            <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-4">{videoElements}</div> //so means equal to 2
+                            <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-4">
+                                {videoElements}
+                            </div> //so means equal to 2
                         ) : (
                             <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-4 xl:grid-cols-[repeat(3,minmax(320px,1fr))]">
                                 {videoElements}
@@ -77,7 +96,11 @@ function ChannelVideos() {
                     )
                 }
 
-                {loading && page === 1 && <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-x-4">{pulseEffect}</div>}
+                {loading && page === 1 && (
+                    <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-x-4">
+                        {pulseEffect}
+                    </div>
+                )}
 
                 {loading && page !== 1 && (
                     <div className="flex items-center justify-center my-2">

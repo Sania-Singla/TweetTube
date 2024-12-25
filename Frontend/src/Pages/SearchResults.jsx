@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
-import videoServices from "../DBservices/videoServices";
-import { VideoList, PulseVideoList } from "../components";
+import { useEffect, useState, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import videoServices from '../DBservices/videoServices';
+import { VideoList, PulseVideoList } from '../components';
 
 export default function SearchResultsPage() {
     const [searchQuery] = useSearchParams();
-    const query = searchQuery.get("search_query");
+    const query = searchQuery.get('search_query');
     const [loading, setLoading] = useState(false);
     const [searchResultsInfo, setSearchResultsInfo] = useState({});
     const [searchVideos, setSearchVideos] = useState([]);
@@ -43,7 +43,8 @@ export default function SearchResultsPage() {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 const lastvideo = entries[0];
-                if (lastvideo.isIntersecting && searchResultsInfo.hasNextPage) setPage((prev) => prev + 1);
+                if (lastvideo.isIntersecting && searchResultsInfo.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -52,9 +53,22 @@ export default function SearchResultsPage() {
 
     const videoElements = searchVideos?.map((video, index) => {
         if (searchVideos.length === index + 1) {
-            return <VideoList key={video._id} video={video} isSearchResultVideoList={true} reference={callbackRef} />;
+            return (
+                <VideoList
+                    key={video._id}
+                    video={video}
+                    isSearchResultVideoList={true}
+                    reference={callbackRef}
+                />
+            );
         } else {
-            return <VideoList key={video._id} video={video} isSearchResultVideoList={true} />;
+            return (
+                <VideoList
+                    key={video._id}
+                    video={video}
+                    isSearchResultVideoList={true}
+                />
+            );
         }
     });
 

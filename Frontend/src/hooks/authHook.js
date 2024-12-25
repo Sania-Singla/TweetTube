@@ -1,4 +1,4 @@
-import { useSelector } from "react-redux";
+import { useSelector } from 'react-redux';
 
 export default function useAuthHook() {
     const loginStatus = useSelector((state) => state.user.loginStatus);

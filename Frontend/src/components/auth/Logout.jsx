@@ -1,8 +1,8 @@
-import { useState } from "react";
-import userServices from "../../DBservices/userServices";
-import { useDispatch } from "react-redux";
-import { logout } from "../../Store/Slices/userSlice";
-import { useNavigate } from "react-router-dom";
+import { useState } from 'react';
+import userServices from '../../DBservices/userServices';
+import { useDispatch } from 'react-redux';
+import { logout } from '../../Store/Slices/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 function Logout() {
     const [loading, setLoading] = useState(false);
@@ -11,13 +11,18 @@ function Logout() {
 
     async function handleClick() {
         await userServices.logoutUser(setLoading);
-        navigate("/");
+        navigate('/');
         dispatch(logout());
     }
 
     return (
         <div className="bg-[#8871ee] text-[#0c0c0c] h-full w-[70px] font-semibold flex items-center justify-center text-lg py-1 border-[0.01rem] border-[#b5b4b4] active:border-white">
-            <button type="button" onClick={handleClick} disabled={loading} className="disabled:cursor-not-allowed w-full h-full">
+            <button
+                type="button"
+                onClick={handleClick}
+                disabled={loading}
+                className="disabled:cursor-not-allowed w-full h-full"
+            >
                 {loading ? (
                     <div className="flex items-center justify-center w-full">
                         <svg
@@ -38,7 +43,7 @@ function Logout() {
                         </svg>
                     </div>
                 ) : (
-                    "Logout"
+                    'Logout'
                 )}
             </button>
         </div>

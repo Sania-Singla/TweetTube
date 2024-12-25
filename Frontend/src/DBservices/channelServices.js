@@ -1,10 +1,20 @@
 export class ChannelServices {
-    async getWatchHistory(setLoading, setHistoryInfo, setHistory, page = 1, search = "", limit = 5) {
+    async getWatchHistory(
+        setLoading,
+        setHistoryInfo,
+        setHistory,
+        page = 1,
+        search = '',
+        limit = 5
+    ) {
         try {
-            const res = await fetch(`/api/v1/users/watch-History/?page=${page}&limit=${limit}&term=${search}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/users/watch-History/?page=${page}&limit=${limit}&term=${search}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
 
@@ -17,7 +27,7 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getWatchHistory service", err.message);
+            return console.log('error in getWatchHistory service', err.message);
         } finally {
             setLoading(false);
         }
@@ -26,8 +36,8 @@ export class ChannelServices {
     async clearWatchHistory(setHistoryInfo, setHistory) {
         try {
             const res = await fetch(`/api/v1/users/clear-History/`, {
-                method: "DELETE",
-                credentials: "include",
+                method: 'DELETE',
+                credentials: 'include',
             });
             const data = await res.json();
             console.log(data);
@@ -41,7 +51,10 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in clearWatchHistory service", err.message);
+            return console.log(
+                'error in clearWatchHistory service',
+                err.message
+            );
         }
     }
 
@@ -50,11 +63,11 @@ export class ChannelServices {
         try {
             setLoading(true);
             const res = await fetch(`/api/v1/users/channel/${username}`, {
-                method: "GET",
-                credentials: "include",
+                method: 'GET',
+                credentials: 'include',
             });
             const data = await res.json();
-            console.log("channeldata=", data);
+            console.log('channeldata=', data);
 
             if (res.ok) {
                 return data;
@@ -64,18 +77,32 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getChannelProfile service", err.message);
+            return console.log(
+                'error in getChannelProfile service',
+                err.message
+            );
         } finally {
             setLoading(false);
         }
     }
 
-    async getUserVideos(setVideoInfo, videos, setVideos, setLoading, id, page = 1, limit = 5) {
+    async getUserVideos(
+        setVideoInfo,
+        videos,
+        setVideos,
+        setLoading,
+        id,
+        page = 1,
+        limit = 5
+    ) {
         try {
-            const res = await fetch(`/api/v1/videos/?userId=${id}&page=${page}&limit=${limit}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/videos/?userId=${id}&page=${page}&limit=${limit}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             if (res.ok) {
                 const data = await res.json();
                 setVideoInfo(data.info);
@@ -85,7 +112,7 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getAllVideos service:", err.message);
+            return console.log('error in getAllVideos service:', err.message);
         } finally {
             setLoading(false);
         }
@@ -93,10 +120,13 @@ export class ChannelServices {
 
     async toggleSubscribe(channelId) {
         try {
-            const res = await fetch(`/api/v1/subscriptions/toggle/${channelId}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/subscriptions/toggle/${channelId}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
 
@@ -106,15 +136,15 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getAllVideos service:", err.message);
+            return console.log('error in getAllVideos service:', err.message);
         }
     }
 
     async getChannelAbout(setLoading, userId) {
         try {
             const res = await fetch(`/api/v1/about/${userId}`, {
-                method: "GET",
-                credentials: "include",
+                method: 'GET',
+                credentials: 'include',
             });
             const data = await res.json();
             console.log(data);
@@ -127,18 +157,32 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getChannelAbout service:", err.message);
+            return console.log(
+                'error in getChannelAbout service:',
+                err.message
+            );
         } finally {
             setLoading(false);
         }
     }
 
-    async getLikedVideos(setLikedVideos, setLoading, setLikedInfo, likedVideos, page = 1, search = "", limit = 5) {
+    async getLikedVideos(
+        setLikedVideos,
+        setLoading,
+        setLikedInfo,
+        likedVideos,
+        page = 1,
+        search = '',
+        limit = 5
+    ) {
         try {
-            const res = await fetch(`/api/v1/likes/likedvideos/?page=${page}&limit=${limit}&term=${search}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/likes/likedvideos/?page=${page}&limit=${limit}&term=${search}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
             if (res.ok) {
@@ -150,7 +194,7 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getLikedVideos service:", err.message);
+            return console.log('error in getLikedVideos service:', err.message);
         } finally {
             setLoading(false);
         }
@@ -160,10 +204,13 @@ export class ChannelServices {
         //can add pagination ⭐
         try {
             setLoading(true);
-            const res = await fetch(`/api/v1/subscriptions/subscribedTo/${userId}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/subscriptions/subscribedTo/${userId}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
 
@@ -173,7 +220,10 @@ export class ChannelServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("error in getSubscribedChannels service:", err.message);
+            return console.log(
+                'error in getSubscribedChannels service:',
+                err.message
+            );
         } finally {
             setLoading(false);
         }

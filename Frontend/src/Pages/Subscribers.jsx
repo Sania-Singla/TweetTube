@@ -1,4 +1,4 @@
-import { useAuthHook } from "../hooks";
+import { useAuthHook } from '../hooks';
 
 export default function SubscribersPage() {
     const { userData, loginStatus } = useAuthHook();

@@ -1,8 +1,8 @@
-import { useDispatch } from "react-redux";
-import { Layout } from "./components/index";
-import { useEffect, useState } from "react";
-import { login, logout } from "./Store/Slices/userSlice";
-import userServices from "./DBservices/userServices";
+import { useDispatch } from 'react-redux';
+import { Layout } from './components/index';
+import { useEffect, useState } from 'react';
+import { login, logout } from './Store/Slices/userSlice';
+import userServices from './DBservices/userServices';
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -41,7 +41,9 @@ function App() {
                         </svg>
                     </div>
                     <div className="text-3xl mt-2">Please wait ...</div>
-                    <div className="text-lg mt-2 text-[#c4c2c2]">Please refresh the page if it takes too long</div>
+                    <div className="text-lg mt-2 text-[#c4c2c2]">
+                        Please refresh the page if it takes too long
+                    </div>
                 </div>
             </div>
         );

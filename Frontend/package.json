@@ -4,7 +4,8 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
+        "dev": "npm run format && vite",
+        "format": "prettier --write .",
         "build": "vite build",
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview"
@@ -18,6 +19,7 @@
         "framer-motion": "^11.3.8",
         "lucide": "^0.414.0",
         "lucide-react": "^0.414.0",
+        "prettier": "^3.4.2",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
         "react-infinite-scroll-component": "^6.1.0",

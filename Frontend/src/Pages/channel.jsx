@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-import { NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
-import channelServices from "../DBservices/channelServices";
-import { PulseChannel, LoginPopup } from "../components";
-import { useAuthHook } from "../hooks";
-import { storeChannelData } from "../Store/Slices/channelSlice";
-import { useDispatch } from "react-redux";
+import { useEffect, useRef, useState } from 'react';
+import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom';
+import channelServices from '../DBservices/channelServices';
+import { PulseChannel, LoginPopup } from '../components';
+import { useAuthHook } from '../hooks';
+import { storeChannelData } from '../Store/Slices/channelSlice';
+import { useDispatch } from 'react-redux';
 
 export default function ChannelPage() {
     const { username } = useParams();
@@ -24,7 +24,8 @@ export default function ChannelPage() {
 
     useEffect(() => {
         channelServices.getChannelProfile(setLoading, username).then((res) => {
-            if (res.message === "CHANNEL_NOT_FOUND") navigate("/not-found"); // navigate to 404not found page ⭐⭐⭐
+            if (res.message === 'CHANNEL_NOT_FOUND')
+                navigate('/not-found'); // navigate to 404not found page ⭐⭐⭐
             else {
                 setData(res);
                 setIsSubscribed(res.isSubscribed);
@@ -36,35 +37,40 @@ export default function ChannelPage() {
 
     const options = [
         {
-            name: "Videos",
+            name: 'Videos',
             path: ``,
         },
         {
-            name: "Playlists",
+            name: 'Playlists',
             path: `playlists`,
         },
         {
-            name: "Subscribed",
+            name: 'Subscribed',
             path: `subscribed`,
         },
         {
-            name: "Tweets",
+            name: 'Tweets',
             path: `tweets`,
         },
         {
-            name: "About",
+            name: 'About',
             path: `about`,
         },
     ];
 
     const optionsElements = options.map((option) => (
-        <div key={option.name} className="flex items-center justify-center w-1/5 mx-[3px]">
+        <div
+            key={option.name}
+            className="flex items-center justify-center w-1/5 mx-[3px]"
+        >
             <NavLink
                 to={option.path}
                 end
                 className={({ isActive }) =>
                     `${
-                        isActive ? "bg-white font-semibold border-[#8871ee] rounded-t-md text-[#0c0c0c]" : "bg-[#0c0c0c] border-white text-[#8871ee]"
+                        isActive
+                            ? 'bg-white font-semibold border-[#8871ee] rounded-t-md text-[#0c0c0c]'
+                            : 'bg-[#0c0c0c] border-white text-[#8871ee]'
                     } w-full h-full border-b-[0.13rem] text-center text-md md:text-lg py-1`
                 }
             >
@@ -95,7 +101,11 @@ export default function ChannelPage() {
                 {/* coverimage */}
                 {data.coverImage ? (
                     <div className="w-full h-[170px] sm:h-[200px] overflow-hidden">
-                        <img src={data.coverImage} alt="cover image" className="w-full h-full object-cover" />
+                        <img
+                            src={data.coverImage}
+                            alt="cover image"
+                            className="w-full h-full object-cover"
+                        />
                     </div>
                 ) : (
                     <div className="bg-slate-700 w-full h-[170px] sm:h-[200px]"></div>
@@ -103,19 +113,28 @@ export default function ChannelPage() {
                 <div className="relative top-[-15px] flex items-center ml-1">
                     {/* avatar */}
                     <div className="w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] overflow-hidden rounded-full border-2 border-[#b5b4b4]">
-                        <img src={data.avatar} className="w-full h-full object-cover" />
+                        <img
+                            src={data.avatar}
+                            className="w-full h-full object-cover"
+                        />
                     </div>
 
                     {/* channel info */}
                     <div className="ml-[15px]">
-                        <div className="text-2xl sm:text-3xl mt-4 sm:mt-1 font-semibold">{data.fullname}</div>
+                        <div className="text-2xl sm:text-3xl mt-4 sm:mt-1 font-semibold">
+                            {data.fullname}
+                        </div>
 
                         <div className="text-lg text-[#c1c1c1]">
-                            {"@" + data.username} &bull; {data.videosCount > 1 ? `${data.videosCount} videos` : `${data.videosCount} video`}
+                            {'@' + data.username} &bull;{' '}
+                            {data.videosCount > 1
+                                ? `${data.videosCount} videos`
+                                : `${data.videosCount} video`}
                         </div>
 
                         <div className="text-md text-[#bbbaba]">
-                            {subscribersCount} subscribers &bull; {data.subscribedToCount} subscribed
+                            {subscribersCount} subscribers &bull;{' '}
+                            {data.subscribedToCount} subscribed
                         </div>
 
                         {/* subscribe/edit btn */}
@@ -142,10 +161,12 @@ export default function ChannelPage() {
                                 <div className="absolute right-[20px] top-[40px] md:right-[30px] text-[1.1rem]">
                                     <button
                                         className="bg-[#8871ee] w-[90px] text-[#0c0c0c] py-[3px] text-lg border-[0.01rem] border-[#b5b4b4] active:border-white"
-                                        onClick={() => navigate("/settings")}
+                                        onClick={() => navigate('/settings')}
                                     >
                                         <i className="fa-solid fa-user-pen text-xl"></i>
-                                        <span className="font-semibold  ml-[6px]">Edit</span>
+                                        <span className="font-semibold  ml-[6px]">
+                                            Edit
+                                        </span>
                                     </button>
                                 </div>
                             )
@@ -170,15 +191,21 @@ export default function ChannelPage() {
                                 onClick={closeLoginPopup}
                                 className="fixed inset-0 backdrop-blur-sm z-[150] flex items-center justify-center"
                             >
-                                <LoginPopup close={() => setLoginPopup(false)} popupText={"Subscribe"} />
+                                <LoginPopup
+                                    close={() => setLoginPopup(false)}
+                                    popupText={'Subscribe'}
+                                />
                             </div>
                         )}
                     </div>
                 </div>
                 {/* channel nav bar */}
-                <div className="flex items-center justify-evenly w-full mb-[8px] px-1">{optionsElements}</div>
+                <div className="flex items-center justify-evenly w-full mb-[8px] px-1">
+                    {optionsElements}
+                </div>
                 <hr className="mb-[8px] border-[0.01rem] border-[#b5b4b4]" />
-                <Outlet /> {/*because we can't direclty provide props to Outlet so either have to use context api conept or redux store*/}
+                <Outlet />{' '}
+                {/*because we can't direclty provide props to Outlet so either have to use context api conept or redux store*/}
             </div>
         );
 }

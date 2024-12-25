@@ -1,8 +1,8 @@
-import { useEffect, useState, useCallback, useRef } from "react";
-import { useAuthHook, useChannelHook } from "../../hooks";
-import { CreatePlaylistPopup, PlaylistCard, PulsePlaylistCard } from "../index";
-import playlistServices from "../../DBservices/playlistServices";
-import { icons } from "../../assets/icons";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { useAuthHook, useChannelHook } from '../../hooks';
+import { CreatePlaylistPopup, PlaylistCard, PulsePlaylistCard } from '../index';
+import playlistServices from '../../DBservices/playlistServices';
+import { icons } from '../../assets/icons';
 
 function ChannelPlaylists() {
     const [loading, setLoading] = useState(true);
@@ -18,11 +18,21 @@ function ChannelPlaylists() {
     useEffect(() => {
         if (page === 1 || playlists.length !== PlaylistsInfo.totalPlaylists) {
             setLoading(true);
-            playlistServices.getUserPlaylists(setPlaylists, setLoading, playlists, setPlaylistsInfo, channelData._id, page, 5).then((data) => {
-                if (data && data?.length > 0) {
-                    setPlaylistsFound(true);
-                } else setPlaylistsFound(false);
-            });
+            playlistServices
+                .getUserPlaylists(
+                    setPlaylists,
+                    setLoading,
+                    playlists,
+                    setPlaylistsInfo,
+                    channelData._id,
+                    page,
+                    5
+                )
+                .then((data) => {
+                    if (data && data?.length > 0) {
+                        setPlaylistsFound(true);
+                    } else setPlaylistsFound(false);
+                });
         }
     }, [page, channelData]);
 
@@ -33,7 +43,8 @@ function ChannelPlaylists() {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 const lastPlaylist = entries[0];
-                if (lastPlaylist.isIntersecting && PlaylistsInfo?.hasNextPage) setPage((prev) => prev + 1);
+                if (lastPlaylist.isIntersecting && PlaylistsInfo?.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -42,7 +53,13 @@ function ChannelPlaylists() {
 
     const playlistElements = playlists?.map((playlist, index) => {
         if (playlists.length === index + 1) {
-            return <PlaylistCard key={playlist._id} playlist={playlist} reference={callbackRef} />;
+            return (
+                <PlaylistCard
+                    key={playlist._id}
+                    playlist={playlist}
+                    reference={callbackRef}
+                />
+            );
         } else {
             return <PlaylistCard key={playlist._id} playlist={playlist} />;
         }
@@ -67,8 +84,12 @@ function ChannelPlaylists() {
                             onClick={() => setCreatePlaylistPopup(true)}
                             className="bg-[#8871ee] flex items-center justify-center text-black p-2 rounded-md  group hover:text-[#8871ee] hover:bg-slate-900 border-[0.01rem] border-transparent hover:border-[#b5b4b4]"
                         >
-                            <div className="size-[25px] fill-none stroke-black group-hover:stroke-[#8871ee]">{icons.uploadPlus}</div>
-                            <div className="text-lg font-medium  ml-2">New Playlist</div>
+                            <div className="size-[25px] fill-none stroke-black group-hover:stroke-[#8871ee]">
+                                {icons.uploadPlus}
+                            </div>
+                            <div className="text-lg font-medium  ml-2">
+                                New Playlist
+                            </div>
                         </button>
                     </div>
                 )}
@@ -84,14 +105,20 @@ function ChannelPlaylists() {
                             onClick={() => setCreatePlaylistPopup(true)}
                             className="bg-[#8871ee] flex items-center justify-center text-black p-2 rounded-md  group hover:text-[#8871ee] hover:bg-slate-900 border-[0.01rem] border-transparent hover:border-[#b5b4b4]"
                         >
-                            <div className="size-[25px] fill-none stroke-black group-hover:stroke-[#8871ee]">{icons.uploadPlus}</div>
-                            <div className="text-lg font-medium  ml-2">New Playlist</div>
+                            <div className="size-[25px] fill-none stroke-black group-hover:stroke-[#8871ee]">
+                                {icons.uploadPlus}
+                            </div>
+                            <div className="text-lg font-medium  ml-2">
+                                New Playlist
+                            </div>
                         </button>
                     </div>
                 )}
                 {playlists.length > 1 ? ( //agr 0 hai toh toh vo idhr ayega hi nhi (returned no videos found !)
                     playlists.length > 2 ? (
-                        <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-4">{playlistElements}</div> //so means equal to 2
+                        <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-4">
+                            {playlistElements}
+                        </div> //so means equal to 2
                     ) : (
                         <div className="grid grid-cols-[repeat(auto-fit,_minmax(320px,_1fr))] gap-4 xl:grid-cols-[repeat(3,minmax(320px,1fr))]">
                             {playlistElements}
@@ -103,7 +130,11 @@ function ChannelPlaylists() {
                         {playlistElements}
                     </div>
                 )}
-                {loading && page === 1 && <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">{pulseEffect}</div>}
+                {loading && page === 1 && (
+                    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
+                        {pulseEffect}
+                    </div>
+                )}
 
                 {loading && page !== 1 && (
                     <div className="flex items-center justify-center my-2">
@@ -128,7 +159,9 @@ function ChannelPlaylists() {
                 )}
                 {createPlaylistPopup && (
                     <div className="fixed inset-0 p-8 backdrop-blur-lg z-[2000] flex justify-center items-center">
-                        <CreatePlaylistPopup close={() => setCreatePlaylistPopup(false)} />
+                        <CreatePlaylistPopup
+                            close={() => setCreatePlaylistPopup(false)}
+                        />
                     </div>
                 )}
             </div>

@@ -1,10 +1,13 @@
 export class CommentServices {
     async toggelCommentLike(commentId, toggleStatus) {
         try {
-            const res = await fetch(`/api/v1/likes/togglecommentlike/${commentId}/?toggleStatus=${toggleStatus}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/likes/togglecommentlike/${commentId}/?toggleStatus=${toggleStatus}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
 
@@ -16,16 +19,29 @@ export class CommentServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("something bad happened with the toggleCommentLike service", err.message);
+            return console.log(
+                'something bad happened with the toggleCommentLike service',
+                err.message
+            );
         }
     }
 
-    async getVideoComments(setCommentsInfo, comments, setComments, page = 1, limit = 10, videoId) {
+    async getVideoComments(
+        setCommentsInfo,
+        comments,
+        setComments,
+        page = 1,
+        limit = 10,
+        videoId
+    ) {
         try {
-            const res = await fetch(`/api/v1/comments/${videoId}?page=${page}&limit=${limit}`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const res = await fetch(
+                `/api/v1/comments/${videoId}?page=${page}&limit=${limit}`,
+                {
+                    method: 'GET',
+                    credentials: 'include',
+                }
+            );
             const data = await res.json();
             console.log(data);
             if (res.ok) {
@@ -36,16 +52,19 @@ export class CommentServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("something went wrong with the getVideoComments service", err.message);
+            return console.log(
+                'something went wrong with the getVideoComments service',
+                err.message
+            );
         }
     }
 
     async addComment(videoId, content, setComments) {
         try {
             const res = await fetch(`/api/v1/comments/${videoId}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ content }),
             });
             const data = await res.json();
@@ -57,16 +76,19 @@ export class CommentServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("something went wrong with the addComment service", err.message);
+            return console.log(
+                'something went wrong with the addComment service',
+                err.message
+            );
         }
     }
 
     async updateComment(commentId, content) {
         try {
             const res = await fetch(`/api/v1/comments/${commentId}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                credentials: "include",
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify({ content }),
             });
             const data = await res.json();
@@ -77,27 +99,35 @@ export class CommentServices {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("something went wrong with the updateComment service", err.message);
+            return console.log(
+                'something went wrong with the updateComment service',
+                err.message
+            );
         }
     }
 
     async deleteComment(commentId, setComments) {
         try {
             const res = await fetch(`/api/v1/comments/${commentId}`, {
-                method: "DELETE",
-                credentials: "include",
+                method: 'DELETE',
+                credentials: 'include',
             });
             const data = await res.json();
             console.log(data);
 
             if (res.ok) {
-                setComments((prev) => prev.filter((comment) => comment._id !== commentId));
+                setComments((prev) =>
+                    prev.filter((comment) => comment._id !== commentId)
+                );
                 return data;
             } else {
                 throw new Error(data.message);
             }
         } catch (err) {
-            return console.log("something went wrong with the deleteComment service", err.message);
+            return console.log(
+                'something went wrong with the deleteComment service',
+                err.message
+            );
         }
     }
 }

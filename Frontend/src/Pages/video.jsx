@@ -1,17 +1,24 @@
-import { useNavigate, useParams } from "react-router-dom";
-import videoServices from "../DBservices/videoServices";
-import channelServices from "../DBservices/channelServices";
-import { useState, useEffect, useRef } from "react";
-import { LoginPopup, PlaylistPopup, VideoPlayer, SideVideos, Comments, PulseVideoPage } from "../components";
-import { useAuthHook } from "../hooks";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faThumbsUp as faSolidThumbsUp } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsUp as faRegularThumbsUp } from "@fortawesome/free-regular-svg-icons";
-import { faThumbsDown as faSolidThumbsDown } from "@fortawesome/free-solid-svg-icons";
-import { faThumbsDown as faRegularThumbsDown } from "@fortawesome/free-regular-svg-icons";
-import { icons } from "../assets/icons";
-import { formatDistanceToNow, parseISO } from "date-fns";
-import { motion } from "framer-motion";
+import { useNavigate, useParams } from 'react-router-dom';
+import videoServices from '../DBservices/videoServices';
+import channelServices from '../DBservices/channelServices';
+import { useState, useEffect, useRef } from 'react';
+import {
+    LoginPopup,
+    PlaylistPopup,
+    VideoPlayer,
+    SideVideos,
+    Comments,
+    PulseVideoPage,
+} from '../components';
+import { useAuthHook } from '../hooks';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faThumbsUp as faSolidThumbsUp } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsUp as faRegularThumbsUp } from '@fortawesome/free-regular-svg-icons';
+import { faThumbsDown as faSolidThumbsDown } from '@fortawesome/free-solid-svg-icons';
+import { faThumbsDown as faRegularThumbsDown } from '@fortawesome/free-regular-svg-icons';
+import { icons } from '../assets/icons';
+import { formatDistanceToNow, parseISO } from 'date-fns';
+import { motion } from 'framer-motion';
 
 function VideoPage() {
     const [loading, setLoading] = useState(true);
@@ -26,7 +33,7 @@ function VideoPage() {
     const { userData } = useAuthHook();
     const navigate = useNavigate();
     const [loginPopup, setLoginPopup] = useState(false);
-    const [loginPopupText, setLoginPopupText] = useState("");
+    const [loginPopupText, setLoginPopupText] = useState('');
     const [playlistPopup, setPlaylistPopup] = useState(false);
     const loginRef = useRef();
     const playlistRef = useRef();
@@ -39,8 +46,11 @@ function VideoPage() {
         setPlaylistPopup(false);
         setLoading(true);
         videoServices.getVideoById(videoId).then((res) => {
-            if (res.message === "INVALID_VIDEO_ID" || res.message === "VIDEO_NOT_FOUND") {
-                navigate("/not-found");
+            if (
+                res.message === 'INVALID_VIDEO_ID' ||
+                res.message === 'VIDEO_NOT_FOUND'
+            ) {
+                navigate('/not-found');
                 setLoading(false);
             } else {
                 setData(res);
@@ -128,7 +138,8 @@ function VideoPage() {
 
     function handleDescrClick(e) {
         //if(bigParentRef.current !== e.target)//this wont work because click on any child would execute it
-        if (!bigParentRef.current.contains(e.target)) setExpandDescription(false);
+        if (!bigParentRef.current.contains(e.target))
+            setExpandDescription(false);
     }
 
     function handleCommentExpandClick(e) {
@@ -148,7 +159,7 @@ function VideoPage() {
             )}
             {!loading && (
                 <div className="flex flex-col lg:flex-row items-start justify-center gap-6 w-full">
-                    {" "}
+                    {' '}
                     {/*full screen*/}
                     <div className="flex flex-col items-center justify-center w-full lg:w-[80%]">
                         <div className="max-w-[900px] lg:max-w-full border-[0.01rem] border-[#252525] rounded-xl overflow-hidden">
@@ -163,9 +174,15 @@ function VideoPage() {
                             <div className="flex">
                                 {/* title */}
                                 <div className="flex flex-col items-start justify-center w-full">
-                                    <div className="w-full line-clamp-2 text-[1.3rem] leading-6 font-medium">{data.title}</div>
+                                    <div className="w-full line-clamp-2 text-[1.3rem] leading-6 font-medium">
+                                        {data.title}
+                                    </div>
                                     <div className="w-full mt-1 text-gray-400 text-[0.9rem]">
-                                        {data.views} views &bull; {formatDistanceToNow(parseISO(data.createdAt), { addSuffix: true })}
+                                        {data.views} views &bull;{' '}
+                                        {formatDistanceToNow(
+                                            parseISO(data.createdAt),
+                                            { addSuffix: true }
+                                        )}
                                     </div>
                                 </div>
 
@@ -173,34 +190,51 @@ function VideoPage() {
                                     {/* like/dislike btn */}
                                     <div className="ml-6">
                                         {userData ? (
-                                            userData?.username !== data.owner.username && (
+                                            userData?.username !==
+                                                data.owner.username && (
                                                 <div className="flex items-center justify-center rounded-lg bg-[#212121] w-fit h-fit overflow-hidden border-[0.01rem] border-[#b5b4b4]">
                                                     <div
-                                                        onClick={handleLikeClick}
+                                                        onClick={
+                                                            handleLikeClick
+                                                        }
                                                         className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] px-[5px] py-[6px]"
                                                     >
                                                         <button className="ml-2">
                                                             <FontAwesomeIcon
                                                                 size="lg"
-                                                                icon={likedStatus ? faSolidThumbsUp : faRegularThumbsUp}
-                                                                color={"white"}
+                                                                icon={
+                                                                    likedStatus
+                                                                        ? faSolidThumbsUp
+                                                                        : faRegularThumbsUp
+                                                                }
+                                                                color={'white'}
                                                             />
                                                         </button>
-                                                        <p className="mx-[8px]">{likesCount}</p>
+                                                        <p className="mx-[8px]">
+                                                            {likesCount}
+                                                        </p>
                                                     </div>
 
                                                     <div
-                                                        onClick={handleDislikeClick}
+                                                        onClick={
+                                                            handleDislikeClick
+                                                        }
                                                         className="cursor-pointer flex items-center justify-center px-[5px] py-[6px] hover:bg-[#3f3f3f]"
                                                     >
                                                         <button className="transform -scale-x-100 ml-2">
                                                             <FontAwesomeIcon
                                                                 size="lg"
-                                                                icon={disLikedStatus ? faSolidThumbsDown : faRegularThumbsDown}
-                                                                color={"white"}
+                                                                icon={
+                                                                    disLikedStatus
+                                                                        ? faSolidThumbsDown
+                                                                        : faRegularThumbsDown
+                                                                }
+                                                                color={'white'}
                                                             />
                                                         </button>
-                                                        <p className="mx-[8px]">{dislikesCount}</p>
+                                                        <p className="mx-[8px]">
+                                                            {dislikesCount}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             )
@@ -208,7 +242,9 @@ function VideoPage() {
                                             <div className="flex items-center justify-center rounded-lg bg-[#212121] w-fit overflow-hidden border-[0.01rem] border-[#b5b4b4]">
                                                 <div
                                                     onClick={() => {
-                                                        setLoginPopupText("Like Video");
+                                                        setLoginPopupText(
+                                                            'Like Video'
+                                                        );
                                                         setLoginPopup(true);
                                                     }}
                                                     className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] px-[5px] py-[6px]"
@@ -216,16 +252,24 @@ function VideoPage() {
                                                     <button className="ml-2">
                                                         <FontAwesomeIcon
                                                             size="lg"
-                                                            icon={likedStatus ? faSolidThumbsUp : faRegularThumbsUp}
-                                                            color={"white"}
+                                                            icon={
+                                                                likedStatus
+                                                                    ? faSolidThumbsUp
+                                                                    : faRegularThumbsUp
+                                                            }
+                                                            color={'white'}
                                                         />
                                                     </button>
-                                                    <p className="mx-[8px]">{likesCount}</p>
+                                                    <p className="mx-[8px]">
+                                                        {likesCount}
+                                                    </p>
                                                 </div>
 
                                                 <div
                                                     onClick={() => {
-                                                        setLoginPopupText("Dislike Video");
+                                                        setLoginPopupText(
+                                                            'Dislike Video'
+                                                        );
                                                         setLoginPopup(true);
                                                     }}
                                                     className="cursor-pointer flex items-center justify-center px-[5px] py-[6px] hover:bg-[#3f3f3f]"
@@ -233,11 +277,17 @@ function VideoPage() {
                                                     <button className="transform -scale-x-100 ml-2">
                                                         <FontAwesomeIcon
                                                             size="lg"
-                                                            icon={disLikedStatus ? faSolidThumbsDown : faRegularThumbsDown}
-                                                            color={"white"}
+                                                            icon={
+                                                                disLikedStatus
+                                                                    ? faSolidThumbsDown
+                                                                    : faRegularThumbsDown
+                                                            }
+                                                            color={'white'}
                                                         />
                                                     </button>
-                                                    <p className="mx-[8px]">{dislikesCount}</p>
+                                                    <p className="mx-[8px]">
+                                                        {dislikesCount}
+                                                    </p>
                                                 </div>
                                             </div>
                                         )}
@@ -248,11 +298,16 @@ function VideoPage() {
                                         {userData ? (
                                             <div className="border-[0.01rem] border-[#b5b4b4] rounded-lg overflow-hidden">
                                                 <div
-                                                    onClick={() => setPlaylistPopup(true)}
+                                                    onClick={() =>
+                                                        setPlaylistPopup(true)
+                                                    }
                                                     className="cursor-pointer w-fit p-[5px] px-3 bg-[#212121] hover:bg-[#3f3f3f]"
                                                 >
                                                     <button className="size-[27px] fill-[#f1f1f1] w-full rounded-lg flex items-center justify-center">
-                                                        {icons.save} <span className="text-lg pb-[3px] ml-1">save</span>
+                                                        {icons.save}{' '}
+                                                        <span className="text-lg pb-[3px] ml-1">
+                                                            save
+                                                        </span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -260,21 +315,34 @@ function VideoPage() {
                                             <div className="border-[0.01rem] border-[#b5b4b4] rounded-lg overflow-hidden">
                                                 <div
                                                     onClick={() => {
-                                                        setLoginPopupText("Save");
+                                                        setLoginPopupText(
+                                                            'Save'
+                                                        );
                                                         setLoginPopup(true);
                                                     }}
                                                     className="cursor-pointer w-fit p-[5px] px-3 bg-[#212121] hover:bg-[#3f3f3f]"
                                                 >
                                                     <button className="size-[27px] fill-[#f1f1f1] w-full rounded-lg flex items-center justify-center">
-                                                        {icons.save} <span className="text-lg pb-[3px] ml-1">save</span>
+                                                        {icons.save}{' '}
+                                                        <span className="text-lg pb-[3px] ml-1">
+                                                            save
+                                                        </span>
                                                     </button>
                                                 </div>
                                             </div>
                                         )}
                                         {/* playlist popup */}
                                         {playlistPopup && (
-                                            <div ref={playlistRef} onClick={closePlaylistPopup} className="absolute z-[150] right-0">
-                                                <PlaylistPopup close={() => setPlaylistPopup(false)} />
+                                            <div
+                                                ref={playlistRef}
+                                                onClick={closePlaylistPopup}
+                                                className="absolute z-[150] right-0"
+                                            >
+                                                <PlaylistPopup
+                                                    close={() =>
+                                                        setPlaylistPopup(false)
+                                                    }
+                                                />
                                             </div>
                                         )}
                                     </div>
@@ -284,34 +352,54 @@ function VideoPage() {
                             {/* channel info */}
                             <div className="flex flex-col-reverse items-start justify-start w-full mt-4">
                                 <div className="flex items-center justify-between w-full mt-6 md:mt-3">
-                                    <div className="flex items-center justify-start" onClick={() => navigate(`/channel/${data.owner.username}`)}>
+                                    <div
+                                        className="flex items-center justify-start"
+                                        onClick={() =>
+                                            navigate(
+                                                `/channel/${data.owner.username}`
+                                            )
+                                        }
+                                    >
                                         <div className="">
                                             <div className="size-[55px] rounded-full overflow-hidden">
-                                                <img src={data.owner.avatar} alt={data.owner.fullname} className="h-full w-full object-cover" />
+                                                <img
+                                                    src={data.owner.avatar}
+                                                    alt={data.owner.fullname}
+                                                    className="h-full w-full object-cover"
+                                                />
                                             </div>
                                         </div>
 
                                         <div className="flex flex-col items-start justify-start ml-4 leading-7">
-                                            <span className="text-[1.4rem]">{data.owner.fullname}</span>
-                                            <span className="text-[1rem] text-[#b7b7b7]">{subscribersCount} subscribers</span>
+                                            <span className="text-[1.4rem]">
+                                                {data.owner.fullname}
+                                            </span>
+                                            <span className="text-[1rem] text-[#b7b7b7]">
+                                                {subscribersCount} subscribers
+                                            </span>
                                         </div>
                                     </div>
 
                                     {/* subscribe/edit btn */}
                                     <div className="text-[1.2rem]">
                                         {userData ? (
-                                            userData.username !== data.owner.username ? (
+                                            userData.username !==
+                                            data.owner.username ? (
                                                 subscribedStatus ? (
                                                     <button
                                                         className="bg-[#d6d5d5] w-[110px] text-[#0c0c0c] px-1 py-1 font-semibold border-[0.01rem] border-[#b5b4b4] active:border-white"
-                                                        onClick={toggleSubscribe}
+                                                        onClick={
+                                                            toggleSubscribe
+                                                        }
                                                     >
                                                         Subscribed
                                                     </button>
                                                 ) : (
                                                     <button
                                                         className="bg-[#8871ee] w-[110px] text-[#0c0c0c] px-1 py-1 font-semibold border-[0.01rem] border-[#b5b4b4] active:border-white"
-                                                        onClick={toggleSubscribe}
+                                                        onClick={
+                                                            toggleSubscribe
+                                                        }
                                                     >
                                                         Subscribe
                                                     </button>
@@ -320,17 +408,23 @@ function VideoPage() {
                                                 //edit btn
                                                 <button
                                                     className="bg-[#8871ee] w-[90px] text-[#0c0c0c] py-[3px] text-lg border-[0.01rem] border-[#b5b4b4] active:border-white"
-                                                    onClick={() => navigate("/settings")}
+                                                    onClick={() =>
+                                                        navigate('/settings')
+                                                    }
                                                 >
                                                     <i className="fa-solid fa-user-pen text-xl"></i>
-                                                    <span className="font-semibold  ml-[6px]">Edit</span>
+                                                    <span className="font-semibold  ml-[6px]">
+                                                        Edit
+                                                    </span>
                                                 </button>
                                             )
                                         ) : (
                                             <button
                                                 className="bg-[#8871ee] w-[110px] text-[#0c0c0c] px-1 py-1 font-semibold border-[0.01rem] border-[#b5b4b4] active:border-white"
                                                 onClick={() => {
-                                                    setLoginPopupText("Subscribe");
+                                                    setLoginPopupText(
+                                                        'Subscribe'
+                                                    );
                                                     setLoginPopup(true);
                                                     //do something that the task user executed before the popup appears should be also done after he successfully logged in ⭐
                                                 }}
@@ -346,34 +440,51 @@ function VideoPage() {
                                     {/* like/dislike btn */}
                                     <div>
                                         {userData ? (
-                                            userData?.username !== data.owner.username && (
+                                            userData?.username !==
+                                                data.owner.username && (
                                                 <div className="flex items-center justify-center rounded-lg bg-[#212121] w-fit h-fit overflow-hidden border-[0.01rem] border-[#b5b4b4]">
                                                     <div
-                                                        onClick={handleLikeClick}
+                                                        onClick={
+                                                            handleLikeClick
+                                                        }
                                                         className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] px-[5px] py-[6px]"
                                                     >
                                                         <button className="ml-2">
                                                             <FontAwesomeIcon
                                                                 size="lg"
-                                                                icon={likedStatus ? faSolidThumbsUp : faRegularThumbsUp}
-                                                                color={"white"}
+                                                                icon={
+                                                                    likedStatus
+                                                                        ? faSolidThumbsUp
+                                                                        : faRegularThumbsUp
+                                                                }
+                                                                color={'white'}
                                                             />
                                                         </button>
-                                                        <p className="mx-[8px]">{likesCount}</p>
+                                                        <p className="mx-[8px]">
+                                                            {likesCount}
+                                                        </p>
                                                     </div>
 
                                                     <div
-                                                        onClick={handleDislikeClick}
+                                                        onClick={
+                                                            handleDislikeClick
+                                                        }
                                                         className="cursor-pointer flex items-center justify-center px-[5px] py-[6px] hover:bg-[#3f3f3f]"
                                                     >
                                                         <button className="transform -scale-x-100 ml-2">
                                                             <FontAwesomeIcon
                                                                 size="lg"
-                                                                icon={disLikedStatus ? faSolidThumbsDown : faRegularThumbsDown}
-                                                                color={"white"}
+                                                                icon={
+                                                                    disLikedStatus
+                                                                        ? faSolidThumbsDown
+                                                                        : faRegularThumbsDown
+                                                                }
+                                                                color={'white'}
                                                             />
                                                         </button>
-                                                        <p className="mx-[8px]">{dislikesCount}</p>
+                                                        <p className="mx-[8px]">
+                                                            {dislikesCount}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             )
@@ -381,7 +492,9 @@ function VideoPage() {
                                             <div className="flex items-center justify-center rounded-lg bg-[#212121] w-fit overflow-hidden border-[0.01rem] border-[#b5b4b4]">
                                                 <div
                                                     onClick={() => {
-                                                        setLoginPopupText("Like Video");
+                                                        setLoginPopupText(
+                                                            'Like Video'
+                                                        );
                                                         setLoginPopup(true);
                                                     }}
                                                     className="cursor-pointer flex items-center justify-center border-r-[0.01rem] border-[#b5b4b4] hover:bg-[#3f3f3f] px-[5px] py-[6px]"
@@ -389,16 +502,24 @@ function VideoPage() {
                                                     <button className="ml-2">
                                                         <FontAwesomeIcon
                                                             size="lg"
-                                                            icon={likedStatus ? faSolidThumbsUp : faRegularThumbsUp}
-                                                            color={"white"}
+                                                            icon={
+                                                                likedStatus
+                                                                    ? faSolidThumbsUp
+                                                                    : faRegularThumbsUp
+                                                            }
+                                                            color={'white'}
                                                         />
                                                     </button>
-                                                    <p className="mx-[8px]">{likesCount}</p>
+                                                    <p className="mx-[8px]">
+                                                        {likesCount}
+                                                    </p>
                                                 </div>
 
                                                 <div
                                                     onClick={() => {
-                                                        setLoginPopupText("Dislike Video");
+                                                        setLoginPopupText(
+                                                            'Dislike Video'
+                                                        );
                                                         setLoginPopup(true);
                                                     }}
                                                     className="cursor-pointer flex items-center justify-center px-[5px] py-[6px] hover:bg-[#3f3f3f]"
@@ -406,11 +527,17 @@ function VideoPage() {
                                                     <button className="transform -scale-x-100 ml-2">
                                                         <FontAwesomeIcon
                                                             size="lg"
-                                                            icon={disLikedStatus ? faSolidThumbsDown : faRegularThumbsDown}
-                                                            color={"white"}
+                                                            icon={
+                                                                disLikedStatus
+                                                                    ? faSolidThumbsDown
+                                                                    : faRegularThumbsDown
+                                                            }
+                                                            color={'white'}
                                                         />
                                                     </button>
-                                                    <p className="mx-[8px]">{dislikesCount}</p>
+                                                    <p className="mx-[8px]">
+                                                        {dislikesCount}
+                                                    </p>
                                                 </div>
                                             </div>
                                         )}
@@ -421,11 +548,16 @@ function VideoPage() {
                                         {userData ? (
                                             <div className="border-[0.01rem] border-[#b5b4b4] rounded-lg overflow-hidden">
                                                 <div
-                                                    onClick={() => setPlaylistPopup(true)}
+                                                    onClick={() =>
+                                                        setPlaylistPopup(true)
+                                                    }
                                                     className="cursor-pointer w-fit py-[5px] px-3 bg-[#212121] hover:bg-[#3f3f3f]"
                                                 >
                                                     <button className="size-[27px] fill-[#f1f1f1] w-full rounded-lg flex items-center justify-center">
-                                                        {icons.save} <span className="text-lg pb-[3px] ml-1">save</span>
+                                                        {icons.save}{' '}
+                                                        <span className="text-lg pb-[3px] ml-1">
+                                                            save
+                                                        </span>
                                                     </button>
                                                 </div>
                                             </div>
@@ -433,30 +565,50 @@ function VideoPage() {
                                             <div className="border-[0.01rem] border-[#b5b4b4] rounded-lg overflow-hidden">
                                                 <div
                                                     onClick={() => {
-                                                        setLoginPopupText("Save");
+                                                        setLoginPopupText(
+                                                            'Save'
+                                                        );
                                                         setLoginPopup(true);
                                                     }}
                                                     className="cursor-pointer w-fit py-[5px] px-3 bg-[#212121] hover:bg-[#3f3f3f]"
                                                 >
                                                     <button className="size-[27px] fill-[#f1f1f1] w-full rounded-lg flex items-center justify-center">
-                                                        {icons.save} <span className="text-lg pb-[3px] ml-1">save</span>
+                                                        {icons.save}{' '}
+                                                        <span className="text-lg pb-[3px] ml-1">
+                                                            save
+                                                        </span>
                                                     </button>
                                                 </div>
                                             </div>
                                         )}
                                         {/* playlist popup */}
                                         {playlistPopup && (
-                                            <div ref={playlistRef} onClick={closePlaylistPopup} className="absolute z-[150] right-0">
-                                                <PlaylistPopup close={() => setPlaylistPopup(false)} />
+                                            <div
+                                                ref={playlistRef}
+                                                onClick={closePlaylistPopup}
+                                                className="absolute z-[150] right-0"
+                                            >
+                                                <PlaylistPopup
+                                                    close={() =>
+                                                        setPlaylistPopup(false)
+                                                    }
+                                                />
                                             </div>
                                         )}
                                     </div>
                                 </div>
                             </div>
 
-                            <motion.hr initial={{ width: 0 }} animate={{ width: "100%" }} transition={{ duration: 0.4 }} className="mt-4" />
+                            <motion.hr
+                                initial={{ width: 0 }}
+                                animate={{ width: '100%' }}
+                                transition={{ duration: 0.4 }}
+                                className="mt-4"
+                            />
 
-                            <div className={`mt-3 text-[0.9rem] w-full break-words ${expandDescription ? "line-clamp-none" : "line-clamp-1"}`}>
+                            <div
+                                className={`mt-3 text-[0.9rem] w-full break-words ${expandDescription ? 'line-clamp-none' : 'line-clamp-1'}`}
+                            >
                                 <span>{data.description}</span>
                             </div>
                         </div>
@@ -477,7 +629,10 @@ function VideoPage() {
                             onClick={closeLoginPopup}
                             className="fixed inset-0 backdrop-blur-sm z-[150] flex flex-col items-center justify-center"
                         >
-                            <LoginPopup close={() => setLoginPopup(false)} popupText={loginPopupText} />
+                            <LoginPopup
+                                close={() => setLoginPopup(false)}
+                                popupText={loginPopupText}
+                            />
                         </div>
                     )}
                     {/* side recemondations */}

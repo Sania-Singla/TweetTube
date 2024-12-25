@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback, useRef } from "react";
-import videoServices from "../DBservices/videoServices";
-import { RandomVideoCard, PulseRandomVideoCard } from "../components";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import videoServices from '../DBservices/videoServices';
+import { RandomVideoCard, PulseRandomVideoCard } from '../components';
 
 export default function HomePage() {
     const [loading, setloading] = useState(false);
@@ -11,11 +11,13 @@ export default function HomePage() {
 
     useEffect(() => {
         setloading(true);
-        videoServices.getRandomVideos(setVideoInfo, videos, setVideos, page, 10).then((data) => {
-            if (data.length > 0) setVideosFound(true);
-            else setVideosFound(false);
-            setloading(false);
-        });
+        videoServices
+            .getRandomVideos(setVideoInfo, videos, setVideos, page, 10)
+            .then((data) => {
+                if (data.length > 0) setVideosFound(true);
+                else setVideosFound(false);
+                setloading(false);
+            });
     }, [page]);
 
     /*const observerCallback = useCallback(entries=>{
@@ -51,7 +53,8 @@ export default function HomePage() {
             // console.log("2=",observer.current);
             observer.current = new IntersectionObserver((entries) => {
                 const lastVideo = entries[0];
-                if (lastVideo.isIntersecting && videoInfo.hasNextPage) setPage((prev) => prev + 1);
+                if (lastVideo.isIntersecting && videoInfo.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -59,7 +62,14 @@ export default function HomePage() {
     );
 
     const videoElements = videos?.map((video, index) => {
-        if (videos.length === index + 1) return <RandomVideoCard key={video._id} video={video} reference={callbackRef} />;
+        if (videos.length === index + 1)
+            return (
+                <RandomVideoCard
+                    key={video._id}
+                    video={video}
+                    reference={callbackRef}
+                />
+            );
         else return <RandomVideoCard key={video._id} video={video} />;
     });
 
@@ -71,10 +81,14 @@ export default function HomePage() {
     if (!videosFound) return <div>no videos found!</div>;
     return (
         <div>
-            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7">{videoElements}</div>
+            <div className="grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7">
+                {videoElements}
+            </div>
 
             {loading && page === 1 && (
-                <div className="overflow-hidden grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7 animate-pulse">{pulseEffect}</div>
+                <div className="overflow-hidden grid grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-x-4 gap-y-7 animate-pulse">
+                    {pulseEffect}
+                </div>
             )}
 
             {loading && page > 1 && (

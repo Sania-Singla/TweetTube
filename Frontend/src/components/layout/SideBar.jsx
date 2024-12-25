@@ -1,61 +1,61 @@
-import { NavLink } from "react-router-dom";
-import { useAuthHook } from "../../hooks";
+import { NavLink } from 'react-router-dom';
+import { useAuthHook } from '../../hooks';
 
 function SideBar() {
     const { userData, loginStatus } = useAuthHook();
 
     const sideItems = [
         {
-            name: "Home",
-            path: "",
+            name: 'Home',
+            path: '',
             icon: <i className="fa-solid fa-house"></i>,
             shouldShow: true,
         },
         {
-            name: "Tweets",
-            path: "tweets",
+            name: 'Tweets',
+            path: 'tweets',
             icon: <i className="fa-brands fa-twitter"></i>,
             shouldShow: true,
         },
         {
-            name: "Watch history",
-            path: "watch-history",
+            name: 'Watch history',
+            path: 'watch-history',
             icon: <i className="fa-solid fa-clock-rotate-left"></i>,
             shouldShow: true,
         },
         {
-            name: "My Content",
+            name: 'My Content',
             path: `/channel/${userData?.username}`, //path: `${userData ? `/channel/${userData.username}` : `guest my content page`}`,
             icon: <i className="fa-solid fa-video"></i>,
             shouldShow: true,
         },
         {
-            name: "Liked videos",
-            path: "liked-videos",
+            name: 'Liked videos',
+            path: 'liked-videos',
             icon: <i className="fa-solid fa-thumbs-up"></i>,
             shouldShow: true,
         },
         {
-            name: "Subscriptions",
+            name: 'Subscriptions',
             path: `channel/${userData?.username}/subscribed`,
             icon: <i className="fa-solid fa-user-plus"></i>,
             shouldShow: loginStatus,
         },
         {
-            name: "Playlists",
+            name: 'Playlists',
             path: `channel/${userData?.username}/playlists`, // /channel/:${userData.username}/....   we only need color(:) in defining the Route path first time in main.jsx , while navigating we dont need it
             icon: <i className="fa-regular fa-square-plus"></i>,
             shouldShow: loginStatus,
         },
         {
-            name: "Admin",
-            path: "admin",
+            name: 'Admin',
+            path: 'admin',
             icon: <i className="fa-solid fa-user"></i>,
             shouldShow: loginStatus,
         },
         {
-            name: "Subscribers",
-            path: "subscribers",
+            name: 'Subscribers',
+            path: 'subscribers',
             icon: <i className="fa-solid fa-user-group"></i>,
             shouldShow: true,
         },
@@ -63,32 +63,32 @@ function SideBar() {
 
     const bottomItems = [
         {
-            name: "Home",
-            path: "",
+            name: 'Home',
+            path: '',
             icon: <i className="fa-solid fa-house"></i>,
             shouldShow: true,
         },
         {
-            name: "Tweets",
-            path: "tweets",
+            name: 'Tweets',
+            path: 'tweets',
             icon: <i className="fa-brands fa-twitter"></i>,
             shouldShow: true,
         },
         {
-            name: "My Content",
+            name: 'My Content',
             path: `/channel/${userData?.username}`,
             icon: <i className="fa-solid fa-video"></i>,
             shouldShow: true,
         },
         {
-            name: "History",
-            path: "watch-history",
+            name: 'History',
+            path: 'watch-history',
             icon: <i className="fa-solid fa-clock-rotate-left"></i>,
             shouldShow: true,
         },
         {
-            name: "Settings",
-            path: "settings",
+            name: 'Settings',
+            path: 'settings',
             icon: <i className="fa-solid fa-gear"></i>,
             shouldShow: loginStatus,
         },
@@ -97,17 +97,27 @@ function SideBar() {
     const sideElements = sideItems.map(
         (item) =>
             item.shouldShow && (
-                <li key={item.name} value={item.name} className="w-full h-full mb-1">
+                <li
+                    key={item.name}
+                    value={item.name}
+                    className="w-full h-full mb-1"
+                >
                     <NavLink
                         to={item.path}
                         className={({ isActive }) =>
                             `${
-                                isActive ? "border-[#8871ee]" : "border-[#b5b4b4]"
+                                isActive
+                                    ? 'border-[#8871ee]'
+                                    : 'border-[#b5b4b4]'
                             } border-[0.1rem] h-full flex items-center justify-center lg:justify-start group-hover:justify-start hover:border-[#8871ee] py-[7px] px-3 text-lg`
                         }
                     >
-                        <span className="text-xl w-5 flex items-center justify-center p-1">{item.icon}</span>{" "}
-                        <span className="ml-3 hidden lg:block group-hover:block">{item.name}</span>
+                        <span className="text-xl w-5 flex items-center justify-center p-1">
+                            {item.icon}
+                        </span>{' '}
+                        <span className="ml-3 hidden lg:block group-hover:block">
+                            {item.name}
+                        </span>
                     </NavLink>
                 </li>
             )
@@ -120,7 +130,7 @@ function SideBar() {
                     <NavLink
                         to={item.path}
                         className={({ isActive }) =>
-                            `${isActive && "text-[#8871ee]"} text-[1.1rem] h-full flex flex-col justify-center pt-1 cursor-pointer`
+                            `${isActive && 'text-[#8871ee]'} text-[1.1rem] h-full flex flex-col justify-center pt-1 cursor-pointer`
                         }
                     >
                         {item.icon}
@@ -141,14 +151,18 @@ function SideBar() {
                             to="support"
                             className={({ isActive }) =>
                                 `${
-                                    isActive ? " border-[#8871ee]" : "border-[#b5b4b4] "
+                                    isActive
+                                        ? ' border-[#8871ee]'
+                                        : 'border-[#b5b4b4] '
                                 } group-hover:justify-start  border-[0.1rem] h-full flex items-center justify-center lg:justify-start hover:border-[0.1rem] hover:border-[#8871ee] py-[7px] px-3 text-lg`
                             }
                         >
                             <span className="text-xl w-5 flex items-center justify-center p-1">
                                 <i className="fa-regular fa-circle-question"></i>
                             </span>
-                            <span className="ml-3 hidden lg:block group-hover:block">Support</span>
+                            <span className="ml-3 hidden lg:block group-hover:block">
+                                Support
+                            </span>
                         </NavLink>
                     </div>
 
@@ -158,14 +172,18 @@ function SideBar() {
                                 to="settings"
                                 className={({ isActive }) =>
                                     `${
-                                        isActive ? " border-[#8871ee]" : "border-[#b5b4b4] "
+                                        isActive
+                                            ? ' border-[#8871ee]'
+                                            : 'border-[#b5b4b4] '
                                     } group-hover:justify-start border-[0.1rem] h-full flex items-center justify-center lg:justify-start hover:border-[0.1rem] hover:border-[#8871ee] py-[7px] px-3 text-lg`
                                 }
                             >
                                 <span className="text-xl w-5 flex items-center justify-center p-1">
                                     <i className="fa-solid fa-gear"></i>
                                 </span>
-                                <span className="ml-3 hidden lg:block group-hover:block">Settings</span>
+                                <span className="ml-3 hidden lg:block group-hover:block">
+                                    Settings
+                                </span>
                             </NavLink>
                         </div>
                     )}
@@ -175,7 +193,9 @@ function SideBar() {
             {/* sidebar for small screens */}
             <aside className="fixed bottom-0 h-[60px] z-[110] w-full sm:hidden flex flex-col items-center justify-center bg-[#0c0c0c] text-white">
                 <hr className="w-full border-[0.01rem] border-[#b5b4b4] absolute top-0" />
-                <ul className="flex w-full h-full gap-2 items-center justify-evenly text-center font-semibold px-2">{bottomElements}</ul>
+                <ul className="flex w-full h-full gap-2 items-center justify-evenly text-center font-semibold px-2">
+                    {bottomElements}
+                </ul>
             </aside>
         </div>
     );

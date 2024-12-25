@@ -1,5 +1,5 @@
-import { useNavigate, Navigate } from "react-router-dom";
-import { useAuthHook } from "../hooks";
+import { useNavigate, Navigate } from 'react-router-dom';
+import { useAuthHook } from '../hooks';
 
 export default function RedirectToLogin({ children }) {
     const { loginStatus } = useAuthHook();

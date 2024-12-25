@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useAuthHook } from "../../hooks";
-import userServices from "../../DBservices/userServices";
-import { useDispatch } from "react-redux";
-import { login } from "../../Store/Slices/userSlice";
+import { useState } from 'react';
+import { useAuthHook } from '../../hooks';
+import userServices from '../../DBservices/userServices';
+import { useDispatch } from 'react-redux';
+import { login } from '../../Store/Slices/userSlice';
 
 export default function SettingsChannel() {
     const { userData } = useAuthHook();
@@ -10,13 +10,13 @@ export default function SettingsChannel() {
 
     const defaultValues = {
         username: userData.username,
-        password: "",
+        password: '',
         description: userData.description,
     };
 
     const defaultErrors = {
-        username: "",
-        password: "",
+        username: '',
+        password: '',
     };
 
     const [inputs, setInputs] = useState(defaultValues);
@@ -26,10 +26,14 @@ export default function SettingsChannel() {
     const handleBlur = (e) => {
         const { name, value } = e.target;
 
-        if (name === "username") {
+        if (name === 'username') {
             /^[a-zA-Z0-9_]+$/.test(value)
-                ? setError((prevError) => ({ ...prevError, username: "" }))
-                : setError((prevError) => ({ ...prevError, username: "only numbers, letters and underscores are allowed." }));
+                ? setError((prevError) => ({ ...prevError, username: '' }))
+                : setError((prevError) => ({
+                      ...prevError,
+                      username:
+                          'only numbers, letters and underscores are allowed.',
+                  }));
         }
     };
 
@@ -45,11 +49,15 @@ export default function SettingsChannel() {
         e.preventDefault();
         if (error.username) return;
         const newData = await userServices.updateChannelInfo(inputs);
-        if (newData.message === "WRONG_PASSWORD") return setError((prevError) => ({ ...prevError, password: "wrong password." }));
+        if (newData.message === 'WRONG_PASSWORD')
+            return setError((prevError) => ({
+                ...prevError,
+                password: 'wrong password.',
+            }));
         else {
             dispatch(login(newData));
             setError(defaultErrors);
-            setInputs((prev) => ({ ...prev, password: "" }));
+            setInputs((prev) => ({ ...prev, password: '' }));
         }
     }
 
@@ -61,8 +69,12 @@ export default function SettingsChannel() {
     return (
         <div className="w-full h-full bg-[#0c0c0c] flex flex-col p-3 sm:flex-row sm:justify-between gap-4">
             <div className="">
-                <p className="text-[1.23rem] text-[#f2f2f2] mb-[3px]">Channel Info</p>
-                <p className="text-[1rem] text-[#c5c5c5]">Update your channel details here.</p>
+                <p className="text-[1.23rem] text-[#f2f2f2] mb-[3px]">
+                    Channel Info
+                </p>
+                <p className="text-[1rem] text-[#c5c5c5]">
+                    Update your channel details here.
+                </p>
             </div>
 
             <form
@@ -72,7 +84,11 @@ export default function SettingsChannel() {
                 <div className="w-full mb-2">
                     <div className="mb-[2px]">
                         <label htmlFor="username"> User name : </label>
-                        {error.username && <span className="text-red-600 text-sm">{error.username}</span>}
+                        {error.username && (
+                            <span className="text-red-600 text-sm">
+                                {error.username}
+                            </span>
+                        )}
                     </div>
                     <div className="flex items-center border-[0.01rem] border-[#b5b4b4] h-10 rounded-md">
                         <div className="pl-2 pr-3">tweettube.com/</div>
@@ -93,7 +109,11 @@ export default function SettingsChannel() {
                 <div className="w-full">
                     <div className="mb-[2px]">
                         <label htmlFor="description"> Description : </label>
-                        {error.username && <span className="text-red-600 text-sm">{error.username}</span>}
+                        {error.username && (
+                            <span className="text-red-600 text-sm">
+                                {error.username}
+                            </span>
+                        )}
                     </div>
                     <textarea
                         name="description"
@@ -109,7 +129,11 @@ export default function SettingsChannel() {
                 <div className="w-full">
                     <div>
                         <label htmlFor="password">Password : </label>
-                        {error.password && <span className="text-red-600 text-sm">{error.password}</span>}
+                        {error.password && (
+                            <span className="text-red-600 text-sm">
+                                {error.password}
+                            </span>
+                        )}
                     </div>
                     <input
                         type="password"

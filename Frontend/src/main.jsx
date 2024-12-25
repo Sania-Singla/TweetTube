@@ -1,10 +1,14 @@
-import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
-import "./index.css";
-import { RouterProvider } from "react-router-dom";
-import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
-import { Provider } from "react-redux";
-import store from "./Store/store";
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
+import { RouterProvider } from 'react-router-dom';
+import {
+    createBrowserRouter,
+    createRoutesFromElements,
+    Route,
+} from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './Store/store';
 import {
     HomePage,
     LoginPage,
@@ -20,10 +24,18 @@ import {
     AdminPage,
     NotFoundPage,
     TweetsPage,
-} from "./Pages";
-import { ChannelVideos, ChannelPlaylists, ChannelSubscribed, SettingsPersonal, SettingsChannel, SettingsPassword, ChannelAbout } from "./components";
-import SearchResultsPage from "./Pages/SearchResults.jsx";
-import SubscribersPage from "./Pages/Subscribers.jsx";
+} from './Pages';
+import {
+    ChannelVideos,
+    ChannelPlaylists,
+    ChannelSubscribed,
+    SettingsPersonal,
+    SettingsChannel,
+    SettingsPassword,
+    ChannelAbout,
+} from './components';
+import SearchResultsPage from './Pages/SearchResults.jsx';
+import SubscribersPage from './Pages/Subscribers.jsx';
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -57,7 +69,10 @@ const router = createBrowserRouter(
             >
                 {/*redirecting to /login if not logged in*/}
                 <Route path="" element={<SettingsPersonal />} />
-                <Route path="change-channel-info" element={<SettingsChannel />} />
+                <Route
+                    path="change-channel-info"
+                    element={<SettingsChannel />}
+                />
                 <Route path="change-password" element={<SettingsPassword />} />
             </Route>
             <Route path="support" element={<SupportPage />} />
@@ -66,7 +81,7 @@ const router = createBrowserRouter(
     )
 );
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById('root')).render(
     // <React.StrictMode>
     <Provider store={store}>
         <RouterProvider router={router} />

@@ -1,6 +1,6 @@
-import { useEffect, useState, useCallback, useRef } from "react";
-import videoServices from "../../DBservices/videoServices";
-import { RecemendationVideoList, PulseRecemendationVideoList } from "..";
+import { useEffect, useState, useCallback, useRef } from 'react';
+import videoServices from '../../DBservices/videoServices';
+import { RecemendationVideoList, PulseRecemendationVideoList } from '..';
 
 export default function SideVideos() {
     const [loading, setloading] = useState(false);
@@ -10,7 +10,9 @@ export default function SideVideos() {
 
     useEffect(() => {
         setloading(true);
-        videoServices.getRandomVideos(setVideoInfo, videos, setVideos, page, 10).then((data) => setloading(false));
+        videoServices
+            .getRandomVideos(setVideoInfo, videos, setVideos, page, 10)
+            .then((data) => setloading(false));
     }, [page]);
 
     const observer = useRef();
@@ -20,7 +22,8 @@ export default function SideVideos() {
             if (observer.current) observer.current.disconnect();
             observer.current = new IntersectionObserver((entries) => {
                 const lastVideo = entries[0];
-                if (lastVideo.isIntersecting && videoInfo.hasNextPage) setPage((prev) => prev + 1);
+                if (lastVideo.isIntersecting && videoInfo.hasNextPage)
+                    setPage((prev) => prev + 1);
             });
             if (node) observer.current.observe(node);
         },
@@ -28,7 +31,14 @@ export default function SideVideos() {
     );
 
     const videoElements = videos?.map((video, index) => {
-        if (videos.length === index + 1) return <RecemendationVideoList key={video._id} video={video} reference={callbackRef} />;
+        if (videos.length === index + 1)
+            return (
+                <RecemendationVideoList
+                    key={video._id}
+                    video={video}
+                    reference={callbackRef}
+                />
+            );
         else return <RecemendationVideoList key={video._id} video={video} />;
     });
 

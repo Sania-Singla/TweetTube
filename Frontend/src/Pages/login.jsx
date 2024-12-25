@@ -1,18 +1,18 @@
-import { useState } from "react";
-import userServices from "../DBservices/userServices";
-import { useDispatch } from "react-redux";
-import { login } from "../Store/Slices/userSlice";
-import { useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useState } from 'react';
+import userServices from '../DBservices/userServices';
+import { useDispatch } from 'react-redux';
+import { login } from '../Store/Slices/userSlice';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 export default function LoginPage() {
     const [inputs, setInputs] = useState({
-        loginInput: "", //could be username/email
-        password: "",
+        loginInput: '', //could be username/email
+        password: '',
     });
 
     const [error, setError] = useState({
-        root: "",
+        root: '',
     });
 
     const [loading, setLoading] = useState(false);
@@ -31,27 +31,29 @@ export default function LoginPage() {
 
     const inputFields = [
         {
-            id: "loginInput",
-            name: "loginInput",
-            type: "text",
-            placeholder: "Enter username or email",
+            id: 'loginInput',
+            name: 'loginInput',
+            type: 'text',
+            placeholder: 'Enter username or email',
             required: true,
-            label: "Username or email",
+            label: 'Username or email',
         },
         {
-            id: "password",
-            name: "password",
-            type: "password",
-            placeholder: "Enter your password",
+            id: 'password',
+            name: 'password',
+            type: 'password',
+            placeholder: 'Enter your password',
             required: true,
-            label: "Password",
+            label: 'Password',
         },
     ];
 
     const inputElements = inputFields.map((input) => (
         <div className="w-[320px] mb-5" key={input.id}>
             <div className="mb-[1px]">
-                {input.required && <span className="text-red-600 mr-[2px]">*</span>}
+                {input.required && (
+                    <span className="text-red-600 mr-[2px]">*</span>
+                )}
                 <label htmlFor={input.id}>{input.label}</label>
             </div>
             <input
@@ -71,13 +73,23 @@ export default function LoginPage() {
         e.preventDefault();
 
         if (error.loginInput || error.password) return;
-        const userData = await userServices.loginUser(setData, setLoading, inputs);
-        if (userData.message === "USER_NOT_FOUND" || userData.message === "WRONG_PASSWORD") {
-            setError((prevError) => ({ ...prevError, root: "wrong password." }));
+        const userData = await userServices.loginUser(
+            setData,
+            setLoading,
+            inputs
+        );
+        if (
+            userData.message === 'USER_NOT_FOUND' ||
+            userData.message === 'WRONG_PASSWORD'
+        ) {
+            setError((prevError) => ({
+                ...prevError,
+                root: 'wrong password.',
+            }));
         } //because req gyi hai becuase agr details hi entered nhi thi toh hmne request bhene hi nhi dii  //so user is not found message received from backend
         else {
             disptach(login(userData));
-            navigate("/");
+            navigate('/');
         }
     }
 
@@ -93,21 +105,31 @@ export default function LoginPage() {
                     <h2 className="font-semibold text-[1.65rem] mt-5">LOGIN</h2>
                     <h3 className="text-lg mt-1">
                         Don't have an Account yet ?
-                        <Link to="/register" className="text-[1rem] text-blue-700">
-                            {" "}
+                        <Link
+                            to="/register"
+                            className="text-[1rem] text-blue-700"
+                        >
+                            {' '}
                             Sign up
                         </Link>
                     </h3>
                     <motion.div
                         initial={{ width: 0 }}
-                        animate={{ width: "120%" }}
+                        animate={{ width: '120%' }}
                         transition={{ duration: 0.3 }}
                         className=" h-[0.005rem] mt-2 bg-[#9e9e9e]"
                     ></motion.div>
                 </div>
 
-                <form onSubmit={handleSubmit} className="mt-3 flex flex-col items-start justify-center">
-                    {error.root && <p className="text-red-600 w-full text-md mb-2 text-center">{error.root}</p>}
+                <form
+                    onSubmit={handleSubmit}
+                    className="mt-3 flex flex-col items-start justify-center"
+                >
+                    {error.root && (
+                        <p className="text-red-600 w-full text-md mb-2 text-center">
+                            {error.root}
+                        </p>
+                    )}
                     {inputElements}
                     <div className="w-full text-center mt-4">
                         <button
@@ -135,7 +157,7 @@ export default function LoginPage() {
                                     </svg>
                                 </div>
                             ) : (
-                                "Login"
+                                'Login'
                             )}
                         </button>
                     </div>
