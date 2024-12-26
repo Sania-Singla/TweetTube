@@ -19,7 +19,7 @@ import { icons } from '../assets/icons';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { motion } from 'framer-motion';
 
-function VideoPage() {
+export default function VideoPage() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({});
     const [subscribedStatus, setSubscribedStatus] = useState(false);
@@ -643,5 +643,3 @@ function VideoPage() {
         </div>
     );
 }
-
-export default VideoPage;
