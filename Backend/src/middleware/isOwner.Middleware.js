@@ -10,6 +10,7 @@ import { isValidObjectId } from 'mongoose';
  * Generic middleware to check if the authenticated user is the owner of the resource.
  * @param {mongoose.Model} Model - The Mongoose model to query (e.g., Video, Tweet, Playlist).
  * @param {string} idParam - The name of the request parameter containing the resource ID.
+ * @param {string} fieldToMatchWith - The field in the model to match with the authenticated user's ID.
  * @param {string} notFoundMessage - The message to return if the resource is not found.
  * @param {string} notOwnerMessage - The message to return if the user is not the owner of the resource.
  * @param {string} requestKey - The key to attach the resource to on the request object.
@@ -19,6 +20,7 @@ import { isValidObjectId } from 'mongoose';
 const isOwner = (
     Model,
     idParam,
+    fieldToMatchWith,
     notFoundMessage,
     notOwnerMessage,
     requestKey
@@ -38,7 +40,7 @@ const isOwner = (
                 return res.status(NOT_FOUND).json({ message: notFoundMessage });
             }
 
-            if (!resource.owner.equals(req.user._id)) {
+            if (!resource[fieldToMatchWith].equals(req.user._id)) {
                 return res
                     .status(BAD_REQUEST)
                     .json({ message: notOwnerMessage });
@@ -59,6 +61,7 @@ const isOwner = (
 const isVideoOwner = isOwner(
     Video,
     'videoId',
+    'owner',
     'VIDEO_NOT_FOUND',
     'NOT_THE_OWNER',
     'video'
@@ -67,6 +70,7 @@ const isVideoOwner = isOwner(
 const isTweetOwner = isOwner(
     Tweet,
     'tweetId',
+    'tweetBy',
     'TWEET_NOT_FOUND',
     'NOT_THE_OWNER',
     'tweet'
@@ -75,6 +79,7 @@ const isTweetOwner = isOwner(
 const isPlaylistOwner = isOwner(
     Playlist,
     'playlistId',
+    'createdBy',
     'PLAYLIST_NOT_FOUND',
     'NOT_THE_OWNER',
     'playlist'

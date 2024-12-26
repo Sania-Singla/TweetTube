@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import channelServices from '../../DBservices/channelServices';
+import { channelServices } from '../../DBservices';
 import { useChannelHook } from '../../hooks';
 import { PulseSubscribedChannel } from '../index';
 import { useNavigate } from 'react-router-dom';
 
-function ChannelSubscribed() {
+export default function ChannelSubscribed() {
     const [loading, setLoading] = useState(true);
     const [subscribedFound, setSubscribedFound] = useState(true);
     const [subscribedChannels, setSubscribedChannels] = useState([]);
@@ -139,5 +139,3 @@ function ChannelSubscribed() {
             </div>
         );
 }
-
-export default ChannelSubscribed;

@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import adminServices from '../../DBservices/adminServices';
+import { adminServices } from '../../DBservices';
 
 export default function EditVideoPopup({
     close,

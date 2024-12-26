@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useAuthHook } from '../../hooks';
 
-function SideBar() {
+export default function SideBar() {
     const { userData, loginStatus } = useAuthHook();
 
     const sideItems = [
@@ -200,5 +200,3 @@ function SideBar() {
         </div>
     );
 }
-
-export default SideBar;

@@ -1,9 +1,9 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import channelServices from '../../DBservices/channelServices';
+import { channelServices } from '../../DBservices';
 import { ChannelVideoCard, PulseVideoCard } from '../index';
 import { useChannelHook } from '../../hooks';
 
-function ChannelVideos() {
+export default function ChannelVideos() {
     const [loading, setLoading] = useState(true);
     const [videosFound, setVideosFound] = useState(true);
     const [videoInfo, setVideoInfo] = useState({});
@@ -126,5 +126,3 @@ function ChannelVideos() {
             </div>
         );
 }
-
-export default ChannelVideos;

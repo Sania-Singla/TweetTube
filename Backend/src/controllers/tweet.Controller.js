@@ -30,7 +30,7 @@ const getTweets = async (req, res) => {
         const pipeline = [
             {
                 $match: {
-                    owner: new mongoose.Types.ObjectId(userId),
+                    tweetBy: new mongoose.Types.ObjectId(userId),
                 },
             },
             {
@@ -46,9 +46,9 @@ const getTweets = async (req, res) => {
                 //populating the user field
                 $lookup: {
                     from: 'users',
-                    localField: 'owner',
+                    localField: 'tweetBy',
                     foreignField: '_id',
-                    as: 'owner',
+                    as: 'tweetBy',
                     pipeline: [
                         {
                             $project: {
@@ -103,7 +103,7 @@ const getTweets = async (req, res) => {
         }
 
         const totalTweets = await Tweet.countDocuments({
-            owner: new mongoose.Types.ObjectId(userId),
+            tweetBy: new mongoose.Types.ObjectId(userId),
         });
         const totalPages = totalTweets / limitNumber;
         const hasPreviousPage = pageNumber > 1;
@@ -135,7 +135,7 @@ const createTweet = async (req, res) => {
 
         const tweet = await Tweet.create({
             content,
-            owner: req.user._id,
+            tweetBy: req.user._id,
         });
 
         return res.status(CREATED).json(tweet);

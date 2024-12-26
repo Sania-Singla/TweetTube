@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import videoServices from '../DBservices/videoServices';
+import { videoServices } from '../DBservices';
 import { VideoList, PulseVideoList } from '../components';
 
 export default function SearchResultsPage() {

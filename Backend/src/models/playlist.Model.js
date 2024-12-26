@@ -1,8 +1,7 @@
 import mongoose from 'mongoose';
 const playlistSchema = new mongoose.Schema(
     {
-        owner: {
-            // createdBy
+        createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
         },

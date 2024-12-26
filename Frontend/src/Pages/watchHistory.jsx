@@ -1,4 +1,4 @@
-import channelServices from '../DBservices/channelServices';
+import { channelServices } from '../DBservices';
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { VideoList, PulseVideoList } from '../components';
 import { useAuthHook } from '../hooks';

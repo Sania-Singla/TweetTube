@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useNavigate, useParams } from 'react-router-dom';
-import channelServices from '../DBservices/channelServices';
+import { channelServices } from '../DBservices';
 import { PulseChannel, LoginPopup } from '../components';
 import { useAuthHook } from '../hooks';
 import { storeChannelData } from '../Store/Slices/channelSlice';

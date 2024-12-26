@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import playlistServices from '../../DBservices/playlistServices';
+import { playlistServices } from '../../DBservices';
 
 export default function EditPlaylistPopup({ close, setRerender, playlist }) {
     const [inputs, setInputs] = useState({

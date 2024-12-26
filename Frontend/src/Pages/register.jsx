@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import userServices from '../DBservices/userServices';
+import { userServices } from '../DBservices';
 import { useDispatch } from 'react-redux';
 import { login } from '../Store/Slices/userSlice';
 import { useNavigate, Link } from 'react-router-dom';

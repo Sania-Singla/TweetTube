@@ -22,7 +22,7 @@ const createPlaylist = async (req, res) => {
         const playlist = await Playlist.create({
             name,
             description,
-            owner: req.user._id,
+            createdBy: req.user._id,
         });
 
         return res.status(CREATED).json(playlist);
@@ -59,7 +59,7 @@ const getPlaylists = async (req, res) => {
             // can also use .find({})
             {
                 $match: {
-                    owner: new mongoose.Types.ObjectId(userId),
+                    createdBy: new mongoose.Types.ObjectId(userId),
                 },
             },
             {
@@ -127,7 +127,7 @@ const getPlaylists = async (req, res) => {
         ]);
 
         const totalPlaylists = await Playlist.countDocuments({
-            owner: new mongoose.Types.ObjectId(userId),
+            createdBy: new mongoose.Types.ObjectId(userId),
         });
         const totalPages = Math.ceil(totalPlaylists / limitNumber); // will round off to nearest integer
         const hasNextPage = pageNumber < totalPages;
@@ -174,7 +174,7 @@ const getPlaylistsTitles = async (req, res) => {
             // can also use .find({})
             {
                 $match: {
-                    owner: new mongoose.Types.ObjectId(userId),
+                    createdBy: new mongoose.Types.ObjectId(userId),
                 },
             },
             {
@@ -268,9 +268,9 @@ const getPlaylist = async (req, res) => {
             {
                 $lookup: {
                     from: 'users',
-                    localField: 'owner',
+                    localField: 'createdBy',
                     foreignField: '_id',
-                    as: 'owner',
+                    as: 'createdBy',
                     pipeline: [
                         {
                             $project: {
@@ -286,7 +286,7 @@ const getPlaylist = async (req, res) => {
             {
                 $addFields: {
                     totalVideos: { $size: '$videos' },
-                    owner: { $first: '$owner' },
+                    createdBy: { $first: '$createdBy' },
                 },
             },
         ]);
@@ -319,7 +319,7 @@ const addVideoToPlaylist = async (req, res) => {
                 .json({ message: 'MISSING_OR_INVALID_VIDEOID' });
         }
 
-        const playlist = await Playlist.findByIdAndUpdate(
+        await Playlist.findByIdAndUpdate(
             playlistId,
             {
                 $push: {

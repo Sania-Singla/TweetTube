@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import videoServices from '../../DBservices/videoServices';
+import { videoServices } from '../../DBservices';
 import { RecemendationVideoList, PulseRecemendationVideoList } from '..';
 
 export default function SideVideos() {

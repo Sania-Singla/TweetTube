@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import userServices from '../../DBservices/userServices';
+import { userServices } from '../../DBservices';
 
 export default function SettingsPassword() {
     const defaultValues = {

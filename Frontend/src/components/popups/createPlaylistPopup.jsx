@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
-import playlistServices from '../../DBservices/playlistServices';
+import { playlistServices } from '../../DBservices';
 
 export default function CreatePlaylistPopup({ close }) {
     const [inputs, setInputs] = useState({
@@ -124,7 +124,6 @@ export default function CreatePlaylistPopup({ close }) {
                         <button
                             onMouseOver={handleMouseOver}
                             disabled={disabled}
-                            type="submit"
                             className="disabled:cursor-not-allowed p-2 w-full"
                         >
                             Create

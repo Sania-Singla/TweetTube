@@ -1,8 +1,7 @@
-import React from 'react';
 import { Header, SideBar } from '../index';
 import { Outlet } from 'react-router-dom';
 
-function Layout() {
+export default function Layout() {
     return (
         <div className="h-[calc(100vh-80px)]">
             <Header />
@@ -13,5 +12,3 @@ function Layout() {
         </div>
     );
 }
-
-export default Layout;

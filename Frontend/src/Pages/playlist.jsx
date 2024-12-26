@@ -10,9 +10,9 @@ import {
     DeletePlaylistPopup,
     PulsePlaylistPage,
 } from '../components';
-import playlistServices from '../DBservices/playlistServices';
+import { playlistServices } from '../DBservices';
 
-function PlaylistPage() {
+export default function PlaylistPage() {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState({});
     const [videos, setVideos] = useState([]);
@@ -350,5 +350,3 @@ function PlaylistPage() {
         </div>
     );
 }
-
-export default PlaylistPage;

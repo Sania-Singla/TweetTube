@@ -3,9 +3,9 @@ import { Logout } from '../index';
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAuthHook } from '../../hooks';
-import videoServices from '../../DBservices/videoServices';
+import { videoServices } from '../../DBservices';
 
-function Header() {
+export default function Header() {
     const { loginStatus, userData } = useAuthHook();
     const [hamburgurMenuDisplay, setHamburgurMenuDisplay] = useState(false);
     const navigate = useNavigate();
@@ -407,5 +407,3 @@ function Header() {
         </header>
     );
 }
-
-export default Header;

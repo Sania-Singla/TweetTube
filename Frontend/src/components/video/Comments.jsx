@@ -9,7 +9,7 @@ import { faThumbsUp as faRegularThumbsUp } from '@fortawesome/free-regular-svg-i
 import { faThumbsDown as faSolidThumbsDown } from '@fortawesome/free-solid-svg-icons';
 import { faThumbsDown as faRegularThumbsDown } from '@fortawesome/free-regular-svg-icons';
 import { icons } from '../../assets/icons';
-import commentServices from '../../DBservices/commentServices';
+import { commentServices } from '../../DBservices';
 
 export default function Comments({ expandComments }) {
     const [comments, setComments] = useState([]);

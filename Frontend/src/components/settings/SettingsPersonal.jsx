@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuthHook } from '../../hooks';
-import userServices from '../../DBservices/userServices';
+import { userServices } from '../../DBservices';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Store/Slices/userSlice';
 

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import channelServices from '../../DBservices/channelServices';
+import { channelServices } from '../../DBservices';
 import { icons } from '../../assets/icons';
 import { format } from 'date-fns';
 import { NavLink } from 'react-router-dom';
 import { PulseChannelAbout } from '../video/Pulses';
 import { useChannelHook } from '../../hooks';
 
-function ChannelAbout() {
+export default function ChannelAbout() {
     const [loading, setLoading] = useState(true);
     const channelData = useChannelHook();
     const [aboutData, setAboutData] = useState({});
@@ -77,5 +77,3 @@ function ChannelAbout() {
         );
     }
 }
-
-export default ChannelAbout;

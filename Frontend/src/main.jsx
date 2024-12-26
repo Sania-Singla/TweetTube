@@ -76,6 +76,7 @@ const router = createBrowserRouter(
                 <Route path="change-password" element={<SettingsPassword />} />
             </Route>
             <Route path="support" element={<SupportPage />} />
+            <Route path="server-error" element={<ServerErrorPage />} />
             <Route path="*" element={<NotFoundPage />} />
         </Route>
     )

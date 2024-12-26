@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { PulseSettings } from '../components';
 import { useAuthHook } from '../hooks';
-import userServices from '../DBservices/userServices';
+import { userServices } from '../DBservices';
 import { useDispatch } from 'react-redux';
 import { login } from '../Store/Slices/userSlice';
 

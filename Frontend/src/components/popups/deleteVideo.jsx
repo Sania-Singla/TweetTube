@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import { icons } from '../../assets/icons';
 import { useState } from 'react';
-import adminServices from '../../DBservices/adminServices';
+import { adminServices } from '../../DBservices';
 
 export default function DeleteVideoPopup({ close, video }) {
     const [checked, setChecked] = useState(false);

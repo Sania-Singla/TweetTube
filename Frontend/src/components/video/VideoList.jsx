@@ -29,7 +29,7 @@ function VideoList({
     });
 
     return (
-        //important⭐adding a "/" can make a route absolute prevent appending
+        // * adding a "/" makes a route absolute prevent appending
         <div
             ref={reference}
             onClick={() => navigate(`/video/${_id}`)}
@@ -51,8 +51,8 @@ function VideoList({
             </div>
 
             {/* info */}
-            <div className="hidden sm:block ml-2 mt-1 sm:mt-0 sm:ml-3">
-                <div className="mb-3 text-[1.3rem] font-medium text-white line-clamp-2">
+            <div className="hidden sm:block mt-1 sm:mt-0 sm:ml-3">
+                <div className="mb-3 text-[1.3rem] font-medium text-white line-clamp-2 mr-11">
                     {title}
                 </div>
 

@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import videoServices from '../DBservices/videoServices';
-import channelServices from '../DBservices/channelServices';
+import { channelServices, videoServices } from '../DBservices';
 import { useState, useEffect, useRef } from 'react';
 import {
     LoginPopup,
