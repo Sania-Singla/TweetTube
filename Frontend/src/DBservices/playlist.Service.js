@@ -28,7 +28,7 @@ export class PlaylistServices {
             const res = await fetch(
                 `/api/v1/playlists/add/${playlistId}/${videoId}`,
                 {
-                    method: 'GET',
+                    method: 'PATCH',
                     credentials: 'include',
                 }
             );
@@ -138,7 +138,7 @@ export class PlaylistServices {
             const res = await fetch(
                 `/api/v1/playlists/remove/${playlistId}/${videoId}`,
                 {
-                    method: 'GET',
+                    method: 'PATCH',
                     credentials: 'include',
                 }
             );
