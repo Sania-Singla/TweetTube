@@ -8,106 +8,57 @@ import {
 } from '../constants/errorCodes.js';
 
 const toggleVideoLike = async (req, res) => {
-    //will have access to req.user
-    //get video id by params
-    /*****from frontend we will send a query parameter as toggleStatus=true/false to specify like button clicked or dislike button clicked *****/
-    //whether clicked on like or dislike => find the like doc with req.user._id if exist then check its liked status (true/false)
-    //if not found that means will have to create a doc and depending on like clicked (set to true) , dislike clicked (set to false)
-    //if found then delete the document then =>a) if oppostie clicked alter the liked status.
-    //                                         b) if same clicked then delete the doc.
-    // remember one thing remove the like doesn't mean disliked
+    // from frontend we will send a query parameter as toggleStatus=true/false to specify like/dislike  //
+    // find the like doc with req.user._id if exist then check if status matches (delete) , unmatches (update)
+    // if not found that means will have to create a doc with provided toggleStatus
+    // remember removing the like doesn't mean disliked
     try {
         const { videoId } = req.params;
-        if (!isValidObjectId(videoId))
+        const { toggleStatus } = req.query; // string
+
+        if (!videoId || !isValidObjectId(videoId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_VIDEO_ID' });
-
-        const { toggleStatus } = req.query; //toggleStatus will be a string
+                .json({ message: 'MISSING_OR_INVALID_VIDEOID' });
+        }
 
         const existingLikeDoc = await Like.findOne({
             video: new mongoose.Types.ObjectId(videoId),
             likedBy: new mongoose.Types.ObjectId(req.user._id),
         });
         if (!existingLikeDoc) {
-            //new interaction
-            const likeDoc = await Like.create({
+            await Like.create({
                 video: videoId,
                 likedBy: req.user._id,
                 liked: toggleStatus,
-                // no need to set the comment and tweet to anything they simple wont we present there in the created doc ok
             });
-            if (!likeDoc)
-                return res
-                    .status(SERVER_ERROR)
-                    .json({ message: 'DOC_CREATION_DB_ISSUE' });
-            if (toggleStatus === 'true')
-                return res.status(CREATED).json({ message: 'VIDEO_LIKED' });
-            if (toggleStatus === 'false')
-                return res.status(CREATED).json({ message: 'VIDEO_DISLIKED' });
-        }
-        //so we have found an existing doc. now the liked status in it could be true or false so we need to toggle it or may be delete the doc, lets see
-        if (existingLikeDoc.liked === 'true') {
+
             if (toggleStatus === 'true') {
-                //so this means the video was liked before and now we removed the like (doesn't mean disliked) so delete the doc
-                const deletedDoc = await Like.findByIdAndDelete(
-                    existingLikeDoc._id
-                );
-                if (!deletedDoc)
-                    return res
-                        .status(SERVER_ERROR)
-                        .json({ message: 'DOC_DELETION_DB_ISSUE' });
-                return res.status(OK).json({ message: 'LIKE_REMOVED' });
+                return res.status(CREATED).json({ message: 'VIDEO_LIKED' });
             } else {
-                //so this means the video was liked before and now we disliked it so toggle the liked status
-                existingLikeDoc.liked = 'false';
-                await existingLikeDoc.save(); // remember it will not return anything
-                return res
-                    .status(OK)
-                    .json({ message: 'LIKE_REMOVED_AND_DISLIKED' });
-                //alternative but by above method we save a db call
-                // const newLikeDoc = await Like.findByIdAndUpdate(
-                //     existingLikeDoc._id,
-                //     {
-                //         $set:{
-                //             liked:false
-                //         }
-                //     },
-                //     { new:true}
-                // )
-                // if(!newLikeDoc) return res.status(SERVER_ERROR).json({message:"something wrong happend while updating the doc."})
-                //return res.status(OK).json({ newLikeDoc, message:"removed the like & disliked the video successfully." })
+                return res.status(CREATED).json({ message: 'VIDEO_DISLIKED' });
             }
-        } else if (existingLikeDoc.liked === 'false') {
-            if (toggleStatus === 'false') {
-                //so this means the video was disliked before and now we removed the dislike (doesn't mean liked) so delete the doc
-                const deletedDoc = await Like.findByIdAndDelete(
-                    existingLikeDoc._id
-                );
-                if (!deletedDoc)
-                    return res
-                        .status(SERVER_ERROR)
-                        .json({ message: 'DOC_DELETION_DB_ISSUE' });
-                return res.status(OK).json({ message: 'DISLIKE_REMOVED' });
+        } else {
+            if (existingLikeDoc.liked === toggleStatus) {
+                await Like.findByIdAndDelete(existingLikeDoc._id);
+
+                if (toggleStatus === 'true') {
+                    return res.status(OK).json({ message: 'LIKE_REMOVED' });
+                } else {
+                    return res.status(OK).json({ message: 'DISLIKE_REMOVED' });
+                }
             } else {
-                //so this means the video was disliked before and now we liked it so toggle the liked status
-                existingLikeDoc.liked = 'true';
-                await existingLikeDoc.save(); // remember it will not return anything
-                return res
-                    .status(OK)
-                    .json({ message: 'DISLIKE_REMOVED_AND_LIKED' });
-                //alternative but by above method we save a db call
-                // const newLikeDoc = await Like.findByIdAndUpdate(
-                //     existingLikeDoc._id,
-                //     {
-                //         $set:{
-                //             liked:true
-                //         }
-                //     },
-                //     { new:true}
-                // )
-                // if(!newLikeDoc) return res.status(SERVER_ERROR).json({message:"something wrong happend while updating the doc."})
-                // return res.status(OK).json({ newLikeDoc, message:"removed the dislike & liked the video successfully." })
+                existingLikeDoc.liked = toggleStatus;
+                await existingLikeDoc.save();
+                if (toggleStatus === 'true') {
+                    return res
+                        .status(OK)
+                        .json({ message: 'LIKE_REMOVED_AND_DISLIKED' });
+                } else {
+                    return res
+                        .status(OK)
+                        .json({ message: 'DISLIKE_REMOVED_AND_LIKED' });
+                }
             }
         }
     } catch (err) {
@@ -119,82 +70,56 @@ const toggleVideoLike = async (req, res) => {
 };
 
 const toggleCommentLike = async (req, res) => {
-    //will have access to req.user
-    //get comment id by params
-    /*****from frontend we will send a query parameter as toggleStatus=true/false to specify like button clicked or dislike button clicked *****/
-    //whether clicked on like or dislike => find the like doc with req.user._id if exist then check its liked status (true/false)
-    //if not found that means will have to create a doc and depending on like clicked (set to true) , dislike clicked (set to false)
-    //if found then delete the document then =>a) if oppostie clicked alter the liked status.
-    //                                         b) if same clicked then delete the doc.
-    // remember one thing remove the like doesn't mean disliked
     try {
         const { commentId } = req.params;
-        if (!isValidObjectId(commentId))
+        const { toggleStatus } = req.query; // string
+
+        if (!commentId || !isValidObjectId(commentId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_COMMENTID' });
-        const { toggleStatus } = req.query;
+                .json({ message: 'MISSING_OR_INVALID_COMMENTID' });
+        }
+
         const existingLikeDoc = await Like.findOne({
             comment: new mongoose.Types.ObjectId(commentId),
             likedBy: new mongoose.Types.ObjectId(req.user._id),
         });
+
         if (!existingLikeDoc) {
-            //new interaction
-            const like = await Like.create({
+            await Like.create({
                 comment: commentId,
                 likedBy: req.user._id,
                 liked: toggleStatus,
-                // no need to set the video and tweet to anything they simple wont we present there in the created doc ok
             });
-            if (!like)
-                return res
-                    .status(SERVER_ERROR)
-                    .json({ message: 'DOC_CREATION_DB_ISSUE' });
-            if (toggleStatus === 'true')
+
+            if (toggleStatus === 'true') {
                 return res.status(CREATED).json({ message: 'COMMENT_LIKED' });
-            if (toggleStatus === 'false')
+            } else {
                 return res
                     .status(CREATED)
                     .json({ message: 'COMMENT_DISLIKED' });
-        }
-        //so we have found an existing doc. now the liked status in it could be true or false so we need to toggle it or may be delete the doc, lets see
-        if (existingLikeDoc.liked === 'true') {
-            if (toggleStatus === 'true') {
-                //so this means the comment was liked before and now we removed the like (doesn't mean disliked) so delete the doc
-                const deletedDoc = await Like.findByIdAndDelete(
-                    existingLikeDoc._id
-                );
-                if (!deletedDoc)
-                    return res
-                        .status(SERVER_ERROR)
-                        .json({ message: 'DOC_DELETION_DB_ISSUE' });
-                return res.status(OK).json({ message: 'LIKE_REMOVED' });
-            } else {
-                //so this means the comment was liked before and now we disliked it so toggle the liked status
-                existingLikeDoc.liked = 'false';
-                await existingLikeDoc.save(); // remember it will not return anything
-                return res
-                    .status(OK)
-                    .json({ message: 'LIKE_REMVOED_AND_DISLIKED' });
             }
-        } else if (existingLikeDoc.liked === 'false') {
-            if (toggleStatus === 'false') {
-                //so this means the comment was disliked before and now we removed the dislike (doesn't mean liked) so delete the doc
-                const deletedDoc = await Like.findByIdAndDelete(
-                    existingLikeDoc._id
-                );
-                if (!deletedDoc)
-                    return res
-                        .status(SERVER_ERROR)
-                        .json({ message: 'DOC_DELETION_DB_ISSUE' });
-                return res.status(OK).json({ message: 'DISLIKE_REMOVED' });
+        } else {
+            if (existingLikeDoc.liked === toggleStatus) {
+                await Like.findByIdAndDelete(existingLikeDoc._id);
+
+                if (toggleStatus === 'true') {
+                    return res.status(OK).json({ message: 'LIKE_REMOVED' });
+                } else {
+                    return res.status(OK).json({ message: 'DISLIKE_REMOVED' });
+                }
             } else {
-                //so this means the comment was disliked before and now we liked it so toggle the liked status
-                existingLikeDoc.liked = 'true';
-                await existingLikeDoc.save(); // remember it will not return anything
-                return res
-                    .status(OK)
-                    .json({ message: 'DISLIKE_REMVOED_AND_LIKED' });
+                existingLikeDoc.liked = toggleStatus;
+                await existingLikeDoc.save();
+                if (toggleStatus === 'true') {
+                    return res
+                        .status(OK)
+                        .json({ message: 'LIKE_REMOVED_AND_DISLIKED' });
+                } else {
+                    return res
+                        .status(OK)
+                        .json({ message: 'DISLIKE_REMOVED_AND_LIKED' });
+                }
             }
         }
     } catch (err) {
@@ -206,94 +131,54 @@ const toggleCommentLike = async (req, res) => {
 };
 
 const toggleTweetLike = async (req, res) => {
-    //will have access to req.user
-    //get tweet id by params
-    /*****from frontend we will send a query parameter as toggleStatus=true/false to specify like button clicked or dislike button clicked *****/
-    //whether clicked on like or dislike => find the like doc with req.user._id if exist then check its liked status (true/false)
-    //if not found that means will have to create a doc and depending on like clicked (set to true) , dislike clicked (set to false)
-    //if found then delete the document then =>a) if oppostie clicked alter the liked status.
-    //                                         b) if same clicked then delete the doc.
-    // remember one thing remove the like doesn't mean disliked
     try {
         const { tweetId } = req.params;
-        if (!isValidObjectId(tweetId))
+        const { toggleStatus } = req.query; // string
+
+        if (!tweetId || !isValidObjectId(tweetId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'invalid tweet id' });
-        const { toggleStatus } = req.query;
+                .json({ message: 'MISSING_OR_INVALID_TWEETID' });
+        }
+
         const existingLikeDoc = await Like.findOne({
             tweet: new mongoose.Types.ObjectId(tweetId),
             likedBy: new mongoose.Types.ObjectId(req.user._id),
         });
+
         if (!existingLikeDoc) {
-            //new interaction
-            const like = await Like.create({
+            await Like.create({
                 tweet: tweetId,
                 likedBy: req.user._id,
                 liked: toggleStatus,
-                // no need to set the comment and video to anything they simple wont we present there in the created doc ok
             });
-            if (!like)
-                return res.status(SERVER_ERROR).json({
-                    message:
-                        'something wrong happened while creating the new doc.',
-                });
-            return res.status(CREATED).json({
-                createdDoc: like,
-                message:
-                    'tweet liked or disliked successfully (new doc created)',
-            });
-        }
-        //so we have found an existing doc. now the liked status in it could be true or false so we need to toggle it or may be delete the doc, lets see
-        if (existingLikeDoc.liked === 'true') {
+
             if (toggleStatus === 'true') {
-                //so this means the tweet was liked before and now we removed the like (doesn't mean disliked) so delete the doc
-                const deletedDoc = await Like.findByIdAndDelete(
-                    existingLikeDoc._id
-                );
-                if (!deletedDoc)
-                    return res.status(SERVER_ERROR).json({
-                        message:
-                            'something wrong happened while deleting the doc.',
-                    });
-                return res.status(OK).json({
-                    deletedDoc,
-                    message: 'like removed (document deleted)',
-                });
+                return res.status(CREATED).json({ message: 'TWEET_LIKED' });
             } else {
-                //so this means the tweet was liked before and now we disliked it so toggle the liked status
-                existingLikeDoc.liked = 'false';
-                await existingLikeDoc.save(); // remember it will not return anything
-                return res.status(OK).json({
-                    newLikeDoc: existingLikeDoc,
-                    message:
-                        'removed the like & disliked the tweet successfully.',
-                });
+                return res.status(CREATED).json({ message: 'TWEET_DISLIKED' });
             }
-        } else if (existingLikeDoc.liked === 'false') {
-            if (toggleStatus === 'false') {
-                //so this means the tweet was disliked before and now we removed the dislike (doesn't mean liked) so delete the doc
-                const deletedDoc = await Like.findByIdAndDelete(
-                    existingLikeDoc._id
-                );
-                if (!deletedDoc)
-                    return res.status(SERVER_ERROR).json({
-                        message:
-                            'something wrong happened while deleting the doc.',
-                    });
-                return res.status(OK).json({
-                    deletedDoc,
-                    message: 'dislike removed (document deleted)',
-                });
+        } else {
+            if (existingLikeDoc.liked === toggleStatus) {
+                await Like.findByIdAndDelete(existingLikeDoc._id);
+
+                if (toggleStatus === 'true') {
+                    return res.status(OK).json({ message: 'LIKE_REMOVED' });
+                } else {
+                    return res.status(OK).json({ message: 'DISLIKE_REMOVED' });
+                }
             } else {
-                //so this means the tweet was disliked before and now we liked it so toggle the liked status
-                existingLikeDoc.liked = 'true';
-                await existingLikeDoc.save(); // remember it will not return anything
-                return res.status(OK).json({
-                    newLikeDoc: existingLikeDoc,
-                    message:
-                        'removed the dislike & liked the tweet successfully.',
-                });
+                existingLikeDoc.liked = toggleStatus;
+                await existingLikeDoc.save();
+                if (toggleStatus === 'true') {
+                    return res
+                        .status(OK)
+                        .json({ message: 'LIKE_REMOVED_AND_DISLIKED' });
+                } else {
+                    return res
+                        .status(OK)
+                        .json({ message: 'DISLIKE_REMOVED_AND_LIKED' });
+                }
             }
         }
     } catch (err) {
@@ -305,8 +190,7 @@ const toggleTweetLike = async (req, res) => {
 };
 
 const getLikedVideos = async (req, res) => {
-    //have access to req.user
-    //just find the like docs with the user id and liked to be true
+    //just find the like docs with the userId and liked to be true
     const { page = 1, limit = 10, term = '' } = req.query;
 
     const pageNumber = parseInt(page);
@@ -434,7 +318,7 @@ const getLikedVideos = async (req, res) => {
                     ],
                 },
             },
-            // {                            ⭐this is also sending the like docs as empty objects because there video not match query term but we don't want those docs at all so used unwind that will remove the empty objects
+            // { ⭐this is also sending the like docs as empty objects because there video not match query term but we don't want those docs at all so used unwind that will remove the empty objects
             //     $addFields:
             //     {
             //         video: {$first:"$video"}
@@ -466,7 +350,8 @@ const getLikedVideos = async (req, res) => {
             likedVideos,
         };
 
-        // if(likedVideos.length === 0) return res.status(204).json({ message:"no liked videos found." })
+        if (!likedVideos.length)
+            return res.status(OK).json({ message: 'NO_LIKED_VIDEOS' });
         return res.status(OK).json(result);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -481,7 +366,7 @@ const removeFromLikedVideos = async (req, res) => {
     //have access to req.user
     try {
         const { videoId } = req.params;
-        const likeDoc = await Like.findOneAndDelete({
+        await Like.findOneAndDelete({
             video: new mongoose.Types.ObjectId(videoId),
             likedBy: new mongoose.Types.ObjectId(req.user._id),
             liked: 'true',
@@ -557,10 +442,10 @@ const getDislikedVideos = async (req, res) => {
             },
         ]);
 
-        if (dislikedVideos.length === 0)
-            return res
-                .status(OK)
-                .json({ message: 'no disliked videos found.' });
+        if (!dislikedVideos.length) {
+            return res.status(OK).json({ message: 'NO_DISLIKED_VIDEOS' });
+        }
+
         return res.status(OK).json(dislikedVideos);
     } catch (err) {
         return res.status(SERVER_ERROR).json({

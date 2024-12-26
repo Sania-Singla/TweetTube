@@ -7,7 +7,7 @@ import {
 
 import express from 'express';
 export const tweetRouter = express.Router();
-import { verifyJWT } from '../middleware/index.js';
+import { verifyJWT, isTweetOwner } from '../middleware/index.js';
 
 tweetRouter.route('/:userId').get(getTweets);
 
@@ -15,4 +15,7 @@ tweetRouter.use(verifyJWT);
 
 tweetRouter.route('/').post(createTweet);
 
-tweetRouter.route('/:tweetId').patch(updateTweet).delete(deleteTweet);
+tweetRouter
+    .route('/:tweetId')
+    .patch(isTweetOwner, updateTweet)
+    .delete(isTweetOwner, deleteTweet);

@@ -45,8 +45,8 @@ const videoSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-// Create a text index on the title field
-videoSchema.index({ title: 'text' }); //so that for searching purposes it is quick
+// Create a text index on the title field so that for searching purposes it is quicker
+videoSchema.index({ title: 'text' });
 
 videoSchema.methods.increment_Views = async function (userOrIp) {
     let viewerIdentifier;
@@ -57,9 +57,13 @@ videoSchema.methods.increment_Views = async function (userOrIp) {
         // It's a user ID (object)
         viewerIdentifier = `user:${userOrIp.toString()}`;
     }
-    if (this.views.includes(viewerIdentifier)) return 'true';
-    this.views.push(viewerIdentifier);
-    return this.save({ validateBeforeSave: false });
+
+    if (this.views.includes(viewerIdentifier)) {
+        return 'true';
+    } else {
+        this.views.push(viewerIdentifier);
+        return this.save({ validateBeforeSave: false });
+    }
 };
 
 videoSchema.plugin(mongooseAggregatePaginate);

@@ -11,7 +11,7 @@ import {
 
 import express from 'express';
 export const playlistRouter = express.Router();
-import { verifyJWT } from '../middleware/index.js';
+import { verifyJWT, isPlaylistOwner } from '../middleware/index.js';
 
 playlistRouter.route('/user/:userId').get(getPlaylists);
 playlistRouter.route('/titles/:userId').get(getPlaylistsTitles);
@@ -19,11 +19,11 @@ playlistRouter.route('/').post(verifyJWT, createPlaylist);
 playlistRouter
     .route('/:playlistId')
     .get(getPlaylist)
-    .patch(verifyJWT, updatePlaylist)
-    .delete(verifyJWT, deletePlaylist);
+    .patch(verifyJWT, isPlaylistOwner, updatePlaylist)
+    .delete(verifyJWT, isPlaylistOwner, deletePlaylist);
 playlistRouter
     .route('/add/:playlistId/:videoId')
-    .get(verifyJWT, addVideoToPlaylist);
+    .patch(verifyJWT, isPlaylistOwner, addVideoToPlaylist);
 playlistRouter
     .route('/remove/:playlistId/:videoId')
-    .get(verifyJWT, removeVideoFromPlaylist);
+    .patch(verifyJWT, isPlaylistOwner, removeVideoFromPlaylist);

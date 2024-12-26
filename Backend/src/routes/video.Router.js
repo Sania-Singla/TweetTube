@@ -16,20 +16,21 @@ import {
     verifyJWT,
     optionalVerifyJWT,
     checkAborted,
+    isVideoOwner,
 } from '../middleware/index.js';
 
 videoRouter.route('/random-videos').get(getRandomVideos);
 videoRouter.route('/search-data').get(getSearchData);
 
 videoRouter
-    .route('/toggle-publish/:videoId/:Status')
-    .get(verifyJWT, togglePublish);
+    .route('/toggle-publish/:videoId/:status')
+    .get(verifyJWT, isVideoOwner, togglePublish);
 
 videoRouter
-    .route('/:videoid')
+    .route('/:videoId')
     .get(optionalVerifyJWT, getVideoById)
-    .delete(verifyJWT, deleteVideo)
-    .patch(verifyJWT, upload.single('thumbnail'), updateVideo);
+    .delete(verifyJWT, isVideoOwner, deleteVideo)
+    .patch(verifyJWT, isVideoOwner, upload.single('thumbnail'), updateVideo);
 
 videoRouter
     .route('/')

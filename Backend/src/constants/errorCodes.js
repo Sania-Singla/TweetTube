@@ -4,6 +4,7 @@ const SERVER_ERROR = 500;
 const FORBIDDEN = 403;
 const NOT_FOUND = 404;
 const CREATED = 201;
+const ABORTED = 499;
 
 const COOKIE_OPTIONS = {
     httpOnly: true,
@@ -19,5 +20,6 @@ export {
     CREATED,
     SERVER_ERROR,
     FORBIDDEN,
+    ABORTED,
     COOKIE_OPTIONS,
 };

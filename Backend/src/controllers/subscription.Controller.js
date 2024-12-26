@@ -7,47 +7,41 @@ import {
     CREATED,
 } from '../constants/errorCodes.js';
 
-//channelId is also someone's userId so dont confuse ki ye channelId kya hai ye channelId 😉
 const toggleSubscribe = async (req, res) => {
-    //have access to req.user
-    //get the channel id from req.params
-    //check for existing doc => a) if found delete the doc
-    //                          b) if not found create a new doc ( here no worries about true/flase => either we have doc or not )
+    /*
+        check for existing doc => a) if found delete the doc
+                                  b) if not found create a new doc ( here no worries about true/flase => either we have doc or not )
+    */
     try {
         const { channelId } = req.params;
-        if (!isValidObjectId(channelId))
+        if (!channelId || !isValidObjectId(channelId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_CHANNELID' });
+                .json({ message: 'MISSING_OR_INVALID_CHANNELID' });
+        }
 
-        if (channelId === req.user._id.toString())
+        if (!req.user?._id.equals(channelId)) {
             return res.status(BAD_REQUEST).json({ message: 'OWN_CHANNEL' });
+        }
+
         const existingDoc = await Subscription.findOne({
             subscriber: new mongoose.Types.ObjectId(req.user._id),
             channel: new mongoose.Types.ObjectId(channelId),
         });
+
         if (!existingDoc) {
             //create a new doc
             const createdDoc = await Subscription.create({
                 subscriber: req.user._id,
                 channel: channelId,
             });
-            if (!createdDoc)
-                return res
-                    .status(SERVER_ERROR)
-                    .json({ message: 'SUBSDOC_CREATION_DB_ISSUE' });
 
             return res.status(CREATED).json(createdDoc);
-        } //so we do have a doc
-        else {
+        } else {
             //delete the doc
             const deletedDoc = await Subscription.findByIdAndDelete(
                 existingDoc._id
             );
-            if (!deletedDoc)
-                return res
-                    .status(SERVER_ERROR)
-                    .json({ message: 'SUBSDOC_REMOVAL_DB_ISSUE' });
 
             return res.status(OK).json(deletedDoc);
         }
@@ -66,10 +60,11 @@ const getChannelSubscribers = async (req, res) => {
     //populate the subscriber field
     try {
         const { channelId } = req.params;
-        if (!isValidObjectId(channelId))
+        if (!channelId || !isValidObjectId(channelId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_CHANNELID' });
+                .json({ message: 'MISSING_OR_INVALID_CHANNELID' });
+        }
 
         const subscribers = await Subscription.aggregate([
             {
@@ -114,8 +109,9 @@ const getChannelSubscribers = async (req, res) => {
                 $replaceRoot: { newRoot: '$subscriber' },
             },
         ]);
-        if (subscribers.length === 0)
+        if (!subscribers.length) {
             return res.status(OK).json({ message: 'NO_SUBSCRIBERS_FOUND' });
+        }
 
         return res.status(OK).json(subscribers);
     } catch (err) {
@@ -133,8 +129,11 @@ const getSubscribedChannels = async (req, res) => {
     //populate the channel field
     try {
         const { userId } = req.params;
-        if (!isValidObjectId(userId))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_USERID' });
+        if (!userId || !isValidObjectId(userId)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'INVALID_OR_MISSING_USERID' });
+        }
 
         const subscribedChannels = await Subscription.aggregate([
             {
@@ -160,7 +159,6 @@ const getSubscribedChannels = async (req, res) => {
                         {
                             $addFields: {
                                 subscribersCount: { $size: '$subscribers' },
-                                // subscribed:true
                             },
                         },
                         {
@@ -169,7 +167,6 @@ const getSubscribedChannels = async (req, res) => {
                                 fullname: 1,
                                 avatar: 1,
                                 subscribersCount: 1,
-                                // subscribed:1
                             },
                         },
                     ],
@@ -195,8 +192,10 @@ const getSubscribedChannels = async (req, res) => {
                 $replaceRoot: { newRoot: '$channel' },
             },
         ]);
-        // if(subscribedChannels.length === 0) return res.status(OK).json({message:"NO channels subscribed."})
-        //was causing issue on frontend becuase we need an array to map so dont worry it will return an empty array thats all
+
+        if (!subscribedChannels.length) {
+            return res.status(OK).json({ message: 'NO_CHANNELS_SUBSCRIBED' });
+        }
 
         return res.status(OK).json(subscribedChannels);
     } catch (err) {

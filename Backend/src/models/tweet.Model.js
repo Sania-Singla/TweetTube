@@ -6,7 +6,7 @@ const tweetSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        tweetBy: {
+        owner: {
             // as soon as user make a new comment on a video we will set his id to its value and then use lookup to get full data
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',

@@ -1,12 +1,23 @@
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { Video, User } from '../models/index.js';
-import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
+import {
+    SERVER_ERROR,
+    OK,
+    BAD_REQUEST,
+    NOT_FOUND,
+} from '../constants/errorCodes.js';
 
 const getAboutChannel = async (req, res) => {
     //get the userId by req.params
     //get total videos, subscribers, views(unique), tweets
     try {
         const { userId } = req.params;
+        if (!userId || !isValidObjectId(userId)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'MISSING_OR_INVALID_USERID' });
+        }
+
         const videos = await Video.aggregate([
             {
                 $match: { owner: new mongoose.Types.ObjectId(userId) },
@@ -48,7 +59,7 @@ const getAboutChannel = async (req, res) => {
                 $lookup: {
                     from: 'tweets',
                     localField: '_id',
-                    foreignField: 'tweetBy',
+                    foreignField: 'owner',
                     as: 'tweets',
                 },
             },
@@ -75,10 +86,9 @@ const getAboutChannel = async (req, res) => {
             },
         ]);
 
-        if (!user)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'CHANNEL_NOT_FOUND' });
+        if (!user) {
+            return res.status(NOT_FOUND).json({ message: 'CHANNEL_NOT_FOUND' });
+        }
 
         const result = {
             ...user[0],
@@ -93,6 +103,6 @@ const getAboutChannel = async (req, res) => {
     }
 };
 
-//will add links opr soon⭐⭐
+// TODO: will add links opr soon⭐⭐
 
 export { getAboutChannel };

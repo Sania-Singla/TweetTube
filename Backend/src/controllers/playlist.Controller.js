@@ -5,14 +5,15 @@ import {
     OK,
     BAD_REQUEST,
     CREATED,
+    NOT_FOUND,
 } from '../constants/errorCodes.js';
 
 const createPlaylist = async (req, res) => {
-    // get name and descr from req.body
-    // will have access to req.user (creater)
-    // create a playlist doc with empty videos array or jsut dont mention it in the create method.
     try {
         const { name, description = '' } = req.body;
+        if (!name) {
+            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        }
 
         // can have multiple playlists with same name
         // const existingPlaylist = await Playlist.findOne({ name });
@@ -21,12 +22,9 @@ const createPlaylist = async (req, res) => {
         const playlist = await Playlist.create({
             name,
             description,
-            createdBy: req.user._id,
+            owner: req.user._id,
         });
-        if (!playlist)
-            return res
-                .status(SERVER_ERROR)
-                .json({ message: 'PLAYLIST_CREATION_DB_ISSUE' });
+
         return res.status(CREATED).json(playlist);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -44,8 +42,11 @@ const getPlaylists = async (req, res) => {
 
     try {
         const { userId } = req.params;
-        if (!isValidObjectId(userId))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_USERID' });
+        if (!userId || !isValidObjectId(userId)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'MISSING_OR_INVALID_USERID' });
+        }
 
         const { page = 1, limit = 10 } = req.query;
 
@@ -58,7 +59,7 @@ const getPlaylists = async (req, res) => {
             // can also use .find({})
             {
                 $match: {
-                    createdBy: new mongoose.Types.ObjectId(userId),
+                    owner: new mongoose.Types.ObjectId(userId),
                 },
             },
             {
@@ -126,13 +127,15 @@ const getPlaylists = async (req, res) => {
         ]);
 
         const totalPlaylists = await Playlist.countDocuments({
-            createdBy: new mongoose.Types.ObjectId(userId),
+            owner: new mongoose.Types.ObjectId(userId),
         });
         const totalPages = Math.ceil(totalPlaylists / limitNumber); // will round off to nearest integer
         const hasNextPage = pageNumber < totalPages;
         const hasPreviousPage = pageNumber > 1;
 
-        //if(playlists.length === 0) return res.status(OK).json({ message:"NO playlists created yet." })   //handled on frontend
+        if (!playlists.length) {
+            return res.status(OK).json({ message: 'NO_PLAYLISTS_FOUND.' });
+        }
 
         const result = {
             info: {
@@ -154,19 +157,24 @@ const getPlaylists = async (req, res) => {
 };
 
 const getPlaylistsTitles = async (req, res) => {
-    // get userId from req.params
-    // will have access to req.user
-    // find the playlist docs with this userId as the createdBy
     try {
         const { userId } = req.params;
-        if (!isValidObjectId(userId))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_USERID' });
+        const {
+            limit = 5,
+            sortBy = 'updatedAt',
+            sortType = 'desc',
+        } = req.query;
+        if (!userId || !isValidObjectId(userId)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'MISSING_OR_INVALID_USERID' });
+        }
 
         const playlists = await Playlist.aggregate([
             // can also use .find({})
             {
                 $match: {
-                    createdBy: new mongoose.Types.ObjectId(userId),
+                    owner: new mongoose.Types.ObjectId(userId),
                 },
             },
             {
@@ -176,7 +184,7 @@ const getPlaylistsTitles = async (req, res) => {
             },
             {
                 $sort: {
-                    createdAt: -1, // Sort before skip and limit
+                    [sortBy]: sortType === 'desc' ? -1 : 1, // Sort before skip and limit
                 },
             },
             {
@@ -187,7 +195,7 @@ const getPlaylistsTitles = async (req, res) => {
                     videos: 1,
                 },
             },
-            { $limit: 5 },
+            { $limit: limit },
         ]);
         return res.status(OK).json(playlists);
     } catch (err) {
@@ -205,10 +213,12 @@ const getPlaylist = async (req, res) => {
     // populate the videos field and then subfield owner
     try {
         const { playlistId } = req.params;
-        if (!isValidObjectId(playlistId))
+        if (!playlistId || !isValidObjectId(playlistId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_PLAYLISTID' });
+                .json({ message: 'MISSING_OR_INVALID_PLAYLISTID' });
+        }
+
         const playlist = await Playlist.aggregate([
             {
                 $match: {
@@ -258,9 +268,9 @@ const getPlaylist = async (req, res) => {
             {
                 $lookup: {
                     from: 'users',
-                    localField: 'createdBy',
+                    localField: 'owner',
                     foreignField: '_id',
-                    as: 'createdBy',
+                    as: 'owner',
                     pipeline: [
                         {
                             $project: {
@@ -276,14 +286,16 @@ const getPlaylist = async (req, res) => {
             {
                 $addFields: {
                     totalVideos: { $size: '$videos' },
-                    createdBy: { $first: '$createdBy' },
+                    owner: { $first: '$owner' },
                 },
             },
         ]);
-        if (!playlist)
+        if (!playlist) {
             return res
-                .status(BAD_REQUEST)
+                .status(NOT_FOUND)
                 .json({ message: 'PLAYLIST_NOT_FOUND' });
+        }
+
         return res.status(CREATED).json(playlist[0]);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -301,12 +313,12 @@ const addVideoToPlaylist = async (req, res) => {
     //in case of user create a new playlist using the input field instead of choosing an already made playlist then first request for createplaylist then call this method (for frontend)
     try {
         const { playlistId, videoId } = req.params;
-        if (!isValidObjectId(videoId))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_VIDEOID' });
-        if (!isValidObjectId(playlistId))
+        if (!videoId || !isValidObjectId(videoId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_PLAYLISTID' });
+                .json({ message: 'MISSING_OR_INVALID_VIDEOID' });
+        }
+
         const playlist = await Playlist.findByIdAndUpdate(
             playlistId,
             {
@@ -316,10 +328,7 @@ const addVideoToPlaylist = async (req, res) => {
             },
             { new: true }
         );
-        if (!playlist)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'PLAYLIST_NOT_FOUND' });
+
         return res.status(OK).json({ message: 'VIDEO_ADDED_TO_PLAYLIST' });
     } catch (err) {
         return res.status(SERVER_ERROR).json({
@@ -337,12 +346,12 @@ const removeVideoFromPlaylist = async (req, res) => {
     //just remove the videoId from the video field of the doc
     try {
         const { playlistId, videoId } = req.params;
-        if (!isValidObjectId(videoId))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_VIDEOID' });
-        if (!isValidObjectId(playlistId))
+        if (!videoId || !isValidObjectId(videoId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_PLAYLISTID' });
+                .json({ message: 'MISSING_OR_INVALID_VIDEOID' });
+        }
+
         const playlist = await Playlist.findByIdAndUpdate(
             playlistId,
             {
@@ -352,10 +361,7 @@ const removeVideoFromPlaylist = async (req, res) => {
             },
             { new: true }
         );
-        if (!playlist)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'PLAYLIST_NOT_FOUND' });
+
         return res
             .status(OK)
             .json({ message: 'VIDEO_REMOVED_FROM_PLAYLIST_SUCCESSFULLY' });
@@ -369,16 +375,14 @@ const removeVideoFromPlaylist = async (req, res) => {
 };
 
 const updatePlaylist = async (req, res) => {
-    // get playlistId from req.params
-    // get name and descr from req.body to update
-    // find the playlist doc with this playlistId and update
     try {
         const { playlistId } = req.params;
-        if (!isValidObjectId(playlistId))
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'INVALID_PLAYLISTID' });
         const { name, description = '' } = req.body;
+
+        if (!name) {
+            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        }
+
         const playlist = await Playlist.findByIdAndUpdate(
             playlistId,
             {
@@ -389,13 +393,8 @@ const updatePlaylist = async (req, res) => {
             },
             { new: true }
         );
-        if (!playlist)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'PLAYLIST_NOT_FOUND' });
-        return res
-            .status(OK)
-            .json({ message: 'PLAYLIST_UPDATED_SUCCESSFULLY' });
+
+        return res.status(OK).json(playlist);
     } catch (err) {
         return res.status(SERVER_ERROR).json({
             message: 'something went wrong while updating the playlist',
@@ -405,19 +404,10 @@ const updatePlaylist = async (req, res) => {
 };
 
 const deletePlaylist = async (req, res) => {
-    //get playlistId from req.params
-    //find the playlist doc with this playlistId and delete
     try {
         const { playlistId } = req.params;
-        if (!isValidObjectId(playlistId))
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'INVALID_PLAYLISTID' });
-        const playlist = await Playlist.findByIdAndDelete(playlistId);
-        if (!playlist)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'PLAYLIST_NOT_FOUND' });
+        await Playlist.findByIdAndDelete(playlistId);
+
         return res
             .status(OK)
             .json({ message: 'PLAYLIST_DELETED_SUCCESSFULLY' });

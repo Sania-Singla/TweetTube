@@ -5,12 +5,16 @@ import {
     uploadOnCloudinary,
     deleteFromCloudinary,
 } from '../utils/cloudinary.js';
-import { SERVER_ERROR, OK, BAD_REQUEST } from '../constants/errorCodes.js';
+import {
+    SERVER_ERROR,
+    OK,
+    BAD_REQUEST,
+    NOT_FOUND,
+    CREATED,
+    ABORTED,
+} from '../constants/errorCodes.js';
 
 const getRandomVideos = async (req, res) => {
-    //fetch all videos from db
-    //add pagination & sorting
-
     try {
         const { page = 1, limit = 10 } = req.query;
         const pageNumber = parseInt(page);
@@ -96,12 +100,15 @@ const getVideos = async (req, res) => {
             userId,
             query = '',
             sortType = 'desc',
-            sortBy = 'createdAt',
+            sortBy = 'updatedAt',
             page = 1,
             limit = 10,
         } = req.query; // query means search term right now we are not implementing that will see in future (easy)
-        if (!isValidObjectId(userId))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_USERID' });
+        if (!userId || !isValidObjectId(userId)) {
+            return res
+                .status(BAD_REQUEST)
+                .json({ message: 'MISSING_OR_INVALID_USERID' });
+        }
 
         //all will be strings by default
         const pageNumber = parseInt(page);
@@ -125,7 +132,7 @@ const getVideos = async (req, res) => {
             },
             {
                 $sort: {
-                    updatedAt: -1, //(desc => -1 and asc => 1)
+                    [sortBy]: sortType === 'desc' ? -1 : 1, //(desc => -1 and asc => 1)
                 },
             },
             //stage 3
@@ -166,7 +173,6 @@ const getVideos = async (req, res) => {
         const hasPreviousPage = startIndex > 0;
         */
 
-        //sending the response
         const result = {
             info: {
                 totalVideos,
@@ -187,19 +193,19 @@ const getVideos = async (req, res) => {
 
 const togglePublish = async (req, res) => {
     try {
-        const { videoId, Status } = req.params;
-        if (!videoId)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEOID_MISSING' });
-        if (!isValidObjectId(videoId))
+        const { videoId, status } = req.params;
+        if (!videoId || !isValidObjectId(videoId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_VIDEO_ID' });
+                .json({ message: 'INVALID_OR_MISSING_VIDEOID' });
+        }
 
         const video = await Video.findById(videoId);
-        if (!video)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEO_NOT_FOUND' });
+        if (!video) {
+            return res.status(NOT_FOUND).json({ message: 'VIDEO_NOT_FOUND' });
+        }
 
-        video.isPublished = Status;
+        video.isPublished = status;
         await video.save({ validateBeforeSave: false });
         return res.status(OK).json(video);
     } catch (err) {
@@ -211,79 +217,57 @@ const togglePublish = async (req, res) => {
 };
 
 const publishVideo = async (req, res) => {
-    //since user(the one publishing the video) should be logged in so we have req.user
-    //get the video file,thumbnail through multer and upload on cloudinary and get the url
-    //get the description,title from req.body
-    //confirm the uploads/urls
-    //create entry in the videos collection
-    //return the response as the video info and the message
     let videoFile, thumbnail;
     try {
-        // req.customConnectionClosed = false;
-
-        // req.on('close', () => {
-        //     req.customConnectionClosed = true;
-        // });
-
-        if (!req.files?.videoFile || !req.files?.thumbnail)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'VIDEOFILE_THUMBNAIL_MISSING' });
         const { title, description } = req.body;
-        if (!title || !description)
+        if (
+            !req.files?.videoFile ||
+            !req.files?.thumbnail ||
+            !title ||
+            !description
+        ) {
+            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        }
+
+        const videoFileLocalpath = req.files.videoFile[0].path;
+        const thumbnailLocalpath = req.files.thumbnail[0].path;
+
+        if (req.connectionClosed) {
+            console.log('Connection closed,had nothing to clean yet.');
             return res
-                .status(BAD_REQUEST)
-                .json({ message: 'TITLE_DESCR_MISSING' });
-        const videoFile_Localpath = req.files.videoFile[0].path;
-        const thumbnail_Localpath = req.files.thumbnail[0].path;
-
-        console.log(
-            'videoFilePath=',
-            videoFile_Localpath,
-            'thumbnail_path=',
-            thumbnail_Localpath
-        );
-
-        if (req.connectionClosed) {
-            console.log(
-                'Connection closed, aborting video and thumbnail upload...'
-            );
-            console.log('had nothing to clean yet & request closed...');
-            return; // Preventing further execution
+                .status(ABORTED)
+                .json({ message: 'VIDEO_UPLOAD_REQUEST_CANCELLED' });
         }
 
-        //upload video
-        videoFile = await uploadOnCloudinary(videoFile_Localpath);
+        // upload thumbnail
+        thumbnail = await uploadOnCloudinary(thumbnailLocalpath);
         if (req.connectionClosed) {
             console.log(
-                'video uploaded but request cancelled so now deleting the video from cloudinary and returning with a cancelled message'
+                'uploaded thumbnail but request cancelled so deleting it from cloudinary.'
             );
-            await deleteFromCloudinary(videoFile.url);
-            console.log('deleted the video from cloudinary');
-            fs.unlinkSync(thumbnail_Localpath); //we dont need the thumbnail now because we are not going to upload it anymore
-            return;
+            // await deleteFromCloudinary(videoFile.url);
+            await deleteFromCloudinary(thumbnail.url);
+            console.log('deleted the thumbnail from cloudinary');
+            fs.unlinkSync(videoFileLocalpath); //we dont need the video anymore
+            return res
+                .status(ABORTED)
+                .json({ message: 'VIDEO_UPLOAD_REQUEST_CANCELLED' });
         }
 
-        //upload thumbnail
-        thumbnail = await uploadOnCloudinary(thumbnail_Localpath);
+        // upload video
+        videoFile = await uploadOnCloudinary(videoFileLocalpath);
         if (req.connectionClosed) {
             console.log(
-                'uploaded both but request cancelled so now deleting both from cloudinary and returning with a cancelled message'
+                'video & thumbnail uploaded but request cancelled so deleting both from cloudinary.'
             );
             await deleteFromCloudinary(videoFile.url);
             await deleteFromCloudinary(thumbnail.url);
-            console.log('deleted both');
-            return;
+            console.log('deleted both from cloudinary');
+            return res
+                .status(ABORTED)
+                .json({ message: 'VIDEO_UPLOAD_REQUEST_CANCELLED' });
         }
 
-        // console.log("videoFile=",videoFile,"thumbnail=",thumbnail);   // it contains the duration property for a video file in seconds
-
-        if (!videoFile || !thumbnail)
-            return res
-                .status(SERVER_ERROR)
-                .json({ message: 'VIDEO_UPLOAD_ISSUE' });
-
-        //create entry
         const video = await Video.create({
             description,
             title,
@@ -291,27 +275,22 @@ const publishVideo = async (req, res) => {
             thumbnail: thumbnail.url,
             videoFile: videoFile.url,
             owner: req.user._id,
-            //views: //will be default yet
-            //is published:false // will add later
         });
-        const publishedVideo = await Video.findById(video._id);
-        if (!publishedVideo)
-            return res
-                .status(SERVER_ERROR)
-                .json({ message: 'VIDEODOC_CREATION_DB_ISSUE' });
 
         if (req.connectionClosed) {
             console.log(
-                'uploaded both and created entry in db but request cancelled so now deleting both from cloudinary and the video doc from db and returning with a cancelled message'
+                'uploaded both and created entry in db but request cancelled so deleting both from cloudinary and the video from db'
             );
             await deleteFromCloudinary(videoFile.url);
             await deleteFromCloudinary(thumbnail.url);
             await Video.findByIdAndDelete(video._id);
-            console.log('deleted the video');
-            return;
+            console.log('video deleted from db & cloudinary');
+            return res
+                .status(ABORTED)
+                .json({ message: 'VIDEO_UPLOAD_REQUEST_CANCELLED' });
         }
 
-        return res.status(201).json(publishedVideo);
+        return res.status(CREATED).json(video);
     } catch (err) {
         if (videoFile) await deleteFromCloudinary(videoFile.url);
         if (thumbnail) await deleteFromCloudinary(thumbnail.url);
@@ -323,74 +302,34 @@ const publishVideo = async (req, res) => {
 };
 
 const updateVideo = async (req, res) => {
-    //get video id from req.params // for finding in db
-    //allowing to change the title , description and thumbnail
-    //req.user is accessable
-    //*****we can only update the video if we are the owner of the video*****
-    //get the thumbnail(multer), title & description
-    // upload the thumbnail on cloudinary
-    //verify the uploads/urls
-    //return the new video model
+    let newThumbnail;
     try {
-        const { videoid } = req.params; // toh url mein bhi /:videoid ==> same likhna hoga
-        if (!videoid)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEO_MISSING' });
-        if (!isValidObjectId(videoid))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_VIDEOID' });
-
-        const video = await Video.findById(videoid);
-        if (!video)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEO_NOT_FOUND' });
-
-        const oldThumbnail_url = video.thumbnail; // because baad mein fir ye update krde hai hmne
-
-        if (!video.owner.equals(req.user._id))
-            return res.status(401).json({ message: 'NOT_THE_OWNER' });
-        //or video.owner.toString() !== req.user?._id.toString()   ==> .equals() method is provided by mongoose to compare the ids without string conversion
-
-        //so we are the owner at this point
         const { description, title } = req.body;
-        if (!description || !title)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'TITLE_DESCR_MISSING' });
+        // isOwner middleware
+        const oldVideo = req.video;
 
-        if (!req.file)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'THUMBNAIL_MISSING' });
+        if (!description || !title || !req.file) {
+            return res.status(BAD_REQUEST).json({ message: 'MISSING_FIELDS' });
+        }
 
-        //so we do have file at this point
-        const newThumbnail_Localpath = req.file.path;
-        const newThumbnail = await uploadOnCloudinary(newThumbnail_Localpath);
-        if (!newThumbnail)
-            return res
-                .status(SERVER_ERROR)
-                .json({ message: 'THUMBNAIL_UPDATE_ISSUE' });
+        newThumbnail = await uploadOnCloudinary(req.file.path);
 
-        //updating
-        video.description = description;
-        video.title = title;
-        video.thumbnail = newThumbnail.url;
-        // const video = await Video.findByIdAndUpdate(
-        //     videoid,
-        //     {
-        //         $set:
-        //         {
-        //             thumbnail: newThumbnail.url,                     //AVOIDING ANOTHER DATABASE CALL BY ABOVE CODE
-        //             description,
-        //             title
-        //         }
-        //     },
-        //     { new: true }
-        // );
-        await video.save({ validateBeforeSave: false }); //no need if using findbyidandupdate()
-        //deleting old thumbnail
-        const deletedThumbnail = await deleteFromCloudinary(oldThumbnail_url);
-        if (deletedThumbnail.result !== 'ok')
-            return res
-                .status(SERVER_ERROR)
-                .json({ message: 'OLD_THUMBNAIL_DELETION_ISSUE' });
+        // updating
+        const video = await Video.findByIdAndUpdate(
+            oldVideo._id,
+            {
+                $set: {
+                    thumbnail: newThumbnail.url,
+                    description,
+                    title,
+                },
+            },
+            { new: true }
+        );
+
+        // deleting old thumbnail
+        await deleteFromCloudinary(oldVideo.thumbnail);
+
         return res.status(OK).json(video);
     } catch (err) {
         if (newThumbnail) await deleteFromCloudinary(newThumbnail.url);
@@ -402,41 +341,20 @@ const updateVideo = async (req, res) => {
 };
 
 const deleteVideo = async (req, res) => {
-    //get the video id by params
-    //find it in the db
-    //you should be the owner of the video
-    //then just delete the video
     try {
-        const { videoid } = req.params;
-        if (!videoid)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEOID_MISSING' });
-        if (!isValidObjectId(videoid))
-            return res.status(BAD_REQUEST).json({ message: 'INVALID_VIDEOID' });
-
-        const video = await Video.findById(videoid);
-        if (!video)
-            return res
-                .status(BAD_REQUEST)
-                .json({ message: 'VIDEO_DOESNT_EXIST' });
-        //checking for the owner
-        if (!video.owner.equals(req.user._id))
-            return res.status(BAD_REQUEST).json({ message: 'NOT_THE_OWNER' });
+        // isOwner middleware
+        const video = req.video;
 
         //deleting the files from cloudinary
-        const deletedThumbnail = await deleteFromCloudinary(video.thumbnail);
-        const deletedVideoFile = await deleteFromCloudinary(video.videoFile);
-        if (
-            deletedVideoFile.result !== 'ok' ||
-            deletedThumbnail.result !== 'ok'
-        )
-            return res
-                .status(SERVER_ERROR)
-                .json({ message: 'VIDEOFILE_OR_THUMBNAIL_DELETION_ISSUE' });
-        const deletedVideo = await Video.findByIdAndDelete(video._id); // videoid
-        const comments = await Comment.deleteMany({
+        await deleteFromCloudinary(video.thumbnail);
+        await deleteFromCloudinary(video.videoFile);
+
+        // delete video, its comments and likes
+        await Video.findByIdAndDelete(video._id);
+        await Comment.deleteMany({
             video: new mongoose.Types.ObjectId(video._id),
         });
-        const likes = await Like.deleteMany({
+        await Like.deleteMany({
             video: new mongoose.Types.ObjectId(video._id),
         });
 
@@ -457,58 +375,44 @@ const getVideoById = async (req, res) => {
     //push the video id to the user watch history  //sub-pipeline won't work (can't avoid the extra db call) becuase they cant presist the changes
     //populate the owner before returning the video using aggregation pipelines
     try {
-        const { videoid } = req.params;
-        if (!videoid)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEOID_MISSING' });
-        if (!isValidObjectId(videoid))
+        const { videoId } = req.params;
+        if (!videoId || !isValidObjectId(videoId)) {
             return res
                 .status(BAD_REQUEST)
-                .json({ message: 'INVALID_VIDEO_ID' });
+                .json({ message: 'MISSING_OR_INVALID_VIDEOID' });
+        }
 
-        const video = await Video.findById(videoid);
-        if (!video)
-            return res.status(BAD_REQUEST).json({ message: 'VIDEO_NOT_FOUND' });
+        const video = await Video.findById(videoId);
+        if (!video) {
+            return res.status(NOT_FOUND).json({ message: 'VIDEO_NOT_FOUND' });
+        }
+
         if (req.user) {
-            //pushing the videoid into the watchHistory****
+            // updating watchHistory
             const user = await User.findById(req.user?._id);
-            await user.updateWatchHistory(videoid);
+            await user.updateWatchHistory(videoId);
 
-            //pushing the userid into the views****
+            // updating views
             await video.increment_Views(user._id);
         } else {
             await video.increment_Views(req.ip);
         }
 
-        //aggregation pipeline
+        // aggregation pipeline
         const detailedVideo = await Video.aggregate([
             {
                 $match: {
-                    _id: new mongoose.Types.ObjectId(videoid), // becuase url se toh hmme "71584619797071074jag" is form mein milegi (no autoconversion since mongodb opr not mongoose)
+                    _id: new mongoose.Types.ObjectId(videoId), // becuase params se hmme string form mein milegi (no autoconversion since mongodb opr not mongoose)
                 },
             },
+            // owner{}
             {
                 $lookup: {
-                    from: 'users', // we are in video model
+                    from: 'users',
                     localField: 'owner',
                     foreignField: '_id',
                     as: 'owner', //overwrite
                     pipeline: [
-                        //pushing the videoid in history array // we are inside owner field so can directly operate with watchHistroy ( just like in watch history first we did lookup to populate the watchhistory ke andr ke video ids then in the sub pipeline(we entered inside the history array can also say in the each video model element becuase all are same) then we used lookup to get the owner field populated) ==> intersting *******
-                        // {
-                        //     $addFields:
-                        //     {
-                        //         watchHistory:
-                        //         {
-                        //             $cond:
-                        //             {
-                        //                 if:{ $in: [ videoid,"$watchHistory"] },
-                        //                 then:"$watchHistory",
-                        //                 else:{ $concatArrays:[ "$watchHistory",[videoid] ] }
-                        //             }
-                        //         }
-                        //     }
-                        // },
-                        //this approach is working but not retaining in the original doc and reseting everytime so we will have to concat it separately (not our fault this is how mongodb works sometimes)
                         {
                             $lookup: {
                                 from: 'subscriptions',
@@ -548,7 +452,7 @@ const getVideoById = async (req, res) => {
                     ],
                 },
             },
-            //get likes array
+            // likes[]
             {
                 $lookup: {
                     from: 'likes',
@@ -560,9 +464,9 @@ const getVideoById = async (req, res) => {
                             $match: { liked: 'true' },
                         },
                     ],
-                }, //array likes[]
+                },
             },
-            //get dislikes array
+            // dislikes[]
             {
                 $lookup: {
                     from: 'likes',
@@ -574,7 +478,7 @@ const getVideoById = async (req, res) => {
                             $match: { liked: 'false' },
                         },
                     ],
-                }, //array dislikes[]
+                },
             },
             {
                 $addFields: {
@@ -618,14 +522,14 @@ const getVideoById = async (req, res) => {
 };
 
 const getSearchData = async (req, res) => {
-    //get videos based on matched title or fullname or username
+    // get videos based on matched title or fullname or username
     try {
         const { page = 1, limit = 10, query = '' } = req.query;
         const pageNumber = parseInt(page);
         const limitNumber = parseInt(limit);
         const startIndex = (pageNumber - 1) * limitNumber;
 
-        //getting the results
+        // pipeline
         const results = await Video.aggregate([
             {
                 $lookup: {
