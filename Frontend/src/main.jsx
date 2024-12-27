@@ -24,7 +24,7 @@ import {
     AdminPage,
     NotFoundPage,
     TweetsPage,
-    ServerErrorPage
+    ServerErrorPage,
 } from './Pages';
 import {
     ChannelVideos,
