@@ -1,7 +1,7 @@
 /**
  * Format a duration in seconds into a human-readable string
  * @param {number} seconds - Total seconds to format
- * @returns {string} - the formatted duration in hh:mm:ss format
+ * @returns {string} the formatted duration as hh:mm:ss
  */
 
 export function formatDuration(seconds) {
