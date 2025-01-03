@@ -20,7 +20,7 @@ const toggleSubscribe = async (req, res) => {
                 .json({ message: 'MISSING_OR_INVALID_CHANNELID' });
         }
 
-        if (!req.user?._id.equals(channelId)) {
+        if (req.user?._id.equals(channelId)) {
             return res.status(BAD_REQUEST).json({ message: 'OWN_CHANNEL' });
         }
 
