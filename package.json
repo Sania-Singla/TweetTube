@@ -7,7 +7,7 @@
         "frontend": "cd Frontend && npm run dev",
         "backend": "cd Backend && npm run dev",
         "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
-        "build": "npm i && npm i --prefix Frontend && npm i --prefix Backend && npm run build --prefix Frontend",
+        "build": "npm i --production=false && npm i --production=false --prefix Frontend && npm i --production=false --prefix Backend && npm run build --prefix Frontend",
         "start": "npm start --prefix Backend"
     },
     "keywords": [],
