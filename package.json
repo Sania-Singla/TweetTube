@@ -1,21 +1,20 @@
 {
-  "name": "tweettube",
-  "version": "1.0.0",
-  "description": "<p>this is a video streaming project where you can upload videos and all that which a basic youtube clone offers you</p>",
-  "main": "index.js",
-  "scripts": {
-    "frontend": "cd Frontend && npm run dev",
-    "backend": "cd Backend && npm run dev",
-    "dev": "concurrently \"npm run frontend\" \"npm run backend\""
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "concurrently": "^9.1.0",
-    "nodemon": "^3.1.7"
-  }
+    "name": "tweettube",
+    "version": "1.0.0",
+    "description": "<p>this is a video streaming project where you can upload videos and all that which a basic youtube clone offers you</p>",
+    "main": "index.js",
+    "scripts": {
+        "frontend": "cd Frontend && npm run dev",
+        "backend": "cd Backend && npm run dev",
+        "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+        "build": "npm i && npm i --prefix Frontend && npm i --prefix Backend && npm run build --prefix Frontend",
+        "start": "npm start --prefix Backend"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "concurrently": "^9.1.0",
+        "nodemon": "^3.1.7"
+    }
 }
-
-
-

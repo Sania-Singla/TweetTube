@@ -222,11 +222,11 @@ const login = async (req, res) => {
             .status(OK)
             .cookie('tweettube_accessToken', accessToken, {
                 ...COOKIE_OPTIONS,
-                maxAge: 24 * 60 * 60 * 1000,
+                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
             })
             .cookie('tweettube_refreshToken', refreshToken, {
                 ...COOKIE_OPTIONS,
-                maxAge: 5 * 24 * 60 * 60 * 1000,
+                maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
             })
             .json(loggedInUser);
     } catch (err) {
@@ -310,11 +310,11 @@ const refreshAccessToken = async (req, res) => {
             .status(OK)
             .cookie('tweettube_accessToken', accessToken, {
                 ...COOKIE_OPTIONS,
-                maxAge: 24 * 60 * 60 * 1000,
+                maxAge: parseInt(process.env.ACCESS_TOKEN_MAXAGE),
             })
             .cookie('tweettube_refreshToken', refreshToken, {
                 ...COOKIE_OPTIONS,
-                maxAge: 5 * 24 * 60 * 60 * 1000,
+                maxAge: parseInt(process.env.REFRESH_TOKEN_MAXAGE),
             })
             .json({ accessToken, refreshToken });
     } catch (err) {

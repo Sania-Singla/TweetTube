@@ -6,8 +6,8 @@
     "scripts": {
         "dev": "npm run format && vite",
         "format": "prettier --write .",
-        "build": "vite build",
-        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+        "build": "npm run format && vite build",
+        "lint": "eslint .",
         "preview": "vite preview"
     },
     "dependencies": {

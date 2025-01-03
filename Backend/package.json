@@ -5,7 +5,8 @@
     "type": "module",
     "scripts": {
         "dev": "npm run format && nodemon src/server.js",
-        "format": "prettier --write ."
+        "format": "prettier --write .",
+        "start": "npm run format && node src/server.js"
     },
     "keywords": [],
     "author": "Sania",
