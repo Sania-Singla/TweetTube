@@ -57,11 +57,11 @@ export default function UploadingVideoPopup({
                         Close
                     </button>
                 </div>
-                <div className="cursor-pointer hover:font-medium w-full border-transparent text-center border-[0.01rem] hover:border-[#b5b4b4] bg-[#8871ee] text-black text-lg">
+                {/* <div className="cursor-pointer hover:font-medium w-full border-transparent text-center border-[0.01rem] hover:border-[#b5b4b4] bg-[#8871ee] text-black text-lg">
                     <button onClick={handleCancelUpload} className="p-2 w-full">
                         Cancel Upload
                     </button>
-                </div>
+                </div> */}
             </div>
         </div>
     );
