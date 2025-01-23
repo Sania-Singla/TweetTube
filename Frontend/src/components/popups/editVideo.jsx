@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { adminServices } from '../../DBservices';
+import toast from 'react-hot-toast';
 
 export default function EditVideoPopup({
     close,
@@ -121,6 +122,7 @@ export default function EditVideoPopup({
         setVideoUpdatingPopup(true);
         const res = await adminServices.editVideo(inputs, video.id);
         if (res) {
+            toast.success('Video updated successfully');
             setVideoUpdatingPopup(false);
             setVideoUpdatedPopup(true);
         }

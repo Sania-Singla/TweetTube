@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { playlistServices } from '../../DBservices';
+import toast from 'react-hot-toast';
 
 export default function EditPlaylistPopup({ close, setRerender, playlist }) {
     const [inputs, setInputs] = useState({
@@ -52,6 +53,7 @@ export default function EditPlaylistPopup({ close, setRerender, playlist }) {
         if (error.name) return;
         const res = await playlistServices.editPlaylist(playlist._id, inputs);
         if (res && res.message === 'PLAYLIST_UPDATED_SUCCESSFULLY') {
+            toast.success('Playlist updated successfully');
             setRerender((prev) => !prev);
             return close();
         }

@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { icons } from '../../assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import { adminServices } from '../../DBservices';
+import toast from 'react-hot-toast';
 
 export default function UploadVideoPopup({
     controller,
@@ -165,11 +166,10 @@ export default function UploadVideoPopup({
             (res.message === 'VIDEODOC_CREATION_DB_ISSUE' ||
                 res.message === 'VIDEO_UPLOAD_ISSUE')
         ) {
-            alert(
-                "something went wrong! couln't upload the video please retry after some time."
-            );
+            toast.error('Failed to Upload the video, please retry soon.');
             setUploadingPopup(false);
         } else if (res) {
+            toast.success('Video uploaded successfully');
             setUploadingPopup(false);
             setVideoUploadedPopup(true);
         }

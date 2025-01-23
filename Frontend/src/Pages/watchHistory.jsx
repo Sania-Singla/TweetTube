@@ -4,6 +4,7 @@ import { VideoList, PulseVideoList } from '../components';
 import { useAuthHook } from '../hooks';
 import { motion } from 'framer-motion';
 import { icons } from '../assets/icons';
+import toast from 'react-hot-toast';
 
 export default function WatchHistoryPage() {
     const { loginStatus } = useAuthHook();
@@ -30,8 +31,10 @@ export default function WatchHistoryPage() {
             setHistoryInfo,
             setHistory
         );
-        if (res.message === 'HISTORY_CLEARED_SUCCESSFULLY')
+        if (res.message === 'HISTORY_CLEARED_SUCCESSFULLY') {
+            toast.success('Watch History Cleared Successfully');
             return setRerender((prev) => !prev);
+        }
     }
 
     useEffect(() => {

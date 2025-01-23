@@ -3,6 +3,7 @@ import { useAuthHook } from '../../hooks';
 import { userServices } from '../../DBservices';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Store/Slices/userSlice';
+import toast from 'react-hot-toast';
 
 export default function SettingsPersonal() {
     // const [loading,setLoading] = useState(true);    // krlo agr krni hai loading state but no need because this is more like a static page because store se hi info aa ri hai so won't take any time
@@ -85,6 +86,7 @@ export default function SettingsPersonal() {
                 password: 'wrong password.',
             }));
         else {
+            toast.success('Account details updated successfully');
             dispatch(login(newData));
             setError(defaultErrors);
             setInputs((prev) => ({ ...prev, password: '' }));

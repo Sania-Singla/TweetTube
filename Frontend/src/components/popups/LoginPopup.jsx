@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { X } from 'lucide-react';
 import { icons } from '../../assets/icons';
+import toast from 'react-hot-toast';
 
 function LoginPopup({ popupText, close }) {
     const [inputs, setInputs] = useState({
@@ -41,6 +42,7 @@ function LoginPopup({ popupText, close }) {
             inputs
         );
         if (userData) {
+            toast.success('Logged in successfully');
             disptach(login(userData));
             close();
         } else {

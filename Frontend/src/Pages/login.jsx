@@ -5,6 +5,7 @@ import { login } from '../Store/Slices/userSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { icons } from '../assets/icons';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
     const [inputs, setInputs] = useState({
@@ -89,6 +90,7 @@ export default function LoginPage() {
             }));
         } //because req gyi hai becuase agr details hi entered nhi thi toh hmne request bhene hi nhi dii  //so user is not found message received from backend
         else {
+            toast.success('Login Successfull');
             disptach(login(userData));
             navigate('/');
         }

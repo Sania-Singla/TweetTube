@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../Store/Slices/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { icons } from '../../assets/icons';
+import toast from 'react-hot-toast';
 
 export default function Logout() {
     const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function Logout() {
 
     async function handleClick() {
         await userServices.logoutUser(setLoading);
+        toast.success('Logged out successfully');
         navigate('/');
         dispatch(logout());
     }

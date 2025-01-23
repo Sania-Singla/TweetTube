@@ -3,6 +3,7 @@ import { useAuthHook } from '../../hooks';
 import { userServices } from '../../DBservices';
 import { useDispatch } from 'react-redux';
 import { login } from '../../Store/Slices/userSlice';
+import toast from 'react-hot-toast';
 
 export default function SettingsChannel() {
     const { userData } = useAuthHook();
@@ -55,6 +56,7 @@ export default function SettingsChannel() {
                 password: 'wrong password.',
             }));
         else {
+            toast.success("Channel's info updated successfully");
             dispatch(login(newData));
             setError(defaultErrors);
             setInputs((prev) => ({ ...prev, password: '' }));

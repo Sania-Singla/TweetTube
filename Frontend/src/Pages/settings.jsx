@@ -5,6 +5,7 @@ import { useAuthHook } from '../hooks';
 import { userServices } from '../DBservices';
 import { useDispatch } from 'react-redux';
 import { login } from '../Store/Slices/userSlice';
+import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
     const { userData } = useAuthHook();
@@ -69,12 +70,14 @@ export default function SettingsPage() {
             const avatar = files[0];
             const data = await userServices.updateAvatar(avatar);
             if (data) {
+                toast.success('Avatar updated successfully');
                 dispatch(login(data));
             }
         } else if (name === 'coverImage' && files[0]) {
             const coverImage = files[0];
             const data = await userServices.updateCoverImage(coverImage);
             if (data) {
+                toast.success('Cover Image updated successfully');
                 dispatch(login(data));
             }
         }

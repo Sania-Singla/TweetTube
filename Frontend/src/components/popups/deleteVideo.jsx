@@ -2,6 +2,7 @@ import { X } from 'lucide-react';
 import { icons } from '../../assets/icons';
 import { useState } from 'react';
 import { adminServices } from '../../DBservices';
+import toast from 'react-hot-toast';
 
 export default function DeleteVideoPopup({ close, video }) {
     const [checked, setChecked] = useState(false);
@@ -10,6 +11,7 @@ export default function DeleteVideoPopup({ close, video }) {
         close();
         const res = await adminServices.deleteVideo(video.id);
         if (res) {
+            toast.success('Video Deleted Successfully');
         }
     }
 

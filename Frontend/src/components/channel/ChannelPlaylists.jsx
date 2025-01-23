@@ -13,7 +13,6 @@ export default function ChannelPlaylists() {
     const channelData = useChannelHook();
     const { userData } = useAuthHook();
     const [createPlaylistPopup, setCreatePlaylistPopup] = useState(false);
-    // const [rerender,setRerender] = useState(false);
 
     useEffect(() => {
         if (page === 1 || playlists.length !== PlaylistsInfo.totalPlaylists) {

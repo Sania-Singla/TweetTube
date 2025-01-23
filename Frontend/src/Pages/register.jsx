@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { login } from '../Store/Slices/userSlice';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 export default function RegisterPage() {
     const dispatch = useDispatch();
@@ -127,6 +128,7 @@ export default function RegisterPage() {
                 root: 'user already exist.',
             }));
         else {
+            toast.success('Account created successfully');
             dispatch(login(userData));
             navigate('/'); //because hmne auto login toh krva hi diya hai
         }

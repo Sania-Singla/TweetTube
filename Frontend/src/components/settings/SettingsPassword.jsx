@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { userServices } from '../../DBservices';
+import toast from 'react-hot-toast';
 
 export default function SettingsPassword() {
     const defaultValues = {
@@ -71,6 +72,7 @@ export default function SettingsPassword() {
     }
 
     function handleReset() {
+        toast.success('Password updated successfully');
         setError(defaultErrors);
         setInputs(defaultValues);
     }

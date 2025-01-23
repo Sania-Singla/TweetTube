@@ -4,6 +4,7 @@ import { playlistServices } from '../../DBservices';
 import { X } from 'lucide-react';
 import { useAuthHook } from '../../hooks';
 import { icons } from '../../assets/icons';
+import toast from 'react-hot-toast';
 
 export default function PlaylistPopup({ close }) {
     const [inputs, setInputs] = useState({
@@ -85,7 +86,7 @@ export default function PlaylistPopup({ close }) {
     async function handleSubmit(e) {
         e.preventDefault();
         setCreatingPlaylistLoading(true);
-        console.log(inputs.newPlaylist);
+
         const res = await playlistServices.createPlaylist(inputs.newPlaylist);
         if (res) {
             const newRes = await playlistServices.addVideoToPlaylist(
@@ -93,6 +94,7 @@ export default function PlaylistPopup({ close }) {
                 res._id
             );
             if (newRes) {
+                toast.success('Playlist created successfully');
                 close();
             }
         }

@@ -11,6 +11,7 @@ import {
     PulsePlaylistPage,
 } from '../components';
 import { playlistServices } from '../DBservices';
+import toast from 'react-hot-toast';
 
 export default function PlaylistPage() {
     const [loading, setLoading] = useState(false);
@@ -56,8 +57,10 @@ export default function PlaylistPage() {
 
     async function deletePlaylist() {
         const res = await playlistServices.deletePlaylist(data._id);
-        if (res && res.message === 'PLAYLIST_DELETED_SUCCESSFULLY')
-            return navigate('/');
+        if (res && res.message === 'PLAYLIST_DELETED_SUCCESSFULLY') {
+            toast.success('Playlist Deleted Successfully');
+            navigate('/');
+        }
     }
 
     const videoElements = videos?.map((video) => {

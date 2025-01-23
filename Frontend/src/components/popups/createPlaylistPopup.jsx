@@ -1,6 +1,7 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { playlistServices } from '../../DBservices';
+import toast from 'react-hot-toast';
 
 export default function CreatePlaylistPopup({ close }) {
     const [inputs, setInputs] = useState({
@@ -49,7 +50,8 @@ export default function CreatePlaylistPopup({ close }) {
             inputs.description
         );
         if (res) {
-            return close();
+            toast.success('Playlist created successfully');
+            close();
         }
     }
 
